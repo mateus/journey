@@ -4,13 +4,14 @@ import {AppProvider} from '@shopify/polaris';
 import {TravelHistory} from 'views';
 import {isDevelopment} from 'config';
 
-import {DevelopmentHead} from './components';
+import {DevelopmentHead, TopNav} from './components';
 
 export function App() {
   return (
     <>
       <AppProvider i18n={enTranslations}>
         {isDevelopment && <DevelopmentHead />}
+        <TopNav />
         <TravelHistory />
       </AppProvider>
     </>
