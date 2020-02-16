@@ -7,7 +7,7 @@ import './TopNav.scss';
 export function TopNav() {
   return (
     <nav className="TopNav">
-      <Image source={logo192} alt="Journey app" width={48} />
+      <Image source={logo192} alt="Journey app" width={48} height={48} />
     </nav>
   );
 }
