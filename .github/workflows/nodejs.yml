@@ -1,6 +1,13 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
+    branches:
+    - master
+    - release/*
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:
