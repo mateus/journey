@@ -8,6 +8,10 @@ import {TopNav} from '../TopNav';
 describe('<TopNav />', () => {
   it('renders Image with logo', () => {
     const wrapper = shallow(<TopNav />);
-    expect(wrapper.find(Image).prop('source')).toEqual(logo192);
+    expect(
+      wrapper.containsMatchingElement(
+        <Image source={logo192} alt="Journey app" width={48} />,
+      ),
+    ).toBeTruthy();
   });
 });
