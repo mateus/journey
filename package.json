@@ -4,10 +4,7 @@
   "private": true,
   "main": "src/index.tsx",
   "dependencies": {
-    "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.1",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
+    "@shopify/polaris": "^4.13.1",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
     "node-sass": "^4.13.1",
@@ -18,8 +15,16 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.1",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
+    "@types/enzyme": "^3.10.5",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
     "@typescript-eslint/parser": "^2.19.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^6.10.0",
@@ -29,7 +34,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.3",
-    "eslint-plugin-shopify": "^35.0.0"
+    "eslint-plugin-shopify": "^35.0.0",
+    "react-test-renderer": "^16.12.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {App} from './App';
-import './assets/stylesheets/main.scss';
+import '@shopify/polaris/styles.css';
+import {App} from 'foundation';
 
 ReactDOM.render(<App />, document.getElementById('root'));
