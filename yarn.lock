@@ -1139,6 +1139,11 @@
   resolved "https://registry.yarnpkg.com/@shopify/polaris-icons/-/polaris-icons-3.9.0.tgz#7064b234824788972593efcda9ae7b87f2a2da43"
   integrity sha512-isGvHpkH57IsQl6iAZA81LaIPdGi8gNSON5hLWXSERvP9SwgTenfDrkOD3UvzLY09Hh7m8lkFBMUVv/ta33xrg==
 
+"@shopify/polaris-tokens@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@shopify/polaris-tokens/-/polaris-tokens-2.7.0.tgz#6e36249d3c7bcbedbd079f4c5e6e35e4f12c45af"
+  integrity sha512-KkATqo7cBoIeeaQqCvEWmWn0LK6MFOcQlI5M9CUx+faNoUYZnUnoC9A9dW2aP+egvuonXCoVgSYLHmBxjxdjGA==
+
 "@shopify/polaris-tokens@^3.0.0-beta.4":
   version "3.0.0-beta.7"
   resolved "https://registry.yarnpkg.com/@shopify/polaris-tokens/-/polaris-tokens-3.0.0-beta.7.tgz#97e58e81ce9c273b0e496ade8ee2e82522581e50"
@@ -9631,6 +9636,11 @@ react-error-overlay@^6.0.6:
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.6.tgz#ac4d9dc4c1b5c536c2c312bf66aa2b09bfa384e2"
   integrity sha512-Yzpno3enVzSrSCnnljmr4b/2KUQSMZaPuqmS26t9k4nW7uwJk6STWmH9heNjPuvqUTO3jOSPkHoKgO4+Dw7uIw==
+
+react-favicon@^0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/react-favicon/-/react-favicon-0.0.17.tgz#a49bd96794e833e83f29cf776c36426fdd2e5ac7"
+  integrity sha512-p8Xj4gq0lp0H/h2HRa8R++W1cSZEuPDnkDCNMvWcOTlo2K5A2Od663loVjDRP/dOs6NeHblVZ5vYRAkurNrQYw==
 
 react-is@^16.12.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.8.6, react-is@^16.9.0:
   version "16.12.0"
