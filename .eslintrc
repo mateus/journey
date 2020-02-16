@@ -10,12 +10,9 @@
     }
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended",
-    "plugin:react/recommended",
-    "prettier/@typescript-eslint"
+    "plugin:shopify/typescript",
+    "plugin:shopify/react",
+    "plugin:shopify/prettier"
   ],
   "rules": {
     "react/jsx-filename-extension": [
