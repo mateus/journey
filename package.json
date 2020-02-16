@@ -2,6 +2,8 @@
   "name": "journey",
   "version": "0.1.0",
   "private": true,
+  "author": "Mateus Ferreira",
+  "license": "UNLICENSED",
   "main": "src/index.tsx",
   "dependencies": {
     "@shopify/polaris": "^4.13.1",
