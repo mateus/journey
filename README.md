@@ -17,9 +17,8 @@ Testing it:
 
 ### Make sure it is running in development mode
 
-#### Dev status bar
+| Dev Status bar   |      Favicon      | 
+|----------|------|
+| ![Screen Shot 2020-02-16 at 4 34 20 PM](https://user-images.githubusercontent.com/2091116/74613186-36c20900-50da-11ea-9f56-244fdfe24f01.png) |  ![Screen Shot 2020-02-16 at 4 34 12 PM](https://user-images.githubusercontent.com/2091116/74613188-375a9f80-50da-11ea-9ea8-4d208477aa5a.png) |
 
-![Screen Shot 2020-02-16 at 4 34 20 PM](https://user-images.githubusercontent.com/2091116/74613186-36c20900-50da-11ea-9f56-244fdfe24f01.png)
 
-#### Favicon updated
-![Screen Shot 2020-02-16 at 4 34 12 PM](https://user-images.githubusercontent.com/2091116/74613188-375a9f80-50da-11ea-9ea8-4d208477aa5a.png)
