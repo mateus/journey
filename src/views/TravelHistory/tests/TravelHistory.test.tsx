@@ -1,6 +1,7 @@
 import React from 'react';
 import {Page} from '@shopify/polaris';
 import {act} from 'react-dom/test-utils';
+
 import {mountWithPolarisProvider} from 'utilities/tests';
 
 import {TravelHistory} from '../TravelHistory';

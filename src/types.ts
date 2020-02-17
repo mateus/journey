@@ -1,6 +1,7 @@
 export interface Trip {
+  id: string;
   completed: boolean;
-  country: string;
+  countryCode: string;
   endDate: Date;
   location: string;
   notes?: string;

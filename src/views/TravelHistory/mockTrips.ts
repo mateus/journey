@@ -4,14 +4,16 @@ import {Trip} from 'types';
 
 export const trips: Trip[] = [
   {
-    country: 'Canada',
+    id: '1',
+    countryCode: 'CA',
     completed: false,
     location: 'Some awesome location',
     startDate: moment(new Date('Mar 16, 2020')).toDate(),
     endDate: moment(new Date('Mar 28, 2020')).toDate(),
   },
   {
-    country: 'Canada',
+    id: '2',
+    countryCode: 'CA',
     completed: false,
     notes: 'some notes',
     location: 'Another location',
@@ -19,7 +21,8 @@ export const trips: Trip[] = [
     endDate: moment(new Date('Sept 17, 2020')).toDate(),
   },
   {
-    country: 'United States',
+    id: '3',
+    countryCode: 'US',
     completed: true,
     notes: 'some notes',
     location: 'Some awesome location',
@@ -27,7 +30,8 @@ export const trips: Trip[] = [
     endDate: moment(new Date('Mar 28, 2019')).toDate(),
   },
   {
-    country: 'Peru',
+    id: '4',
+    countryCode: 'PR',
     completed: true,
     notes: 'some notes',
     location: 'Some awesome location',
