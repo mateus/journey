@@ -1,6 +1,7 @@
 import React, {useState, useCallback} from 'react';
 import {
   Card,
+  Checkbox,
   DisplayText,
   DatePicker,
   FormLayout,
@@ -21,6 +22,7 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(location);
   const [notesValue, setNotes] = useState(notes);
+  const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
     month: today.month(),
     year: today.year(),
@@ -29,14 +31,20 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
     start: today.toDate(),
     end: today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
-
   const handleMonthChange = useCallback(
-    (month, year) => setDate({month, year}),
+    (newMonth, newYear) => setDate({month: newMonth, year: newYear}),
     [],
   );
   const handleLocationChange = useCallback(
     (newLocation) => setLocation(newLocation),
     [],
+  );
+  const handleSameDayChange = useCallback(
+    (newSameDay) => {
+      setSameDay(newSameDay);
+      setSelectedDates({start: selectedDates.start, end: selectedDates.start});
+    },
+    [selectedDates.start],
   );
   const handleNotesChange = useCallback((newNotes) => setNotes(newNotes), []);
 
@@ -64,7 +72,12 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
             onChange={setSelectedDates}
             onMonthChange={handleMonthChange}
             selected={selectedDates}
-            allowRange
+            allowRange={!sameDayValue}
+          />
+          <Checkbox
+            label="Same day trip"
+            checked={sameDayValue}
+            onChange={handleSameDayChange}
           />
         </FormLayout>
       </Card.Section>
