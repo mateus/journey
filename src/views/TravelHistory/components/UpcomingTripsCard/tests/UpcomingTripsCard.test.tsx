@@ -1,6 +1,7 @@
 import React from 'react';
+import {Card, Caption, Heading, List} from '@shopify/polaris';
 import {mountWithPolarisProvider} from 'utilities/tests';
-import {Card, Caption, Heading, List, TextStyle, Stack} from '@shopify/polaris';
+import moment from 'moment';
 
 import {UpcomingTripsCard, UpcomingTripsCardProps} from '../UpcomingTripsCard';
 
@@ -8,13 +9,13 @@ describe('<UpcomingTripsCard />', () => {
   const list: UpcomingTripsCardProps['list'] = [
     {
       location: 'Some awesome location',
-      startDate: 'Mar 16, 2020',
-      endDate: 'Mar 28, 2020',
+      startDate: new Date('May 4, 2020'),
+      endDate: new Date('May 28, 2020'),
     },
     {
       location: 'Another location',
-      startDate: 'Sept 01, 2020',
-      endDate: 'Sept 17, 2020',
+      startDate: new Date('Sept 01, 2020'),
+      endDate: new Date('Sept 17, 2020'),
     },
   ];
 
@@ -40,7 +41,11 @@ describe('<UpcomingTripsCard />', () => {
           .find(Caption)
           .at(index)
           .text(),
-      ).toEqual(`${startDate} until ${endDate}`);
+      ).toEqual(
+        `${moment(startDate).format('LL')} until ${moment(endDate).format(
+          'LL',
+        )}`,
+      );
     });
   });
 });

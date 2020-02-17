@@ -1,5 +1,6 @@
 import React from 'react';
 import {Card, Caption, Heading, List, TextStyle, Stack} from '@shopify/polaris';
+import moment from 'moment';
 import {Trip} from 'types';
 
 export interface UpcomingTripsCardProps {
@@ -16,8 +17,13 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
               <Heading>Trip to {location}</Heading>
               <TextStyle variation="subdued">
                 <Caption>
-                  <TextStyle variation="strong">{startDate}</TextStyle> until{' '}
-                  <TextStyle variation="strong">{endDate}</TextStyle>
+                  <TextStyle variation="strong">
+                    {moment(startDate).format('LL')}
+                  </TextStyle>{' '}
+                  until{' '}
+                  <TextStyle variation="strong">
+                    {moment(endDate).format('LL')}
+                  </TextStyle>
                 </Caption>
               </TextStyle>
             </Stack>
