@@ -1,19 +1,16 @@
 import React from 'react';
 import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
 
+import {NewTripCard} from './components';
+
 export function TravelHistory() {
   return (
     <Page title="Travel History">
       <Layout>
         <Layout.Section>
-          <Card title="Add new trip" sectioned>
-            <SkeletonBodyText />
-          </Card>
-        </Layout.Section>
-        <Layout.Section>
+          <NewTripCard />
           <Card title="Past trips" sectioned>
             <Stack vertical spacing="loose">
-              <SkeletonBodyText />
               <SkeletonBodyText />
               <SkeletonBodyText />
               <SkeletonBodyText />
