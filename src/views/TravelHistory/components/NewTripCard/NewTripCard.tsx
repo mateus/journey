@@ -38,14 +38,6 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
-  const handleMonthChange = useCallback(
-    (newMonth, newYear) => setDate({month: newMonth, year: newYear}),
-    [],
-  );
-  const handleLocationChange = useCallback(
-    (newLocation) => setLocation(newLocation),
-    [],
-  );
   const handleSameDayChange = useCallback(
     (newSameDay) => {
       setSameDay(newSameDay);
@@ -53,7 +45,6 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
     },
     [selectedDates.start],
   );
-  const handleNotesChange = useCallback((newNotes) => setNotes(newNotes), []);
 
   return (
     <Card
@@ -67,7 +58,7 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
             label="City"
             value={locationValue}
             placeholder="Anywhere"
-            onChange={handleLocationChange}
+            onChange={(newLocation) => setLocation(newLocation)}
           />
           <CountryTextField
             value={countryValue}
@@ -82,14 +73,16 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
               label="Notes"
               value={notesValue}
               placeholder="Anything extra"
-              onChange={handleNotesChange}
+              onChange={(newNotes) => setNotes(newNotes)}
             />
           )}
           <DatePicker
             month={month}
             year={year}
             onChange={setSelectedDates}
-            onMonthChange={handleMonthChange}
+            onMonthChange={(newMonth, newYear) =>
+              setDate({month: newMonth, year: newYear})
+            }
             selected={selectedDates}
             allowRange={!sameDayValue}
           />
