@@ -6,7 +6,6 @@ import {
   DatePicker,
   FormLayout,
   Stack,
-  Link,
   TextField,
   TextStyle,
   TextContainer,
@@ -50,7 +49,14 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
     <Card
       title="What is your next trip?"
       primaryFooterAction={{content: 'Submit new trip'}}
-      actions={[{content: 'Close', onAction: onClose}]}
+      actions={[
+        {
+          content: 'Add notes',
+          onAction: () => setHasNotes(true),
+          disabled: hasNotes,
+        },
+        {content: 'Close', onAction: onClose},
+      ]}
     >
       <Card.Section>
         <FormLayout>
@@ -64,9 +70,6 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
             value={countryValue}
             onChange={(selected) => setCountry(selected)}
           />
-          {!hasNotes && (
-            <Link onClick={() => setHasNotes(true)}>Add notes</Link>
-          )}
           {hasNotes && (
             <TextField
               multiline={2}
