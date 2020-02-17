@@ -1,7 +1,12 @@
 import React, {useState} from 'react';
-import {Page, Card, Layout, SkeletonBodyText} from '@shopify/polaris';
+import {Page, Card, Layout} from '@shopify/polaris';
 
-import {ManageTripCard, RandomQuote, UpcomingTripsCard} from './components';
+import {
+  ManageTripCard,
+  RandomQuote,
+  TripDetailsCard,
+  UpcomingTripsCard,
+} from './components';
 import {trips} from './mockTrips';
 
 export function TravelHistory() {
@@ -24,10 +29,8 @@ export function TravelHistory() {
           <Card sectioned>
             <RandomQuote />
           </Card>
-          {trips.map(({location, id}) => (
-            <Card key={location + id} title={location} sectioned>
-              <SkeletonBodyText />
-            </Card>
+          {trips.map((trip) => (
+            <TripDetailsCard key={trip.location + trip.id} {...trip} />
           ))}
         </Layout.Section>
         <Layout.Section secondary>
