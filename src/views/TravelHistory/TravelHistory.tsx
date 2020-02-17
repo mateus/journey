@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
+import moment from 'moment';
 
 import {NewTripCard, RandomQuote, UpcomingTripsCard} from './components';
 
@@ -33,13 +34,13 @@ export function TravelHistory() {
             list={[
               {
                 location: 'Some awesome location',
-                startDate: 'Mar 16, 2020',
-                endDate: 'Mar 28, 2020',
+                startDate: moment(new Date('Mar 16, 2020')).toDate(),
+                endDate: moment(new Date('Mar 28, 2020')).toDate(),
               },
               {
                 location: 'Another location',
-                startDate: 'Sept 01, 2020',
-                endDate: 'Sept 17, 2020',
+                startDate: moment(new Date('Sept 01, 2020')).toDate(),
+                endDate: moment(new Date('Sept 17, 2020')).toDate(),
               },
             ]}
           />

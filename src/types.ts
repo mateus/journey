@@ -1,6 +1,6 @@
 export interface Trip {
   location: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   notes?: string;
 }
