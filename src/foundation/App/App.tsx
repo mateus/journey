@@ -5,7 +5,7 @@ import {AppProvider} from '@shopify/polaris';
 import {TravelHistory} from 'views';
 import {isDevelopment} from 'config';
 
-import {DevelopmentHead, TopNav} from './components';
+import {DevelopmentHead, TopNav, Footer} from './components';
 
 export function App() {
   return (
@@ -14,6 +14,7 @@ export function App() {
         {isDevelopment && <DevelopmentHead />}
         <TopNav />
         <TravelHistory />
+        <Footer />
       </AppProvider>
     </>
   );

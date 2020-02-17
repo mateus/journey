@@ -3,12 +3,12 @@ import {Image} from '@shopify/polaris';
 
 import {logo192} from 'assets/images';
 
-import './TopNav.scss';
+import './Footer.scss';
 
-export function TopNav() {
+export function Footer() {
   return (
-    <nav className="TopNav">
+    <footer className="Footer">
       <Image source={logo192} alt="Journey app" width={40} height={40} />
-    </nav>
+    </footer>
   );
 }

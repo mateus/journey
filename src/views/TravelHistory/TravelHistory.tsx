@@ -1,5 +1,8 @@
 import React, {useState} from 'react';
 import {Page, Card, Layout, DisplayText, Stack} from '@shopify/polaris';
+import moment from 'moment';
+
+import {Trip} from 'types';
 
 import {
   ManageTripCard,
@@ -12,7 +15,15 @@ import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
-
+  const tripsByYear = trips.reduce((map, trip) => {
+    const year = moment(trip.endDate).year();
+    if (map[year]) {
+      map[year].push(trip);
+    } else {
+      map[year] = [trip];
+    }
+    return map;
+  }, {} as {[key: string]: Trip[]});
   const upcomingTrips = trips.filter(({completed}) => !completed);
 
   return (
@@ -33,12 +44,23 @@ export function TravelHistory() {
             <Card sectioned>
               <RandomQuote />
             </Card>
-            {trips.map((trip) => (
-              <TripDetailsCard key={trip.location + trip.id} {...trip} />
-            ))}
-            <div className="Separator">
-              <DisplayText size="extraLarge">2018</DisplayText>
-            </div>
+            {Object.keys(tripsByYear)
+              .reverse()
+              .map((year) => {
+                return (
+                  <div key={year}>
+                    {tripsByYear[year].map((trip) => (
+                      <TripDetailsCard
+                        key={trip.location + trip.id}
+                        {...trip}
+                      />
+                    ))}
+                    <div className="Separator">
+                      <DisplayText size="extraLarge">{year}</DisplayText>
+                    </div>
+                  </div>
+                );
+              })}
           </Stack>
         </Layout.Section>
         <Layout.Section secondary>
