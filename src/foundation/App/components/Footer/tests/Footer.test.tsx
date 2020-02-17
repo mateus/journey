@@ -11,7 +11,7 @@ describe('<Footer />', () => {
     const wrapper = shallow(<Footer />);
     expect(
       wrapper.containsMatchingElement(
-        <Image source={logo192} alt="Journey app" width={48} />,
+        <Image source={logo192} alt="Journey app" width={40} height={40} />,
       ),
     ).toBeTruthy();
   });
