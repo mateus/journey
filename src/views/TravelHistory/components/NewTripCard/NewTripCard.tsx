@@ -5,6 +5,7 @@ import {
   DisplayText,
   DatePicker,
   FormLayout,
+  Stack,
   TextField,
   TextStyle,
   TextContainer,
@@ -14,11 +15,16 @@ import moment from 'moment';
 interface NewTripCardProps {
   location?: string;
   notes?: string;
+  onClose(): void;
 }
 
 const DEFAULT_TRIP_LENGTH = 3;
 
-export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
+export function NewTripCard({
+  location = '',
+  notes = '',
+  onClose,
+}: NewTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(location);
   const [notesValue, setNotes] = useState(notes);
@@ -31,6 +37,7 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
     start: today.toDate(),
     end: today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
+
   const handleMonthChange = useCallback(
     (newMonth, newYear) => setDate({month: newMonth, year: newYear}),
     [],
@@ -49,7 +56,11 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
   const handleNotesChange = useCallback((newNotes) => setNotes(newNotes), []);
 
   return (
-    <Card primaryFooterAction={{content: 'Add trip'}}>
+    <Card
+      title="What is your next trip?"
+      primaryFooterAction={{content: 'Submit new trip'}}
+      actions={[{content: 'Close', onAction: onClose}]}
+    >
       <Card.Section>
         <FormLayout>
           <TextField
@@ -83,26 +94,28 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
       </Card.Section>
 
       <Card.Section>
-        <TextContainer spacing="tight">
-          <DisplayText size="small" element="h3">
-            Trip to {locationValue || '...'}
-          </DisplayText>
-          <p>
-            Traveling from{' '}
-            <TextStyle variation="strong">
-              {moment(selectedDates.start).format('LL')}
-            </TextStyle>{' '}
-            until{' '}
-            <TextStyle variation="strong">
-              {moment(selectedDates.end).format('LL')}
-            </TextStyle>
-          </p>
-          {notesValue && (
+        <Stack vertical>
+          <TextContainer spacing="tight">
+            <DisplayText size="small" element="h3">
+              Trip to {locationValue || '...'}
+            </DisplayText>
             <p>
-              <TextStyle variation="subdued">{notesValue}</TextStyle>
+              Traveling from{' '}
+              <TextStyle variation="strong">
+                {moment(selectedDates.start).format('LL')}
+              </TextStyle>{' '}
+              until{' '}
+              <TextStyle variation="strong">
+                {moment(selectedDates.end).format('LL')}
+              </TextStyle>
             </p>
-          )}
-        </TextContainer>
+            {notesValue && (
+              <p>
+                <TextStyle variation="subdued">{notesValue}</TextStyle>
+              </p>
+            )}
+          </TextContainer>
+        </Stack>
       </Card.Section>
     </Card>
   );

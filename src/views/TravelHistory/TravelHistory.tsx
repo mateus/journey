@@ -1,14 +1,25 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
 
 import {NewTripCard, RandomQuote, UpcomingTripsCard} from './components';
 
 export function TravelHistory() {
+  const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+
   return (
-    <Page title="Travel History">
+    <Page
+      title="Travel History"
+      primaryAction={{
+        content: 'Add trip',
+        disabled: newTripFormOpen,
+        onAction: () => setNewTripFormOpen(!newTripFormOpen),
+      }}
+    >
       <Layout>
         <Layout.Section>
-          <NewTripCard />
+          {newTripFormOpen && (
+            <NewTripCard onClose={() => setNewTripFormOpen(false)} />
+          )}
           <Card title="Journey" sectioned>
             <Stack vertical spacing="loose">
               <RandomQuote />
