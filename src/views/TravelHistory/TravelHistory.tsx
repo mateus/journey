@@ -1,7 +1,7 @@
 import React from 'react';
 import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
 
-import {NewTripCard, RandomQuote} from './components';
+import {NewTripCard, RandomQuote, UpcomingTripsCard} from './components';
 
 export function TravelHistory() {
   return (
@@ -14,15 +14,24 @@ export function TravelHistory() {
               <RandomQuote />
               <SkeletonBodyText />
               <SkeletonBodyText />
-              <SkeletonBodyText />
-              <SkeletonBodyText />
             </Stack>
           </Card>
         </Layout.Section>
         <Layout.Section secondary>
-          <Card title="Notes" sectioned subdued>
-            <SkeletonBodyText />
-          </Card>
+          <UpcomingTripsCard
+            list={[
+              {
+                location: 'Some awesome location',
+                startDate: 'Mar 16, 2020',
+                endDate: 'Mar 28, 2020',
+              },
+              {
+                location: 'Another location',
+                startDate: 'Sept 01, 2020',
+                endDate: 'Sept 17, 2020',
+              },
+            ]}
+          />
         </Layout.Section>
       </Layout>
     </Page>

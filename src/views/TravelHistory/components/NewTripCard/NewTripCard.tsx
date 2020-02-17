@@ -15,6 +15,8 @@ interface NewTripCardProps {
   notes?: string;
 }
 
+const DEFAULT_TRIP_LENGTH = 3;
+
 export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(location);
@@ -25,7 +27,7 @@ export function NewTripCard({location = '', notes = ''}: NewTripCardProps) {
   });
   const [selectedDates, setSelectedDates] = useState({
     start: today.toDate(),
-    end: today.add(5, 'days').toDate(),
+    end: today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
   const handleMonthChange = useCallback(
