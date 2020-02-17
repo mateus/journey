@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
-import moment from 'moment';
+import {Page, Card, Layout, SkeletonBodyText} from '@shopify/polaris';
 
 import {ManageTripCard, RandomQuote, UpcomingTripsCard} from './components';
+import {trips} from './mockTrips';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
@@ -21,31 +21,17 @@ export function TravelHistory() {
           {newTripFormOpen && (
             <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
           )}
-          <Card title="Journey" sectioned>
-            <Stack vertical spacing="loose">
-              <RandomQuote />
-              <SkeletonBodyText />
-              <SkeletonBodyText />
-            </Stack>
+          <Card sectioned>
+            <RandomQuote />
           </Card>
+          {trips.map(({location}) => (
+            <Card key={location} title={location} sectioned>
+              <SkeletonBodyText />
+            </Card>
+          ))}
         </Layout.Section>
         <Layout.Section secondary>
-          <UpcomingTripsCard
-            list={[
-              {
-                country: 'Canada',
-                location: 'Some awesome location',
-                startDate: moment(new Date('Mar 16, 2020')).toDate(),
-                endDate: moment(new Date('Mar 28, 2020')).toDate(),
-              },
-              {
-                country: 'Canada',
-                location: 'Another location',
-                startDate: moment(new Date('Sept 01, 2020')).toDate(),
-                endDate: moment(new Date('Sept 17, 2020')).toDate(),
-              },
-            ]}
-          />
+          <UpcomingTripsCard list={trips.filter(({completed}) => !completed)} />
         </Layout.Section>
       </Layout>
     </Page>

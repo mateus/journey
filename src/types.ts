@@ -1,7 +1,8 @@
 export interface Trip {
-  location: string;
+  completed: boolean;
   country: string;
-  startDate: Date;
   endDate: Date;
+  location: string;
   notes?: string;
+  startDate: Date;
 }
