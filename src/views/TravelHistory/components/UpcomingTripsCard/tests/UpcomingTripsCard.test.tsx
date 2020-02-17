@@ -42,8 +42,8 @@ describe('<UpcomingTripsCard />', () => {
           .at(index)
           .text(),
       ).toEqual(
-        `${moment(startDate).format('LL')} until ${moment(endDate).format(
-          'LL',
+        `${moment(startDate).format('ll')} until ${moment(endDate).format(
+          'll',
         )}`,
       );
     });

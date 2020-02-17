@@ -18,11 +18,11 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
               <TextStyle variation="subdued">
                 <Caption>
                   <TextStyle variation="strong">
-                    {moment(startDate).format('LL')}
+                    {moment(startDate).format('ll')}
                   </TextStyle>{' '}
                   until{' '}
                   <TextStyle variation="strong">
-                    {moment(endDate).format('LL')}
+                    {moment(endDate).format('ll')}
                   </TextStyle>
                 </Caption>
               </TextStyle>
