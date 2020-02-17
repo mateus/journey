@@ -36,4 +36,13 @@ export const trips: Trip[] = [
     startDate: moment(new Date('Mar 16, 2019')).toDate(),
     endDate: moment(new Date('Mar 28, 2019')).toDate(),
   },
+  {
+    id: '5',
+    countryCode: 'BR',
+    completed: true,
+    notes: '4 day Inca Trail to Matchu Picchu.',
+    location: 'Belo Horizonte and Barbacena, MG',
+    startDate: moment(new Date('Mar 16, 2018')).toDate(),
+    endDate: moment(new Date('Mar 28, 2018')).toDate(),
+  },
 ];

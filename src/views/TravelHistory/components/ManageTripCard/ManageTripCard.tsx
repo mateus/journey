@@ -28,6 +28,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [countryValue, setCountry] = useState(trip?.countryCode || '');
+  const [isCompletedValue, setIsCompleted] = useState(trip?.completed || false);
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
     month: moment(trip?.startDate).month() || today.month(),
@@ -46,13 +47,15 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
     [selectedDates.start],
   );
 
-  const cardTitle = trip ? 'Edit this trip' : 'What is your next trip?';
-  const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
+  const cardTitle = trip ? 'What is new?' : 'What is your next trip?';
+  const primaryFooterActionContent = trip ? 'Update' : 'Submit new trip';
+  const secondaryFooterActions = trip ? [{content: 'Remove'}] : undefined;
 
   return (
     <Card
       title={cardTitle}
       primaryFooterAction={{content: primaryFooterActionContent}}
+      secondaryFooterActions={secondaryFooterActions}
       actions={[
         {
           content: 'Add notes',
@@ -93,11 +96,18 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
             selected={selectedDates}
             allowRange={!sameDayValue}
           />
-          <Checkbox
-            label="Same day trip"
-            checked={sameDayValue}
-            onChange={handleSameDayChange}
-          />
+          <FormLayout.Group>
+            <Checkbox
+              label="Same day trip"
+              checked={sameDayValue}
+              onChange={handleSameDayChange}
+            />
+            <Checkbox
+              label="I have completed this trip"
+              checked={isCompletedValue}
+              onChange={() => setIsCompleted(!isCompletedValue)}
+            />
+          </FormLayout.Group>
         </FormLayout>
       </Card.Section>
 

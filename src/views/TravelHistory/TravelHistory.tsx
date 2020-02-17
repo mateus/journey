@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Page, Card, Layout} from '@shopify/polaris';
+import {Page, Card, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {
   ManageTripCard,
@@ -8,9 +8,12 @@ import {
   UpcomingTripsCard,
 } from './components';
 import {trips} from './mockTrips';
+import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+
+  const upcomingTrips = trips.filter(({completed}) => !completed);
 
   return (
     <Page
@@ -23,18 +26,23 @@ export function TravelHistory() {
     >
       <Layout>
         <Layout.Section>
-          {newTripFormOpen && (
-            <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
-          )}
-          <Card sectioned>
-            <RandomQuote />
-          </Card>
-          {trips.map((trip) => (
-            <TripDetailsCard key={trip.location + trip.id} {...trip} />
-          ))}
+          <Stack vertical>
+            {newTripFormOpen && (
+              <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
+            )}
+            <Card sectioned>
+              <RandomQuote />
+            </Card>
+            {trips.map((trip) => (
+              <TripDetailsCard key={trip.location + trip.id} {...trip} />
+            ))}
+            <div className="Separator">
+              <DisplayText size="extraLarge">2018</DisplayText>
+            </div>
+          </Stack>
         </Layout.Section>
         <Layout.Section secondary>
-          <UpcomingTripsCard list={trips.filter(({completed}) => !completed)} />
+          <UpcomingTripsCard list={upcomingTrips} />
         </Layout.Section>
       </Layout>
     </Page>
