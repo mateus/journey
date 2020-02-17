@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Page, Card, Layout, DisplayText, Stack} from '@shopify/polaris';
+import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import moment from 'moment';
 
 import {Trip} from 'types';
@@ -34,6 +35,10 @@ export function TravelHistory() {
         disabled: newTripFormOpen,
         onAction: () => setNewTripFormOpen(!newTripFormOpen),
       }}
+      secondaryActions={[
+        {content: 'Import', icon: ImportMinor},
+        {content: 'Export', icon: ExportMinor},
+      ]}
     >
       <Layout>
         <Layout.Section>
