@@ -1,5 +1,6 @@
 import React from 'react';
 import {Image} from '@shopify/polaris';
+
 import {logo192} from 'assets/images';
 
 import './TopNav.scss';

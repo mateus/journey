@@ -1,1 +1,0 @@
-export {NewTripCard} from './NewTripCard';

@@ -10,22 +10,23 @@ import {
   TextStyle,
   TextContainer,
 } from '@shopify/polaris';
-import {CountryTextField} from 'components';
-import {Trip} from 'types';
 import moment from 'moment';
 
-interface NewTripCardProps {
+import {CountryTextField} from 'components';
+import {Trip} from 'types';
+
+interface ManageTripCardProps {
   trip?: Trip;
   onClose(): void;
 }
 
 const DEFAULT_TRIP_LENGTH = 3;
 
-export function NewTripCard({trip, onClose}: NewTripCardProps) {
+export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
-  const [hasNotes, setHasNotes] = useState(false);
+  const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [countryValue, setCountry] = useState(trip?.country || '');
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
@@ -45,10 +46,13 @@ export function NewTripCard({trip, onClose}: NewTripCardProps) {
     [selectedDates.start],
   );
 
+  const cardTitle = trip ? 'Edit this trip' : 'What is your next trip?';
+  const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
+
   return (
     <Card
-      title="What is your next trip?"
-      primaryFooterAction={{content: 'Submit new trip'}}
+      title={cardTitle}
+      primaryFooterAction={{content: primaryFooterActionContent}}
       actions={[
         {
           content: 'Add notes',
