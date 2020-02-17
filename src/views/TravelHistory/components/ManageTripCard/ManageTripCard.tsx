@@ -9,6 +9,7 @@ import {
   TextField,
   TextStyle,
   TextContainer,
+  ComplexAction,
 } from '@shopify/polaris';
 import moment from 'moment';
 
@@ -49,12 +50,16 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
 
   const cardTitle = trip ? 'What is new?' : 'What is your next trip?';
   const primaryFooterActionContent = trip ? 'Update' : 'Submit new trip';
-  const secondaryFooterActions = trip ? [{content: 'Remove'}] : undefined;
+  const secondaryFooterActions: ComplexAction[] | undefined = trip
+    ? [{content: 'Remove'}]
+    : undefined;
 
   return (
     <Card
       title={cardTitle}
-      primaryFooterAction={{content: primaryFooterActionContent}}
+      primaryFooterAction={{
+        content: primaryFooterActionContent,
+      }}
       secondaryFooterActions={secondaryFooterActions}
       actions={[
         {
