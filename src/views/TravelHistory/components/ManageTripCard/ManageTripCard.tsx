@@ -27,7 +27,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
-  const [countryValue, setCountry] = useState(trip?.country || '');
+  const [countryValue, setCountry] = useState(trip?.countryCode || '');
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
     month: moment(trip?.startDate).month() || today.month(),

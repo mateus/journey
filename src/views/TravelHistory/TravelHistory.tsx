@@ -24,8 +24,8 @@ export function TravelHistory() {
           <Card sectioned>
             <RandomQuote />
           </Card>
-          {trips.map(({location}) => (
-            <Card key={location} title={location} sectioned>
+          {trips.map(({location, id}) => (
+            <Card key={location + id} title={location} sectioned>
               <SkeletonBodyText />
             </Card>
           ))}
