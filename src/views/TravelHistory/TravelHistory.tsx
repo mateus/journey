@@ -11,21 +11,25 @@ import {
   TripDetailsCard,
   UpcomingTripsCard,
 } from './components';
-import {trips} from './mockTrips';
+import {mockTrips} from './mockTrips';
 import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
-  const tripsByYear = trips.reduce((map, trip) => {
+
+  const tripsByYear = mockTrips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
     if (map[year]) {
-      map[year].push(trip);
+      map[year] = insertOrdered(trip, map[year]);
     } else {
       map[year] = [trip];
     }
     return map;
   }, {} as {[key: string]: Trip[]});
-  const upcomingTrips = trips.filter(({completed}) => !completed);
+
+  const upcomingTrips = mockTrips
+    .filter(({completed}) => !completed)
+    .sort(sortByStartDateAsc);
 
   return (
     <Page
@@ -74,4 +78,18 @@ export function TravelHistory() {
       </Layout>
     </Page>
   );
+}
+
+function insertOrdered(trip: Trip, array: Trip[]): Trip[] {
+  array.push(trip);
+  array.sort(sortByStartDateDesc);
+  return array;
+}
+
+function sortByStartDateAsc(tripA: Trip, tripB: Trip) {
+  return tripA.startDate < tripB.startDate ? -1 : 0;
+}
+
+function sortByStartDateDesc(tripA: Trip, tripB: Trip) {
+  return tripA.startDate > tripB.startDate ? -1 : 0;
 }
