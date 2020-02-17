@@ -8,6 +8,7 @@ import {
   UpcomingTripsCard,
 } from './components';
 import {trips} from './mockTrips';
+import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
@@ -35,9 +36,9 @@ export function TravelHistory() {
             {trips.map((trip) => (
               <TripDetailsCard key={trip.location + trip.id} {...trip} />
             ))}
-            <Stack distribution="center">
+            <div className="Separator">
               <DisplayText size="extraLarge">2018</DisplayText>
-            </Stack>
+            </div>
           </Stack>
         </Layout.Section>
         <Layout.Section secondary>
