@@ -1,6 +1,7 @@
 import React from 'react';
 import {Card, Caption, Heading, List, TextStyle, Stack} from '@shopify/polaris';
 import moment from 'moment';
+
 import {Trip} from 'types';
 
 export interface UpcomingTripsCardProps {

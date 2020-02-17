@@ -4,7 +4,7 @@ import {act} from 'react-dom/test-utils';
 import {mountWithPolarisProvider} from 'utilities/tests';
 
 import {TravelHistory} from '../TravelHistory';
-import {NewTripCard, RandomQuote, UpcomingTripsCard} from '../components';
+import {ManageTripCard} from '../components';
 
 describe('<TravelHistory />', () => {
   it('renders <Page />', () => {
@@ -15,10 +15,10 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<NewTripCard />', () => {
+  describe('<ManageTripCard />', () => {
     it('is closed on first load', () => {
       const wrapper = mountWithPolarisProvider(<TravelHistory />);
-      expect(wrapper.find(NewTripCard).exists()).toBeFalsy();
+      expect(wrapper.find(ManageTripCard).exists()).toBeFalsy();
     });
 
     it('renders when clicking "Add trip" action from Page', async () => {
@@ -27,7 +27,7 @@ describe('<TravelHistory />', () => {
         await wrapper.find(Page)!.prop('primaryAction')!.onAction!();
         wrapper.update();
       });
-      expect(wrapper.find(NewTripCard).exists()).toBeTruthy();
+      expect(wrapper.find(ManageTripCard).exists()).toBeTruthy();
     });
   });
 });

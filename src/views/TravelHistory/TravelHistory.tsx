@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Page, Card, Layout, SkeletonBodyText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
-import {NewTripCard, RandomQuote, UpcomingTripsCard} from './components';
+import {ManageTripCard, RandomQuote, UpcomingTripsCard} from './components';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
@@ -19,7 +19,7 @@ export function TravelHistory() {
       <Layout>
         <Layout.Section>
           {newTripFormOpen && (
-            <NewTripCard onClose={() => setNewTripFormOpen(false)} />
+            <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
           )}
           <Card title="Journey" sectioned>
             <Stack vertical spacing="loose">
