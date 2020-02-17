@@ -23,4 +23,8 @@ export const quotes: {[id: string]: string} = {
   22: '“You don’t have to be rich to travel well.” – Eugene Fodor',
   23: '“Travel is never a matter of money, but of courage.” — Paulo Coelho',
   24: '“Our happiest moments as tourists always seem to come when we stumble upon one thing while in pursuit of something else.” — Lawrence Block',
+  25: '“The way get started is to quit talking and begin doing.” – Walt Disney',
+  26: '“The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty.” – Winston Churchill',
+  27: '“If you are working on something that you really care about, You don’t have to be pushed. The vision pulls you.” – Steve Jobs',
+  28: '“People who are crazy enough to think they can change the world, Are the ones who do.” – Rob Siltanen',
 };
