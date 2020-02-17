@@ -10,42 +10,33 @@ import {
   TextStyle,
   TextContainer,
 } from '@shopify/polaris';
+import {CountryTextField} from 'components';
+import {Trip} from 'types';
 import moment from 'moment';
 
 interface NewTripCardProps {
-  location?: string;
-  notes?: string;
+  trip?: Trip;
   onClose(): void;
 }
 
 const DEFAULT_TRIP_LENGTH = 3;
 
-export function NewTripCard({
-  location = '',
-  notes = '',
-  onClose,
-}: NewTripCardProps) {
+export function NewTripCard({trip, onClose}: NewTripCardProps) {
   const today = moment();
-  const [locationValue, setLocation] = useState(location);
-  const [notesValue, setNotes] = useState(notes);
+  const [locationValue, setLocation] = useState(trip?.location || '');
+  const [notesValue, setNotes] = useState(trip?.notes || '');
+  const [hasNotes, setHasNotes] = useState(false);
+  const [countryValue, setCountry] = useState(trip?.country || '');
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
-    month: today.month(),
-    year: today.year(),
+    month: moment(trip?.startDate).month() || today.month(),
+    year: moment(trip?.startDate).year() || today.year(),
   });
   const [selectedDates, setSelectedDates] = useState({
-    start: today.toDate(),
-    end: today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
+    start: trip?.startDate || today.toDate(),
+    end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
-  const handleMonthChange = useCallback(
-    (newMonth, newYear) => setDate({month: newMonth, year: newYear}),
-    [],
-  );
-  const handleLocationChange = useCallback(
-    (newLocation) => setLocation(newLocation),
-    [],
-  );
   const handleSameDayChange = useCallback(
     (newSameDay) => {
       setSameDay(newSameDay);
@@ -53,35 +44,48 @@ export function NewTripCard({
     },
     [selectedDates.start],
   );
-  const handleNotesChange = useCallback((newNotes) => setNotes(newNotes), []);
 
   return (
     <Card
       title="What is your next trip?"
       primaryFooterAction={{content: 'Submit new trip'}}
-      actions={[{content: 'Close', onAction: onClose}]}
+      actions={[
+        {
+          content: 'Add notes',
+          onAction: () => setHasNotes(true),
+          disabled: hasNotes,
+        },
+        {content: 'Close', onAction: onClose},
+      ]}
     >
       <Card.Section>
         <FormLayout>
           <TextField
-            label="Location"
+            label="City"
             value={locationValue}
             placeholder="Anywhere"
-            onChange={handleLocationChange}
+            onChange={(newLocation) => setLocation(newLocation)}
           />
-          <TextField
-            multiline={2}
-            label="Notes"
-            value={notesValue}
-            placeholder="Anything extra"
-            onChange={handleNotesChange}
+          <CountryTextField
+            value={countryValue}
+            onChange={(selected) => setCountry(selected)}
           />
-
+          {hasNotes && (
+            <TextField
+              multiline={2}
+              label="Notes"
+              value={notesValue}
+              placeholder="Anything extra"
+              onChange={(newNotes) => setNotes(newNotes)}
+            />
+          )}
           <DatePicker
             month={month}
             year={year}
             onChange={setSelectedDates}
-            onMonthChange={handleMonthChange}
+            onMonthChange={(newMonth, newYear) =>
+              setDate({month: newMonth, year: newYear})
+            }
             selected={selectedDates}
             allowRange={!sameDayValue}
           />

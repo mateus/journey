@@ -33,11 +33,13 @@ export function TravelHistory() {
           <UpcomingTripsCard
             list={[
               {
+                country: 'Canada',
                 location: 'Some awesome location',
                 startDate: moment(new Date('Mar 16, 2020')).toDate(),
                 endDate: moment(new Date('Mar 28, 2020')).toDate(),
               },
               {
+                country: 'Canada',
                 location: 'Another location',
                 startDate: moment(new Date('Sept 01, 2020')).toDate(),
                 endDate: moment(new Date('Sept 17, 2020')).toDate(),
