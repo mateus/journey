@@ -25,7 +25,7 @@ describe('<TravelHistory />', () => {
       const wrapper = mountWithPolarisProvider(<TravelHistory />);
       await act(async () => {
         await wrapper.find(Page)!.prop('primaryAction')!.onAction!();
-        await wrapper.update();
+        wrapper.update();
       });
       expect(wrapper.find(NewTripCard).exists()).toBeTruthy();
     });
