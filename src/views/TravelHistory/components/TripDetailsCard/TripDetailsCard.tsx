@@ -34,7 +34,7 @@ export function TripDetailsCard({
     <Card
       title={
         <Stack vertical spacing="extraTight">
-          <Stack wrap={false} alignment="center" spacing="tight">
+          <Stack alignment="center" spacing="tight">
             <DisplayText size="small" element="h3">
               {location}
             </DisplayText>
