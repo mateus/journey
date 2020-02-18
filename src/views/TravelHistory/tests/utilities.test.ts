@@ -11,20 +11,20 @@ import {
 describe('insertOrdered()', () => {
   it('inserts Trip into an array of Trips and orders it', () => {
     const arrayOfTrips = [
-      mockTrip({startDate: moment(new Date('01/01/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('06/06/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('12/12/2020')).toDate()}),
+      mockTrip({startDate: new Date('01/01/2020')}),
+      mockTrip({startDate: new Date('06/06/2020')}),
+      mockTrip({startDate: new Date('12/12/2020')}),
     ];
     const newTrip = mockTrip({
-      startDate: moment(new Date('08/08/2020')).toDate(),
+      startDate: new Date('08/08/2020'),
     });
     const expected = [
-      mockTrip({startDate: moment(new Date('01/01/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('06/06/2020')).toDate()}),
+      mockTrip({startDate: new Date('01/01/2020')}),
+      mockTrip({startDate: new Date('06/06/2020')}),
       mockTrip({
-        startDate: moment(new Date('08/08/2020')).toDate(),
+        startDate: new Date('08/08/2020'),
       }),
-      mockTrip({startDate: moment(new Date('12/12/2020')).toDate()}),
+      mockTrip({startDate: new Date('12/12/2020')}),
     ];
 
     expect(insertOrdered(newTrip, arrayOfTrips)).toStrictEqual(expected);
@@ -32,20 +32,20 @@ describe('insertOrdered()', () => {
 
   it('inserts Trip into an array of Trips and orders it descendingly', () => {
     const arrayOfTrips = [
-      mockTrip({startDate: moment(new Date('01/01/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('06/06/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('12/12/2020')).toDate()}),
+      mockTrip({startDate: new Date('01/01/2020')}),
+      mockTrip({startDate: new Date('06/06/2020')}),
+      mockTrip({startDate: new Date('12/12/2020')}),
     ];
     const newTrip = mockTrip({
-      startDate: moment(new Date('08/08/2020')).toDate(),
+      startDate: new Date('08/08/2020'),
     });
     const expected = [
-      mockTrip({startDate: moment(new Date('12/12/2020')).toDate()}),
+      mockTrip({startDate: new Date('12/12/2020')}),
       mockTrip({
-        startDate: moment(new Date('08/08/2020')).toDate(),
+        startDate: new Date('08/08/2020'),
       }),
-      mockTrip({startDate: moment(new Date('06/06/2020')).toDate()}),
-      mockTrip({startDate: moment(new Date('01/01/2020')).toDate()}),
+      mockTrip({startDate: new Date('06/06/2020')}),
+      mockTrip({startDate: new Date('01/01/2020')}),
     ];
 
     expect(insertOrdered(newTrip, arrayOfTrips, {desc: true})).toStrictEqual(
