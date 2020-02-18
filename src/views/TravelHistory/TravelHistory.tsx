@@ -5,13 +5,14 @@ import moment from 'moment';
 
 import {Trip} from 'types';
 
+import {insertOrdered, sortByStartDateAsc} from './utilities';
 import {
   ManageTripCard,
   RandomQuote,
   TripDetailsCard,
   UpcomingTripsCard,
 } from './components';
-import {mockTrips} from './mockTrips';
+import {mockTrips} from './tests/fixtures/mockTrips';
 import './TravelHistory.scss';
 
 export function TravelHistory() {
@@ -20,7 +21,7 @@ export function TravelHistory() {
   const tripsByYear = mockTrips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
     if (map[year]) {
-      map[year] = insertOrdered(trip, map[year]);
+      map[year] = insertOrdered(trip, map[year], {desc: true});
     } else {
       map[year] = [trip];
     }
@@ -78,18 +79,4 @@ export function TravelHistory() {
       </Layout>
     </Page>
   );
-}
-
-function insertOrdered(trip: Trip, array: Trip[]): Trip[] {
-  array.push(trip);
-  array.sort(sortByStartDateDesc);
-  return array;
-}
-
-function sortByStartDateAsc(tripA: Trip, tripB: Trip) {
-  return tripA.startDate < tripB.startDate ? -1 : 0;
-}
-
-function sortByStartDateDesc(tripA: Trip, tripB: Trip) {
-  return tripA.startDate > tripB.startDate ? -1 : 0;
 }

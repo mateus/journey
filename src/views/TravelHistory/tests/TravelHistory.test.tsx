@@ -7,6 +7,8 @@ import {mountWithPolarisProvider} from 'utilities/tests';
 import {TravelHistory} from '../TravelHistory';
 import {ManageTripCard} from '../components';
 
+import {mockTrips} from './fixtures/mockTrips';
+
 describe('<TravelHistory />', () => {
   it('renders <Page />', () => {
     const wrapper = mountWithPolarisProvider(<TravelHistory />);
