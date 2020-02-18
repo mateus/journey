@@ -1,22 +1,24 @@
 import React from 'react';
 import {Card, Caption, Heading, List} from '@shopify/polaris';
-import {mountWithPolarisProvider} from 'utilities/tests';
 import moment from 'moment';
+
+import {mountWithPolarisProvider} from 'utilities/tests';
+import {mockTrip} from 'utilities/trip';
 
 import {UpcomingTripsCard, UpcomingTripsCardProps} from '../UpcomingTripsCard';
 
 describe('<UpcomingTripsCard />', () => {
   const list: UpcomingTripsCardProps['list'] = [
-    {
+    mockTrip({
       location: 'Some awesome location',
       startDate: new Date('May 4, 2020'),
       endDate: new Date('May 28, 2020'),
-    },
-    {
+    }),
+    mockTrip({
       location: 'Another location',
       startDate: new Date('Sept 01, 2020'),
       endDate: new Date('Sept 17, 2020'),
-    },
+    }),
   ];
 
   it('renders a Card', () => {

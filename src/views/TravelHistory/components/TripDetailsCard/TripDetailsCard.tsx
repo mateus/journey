@@ -9,15 +9,8 @@ import {ManageTripCard} from '..';
 
 interface TripDetailsCardProps extends Trip {}
 
-export function TripDetailsCard({
-  location,
-  id,
-  notes,
-  startDate,
-  endDate,
-  countryCode,
-  completed,
-}: TripDetailsCardProps) {
+export function TripDetailsCard(trip: TripDetailsCardProps) {
+  const {location, notes, startDate, endDate, countryCode, completed} = trip;
   const [isEditing, setIsEditing] = useState(false);
   const cardBadge = completed ? (
     <Badge>Completed</Badge>
@@ -26,10 +19,7 @@ export function TripDetailsCard({
   );
 
   return isEditing ? (
-    <ManageTripCard
-      trip={{countryCode, id, location, notes, startDate, endDate, completed}}
-      onClose={() => setIsEditing(false)}
-    />
+    <ManageTripCard trip={trip} onClose={() => setIsEditing(false)} />
   ) : (
     <Card
       title={

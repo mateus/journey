@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-import {mockTrip} from 'utilities';
+import {mockTrip} from 'utilities/trip';
 
 import {
   insertOrdered,
