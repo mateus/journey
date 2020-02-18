@@ -21,7 +21,7 @@ export function TravelHistory() {
   const tripsByYear = mockTrips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
     if (map[year]) {
-      map[year] = insertOrdered(trip, map[year]);
+      map[year] = insertOrdered(trip, map[year], {desc: true});
     } else {
       map[year] = [trip];
     }

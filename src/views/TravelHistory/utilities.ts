@@ -1,8 +1,12 @@
 import {Trip} from 'types';
 
-export function insertOrdered(trip: Trip, array: Trip[]): Trip[] {
+export function insertOrdered(
+  trip: Trip,
+  array: Trip[],
+  opt = {desc: false},
+): Trip[] {
   array.push(trip);
-  array.sort(sortByStartDateDesc);
+  array.sort(opt.desc ? sortByStartDateDesc : sortByStartDateAsc);
   return array;
 }
 
