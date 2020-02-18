@@ -3,7 +3,7 @@ import {Card, Page} from '@shopify/polaris';
 import {act} from 'react-dom/test-utils';
 
 import {mountWithPolarisProvider} from 'utilities/tests';
-import {mockTrip} from 'utilities';
+import {mockTrip} from 'utilities/trip';
 import {Trip} from 'types';
 
 import {sortByStartDateAsc} from '../utilities';

@@ -8,6 +8,8 @@ import {isDevelopment} from 'config';
 import {DevelopmentHead, TopNav, Footer} from './components';
 
 export function App() {
+  // Add a Single Query Request for all the pages
+
   return (
     <>
       <AppProvider i18n={enTranslations}>
