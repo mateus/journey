@@ -1,11 +1,11 @@
 import React from 'react';
-import {Page} from '@shopify/polaris';
+import {Card, Page} from '@shopify/polaris';
 import {act} from 'react-dom/test-utils';
 
 import {mountWithPolarisProvider} from 'utilities/tests';
 
 import {TravelHistory} from '../TravelHistory';
-import {ManageTripCard} from '../components';
+import {ManageTripCard, RandomQuote, UpcomingTripsCard} from '../components';
 
 import {mockTrips} from './fixtures/mockTrips';
 
@@ -16,6 +16,21 @@ describe('<TravelHistory />', () => {
     expect(wrapper.find(Page).props()).toMatchObject({
       title: 'Travel History',
     });
+  });
+
+  it('renders <RandomQuote />', () => {
+    const wrapper = mountWithPolarisProvider(<TravelHistory />);
+    expect(
+      wrapper
+        .find(Card)
+        .find(RandomQuote)
+        .exists(),
+    ).toBeTruthy();
+  });
+
+  it('renders <UpcomingTripsCard />', () => {
+    const wrapper = mountWithPolarisProvider(<TravelHistory />);
+    expect(wrapper.find(UpcomingTripsCard).exists()).toBeTruthy();
   });
 
   describe('<ManageTripCard />', () => {
@@ -31,6 +46,19 @@ describe('<TravelHistory />', () => {
         wrapper.update();
       });
       expect(wrapper.find(ManageTripCard).exists()).toBeTruthy();
+    });
+
+    it('disables Add trip Page action when showing', async () => {
+      const wrapper = mountWithPolarisProvider(<TravelHistory />);
+      await act(async () => {
+        await wrapper.find(Page)!.prop('primaryAction')!.onAction!();
+        wrapper.update();
+      });
+      expect(wrapper.find(Page).props()).toMatchObject({
+        primaryAction: {
+          disabled: true,
+        },
+      });
     });
   });
 });
