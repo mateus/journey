@@ -10,7 +10,7 @@ import {
 
 describe('insertOrdered()', () => {
   it('inserts Trip into an array of Trips and orders it', () => {
-    const arrayOfTrips = [
+    const [trip1, trip2, trip3] = [
       mockTrip({startDate: new Date('01/01/2020')}),
       mockTrip({startDate: new Date('06/06/2020')}),
       mockTrip({startDate: new Date('12/12/2020')}),
@@ -18,20 +18,15 @@ describe('insertOrdered()', () => {
     const newTrip = mockTrip({
       startDate: new Date('08/08/2020'),
     });
-    const expected = [
-      mockTrip({startDate: new Date('01/01/2020')}),
-      mockTrip({startDate: new Date('06/06/2020')}),
-      mockTrip({
-        startDate: new Date('08/08/2020'),
-      }),
-      mockTrip({startDate: new Date('12/12/2020')}),
-    ];
+    const expected = [trip1, trip2, newTrip, trip3];
 
-    expect(insertOrdered(newTrip, arrayOfTrips)).toStrictEqual(expected);
+    expect(insertOrdered(newTrip, [trip1, trip2, trip3])).toStrictEqual(
+      expected,
+    );
   });
 
   it('inserts Trip into an array of Trips and orders it descendingly', () => {
-    const arrayOfTrips = [
+    const [trip1, trip2, trip3] = [
       mockTrip({startDate: new Date('01/01/2020')}),
       mockTrip({startDate: new Date('06/06/2020')}),
       mockTrip({startDate: new Date('12/12/2020')}),
@@ -39,18 +34,11 @@ describe('insertOrdered()', () => {
     const newTrip = mockTrip({
       startDate: new Date('08/08/2020'),
     });
-    const expected = [
-      mockTrip({startDate: new Date('12/12/2020')}),
-      mockTrip({
-        startDate: new Date('08/08/2020'),
-      }),
-      mockTrip({startDate: new Date('06/06/2020')}),
-      mockTrip({startDate: new Date('01/01/2020')}),
-    ];
+    const expected = [trip3, newTrip, trip2, trip1];
 
-    expect(insertOrdered(newTrip, arrayOfTrips, {desc: true})).toStrictEqual(
-      expected,
-    );
+    expect(
+      insertOrdered(newTrip, [trip1, trip2, trip3], {desc: true}),
+    ).toStrictEqual(expected);
   });
 });
 
