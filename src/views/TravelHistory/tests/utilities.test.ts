@@ -1,4 +1,3 @@
-import React from 'react';
 import moment from 'moment';
 
 import {mockTrip} from 'utilities';
@@ -31,7 +30,7 @@ describe('insertOrdered()', () => {
     expect(insertOrdered(newTrip, arrayOfTrips)).toStrictEqual(expected);
   });
 
-  it('inserts Trip into an array of Trips and orders it descending', () => {
+  it('inserts Trip into an array of Trips and orders it descendingly', () => {
     const arrayOfTrips = [
       mockTrip({startDate: moment(new Date('01/01/2020')).toDate()}),
       mockTrip({startDate: moment(new Date('06/06/2020')).toDate()}),
@@ -55,6 +54,55 @@ describe('insertOrdered()', () => {
   });
 });
 
-describe.skip('sortByStartDateAsc()', () => {});
+const pastTrip = mockTrip({
+  startDate: moment(new Date())
+    .subtract(1, 'days')
+    .toDate(),
+});
+const futureTrip = mockTrip({
+  startDate: moment(new Date())
+    .add(1, 'days')
+    .toDate(),
+});
 
-describe.skip('sortByStartDateDesc()', () => {});
+describe('sortByStartDateAsc()', () => {
+  it('returns -1 if trip A is before trip B', () => {
+    expect(sortByStartDateAsc(pastTrip, futureTrip)).toStrictEqual(-1);
+  });
+
+  it('returns 0 if trip A is after trip B', () => {
+    const pastTrip = mockTrip({
+      startDate: moment(new Date())
+        .subtract(1, 'days')
+        .toDate(),
+    });
+    const futureTrip = mockTrip({
+      startDate: moment(new Date())
+        .add(1, 'days')
+        .toDate(),
+    });
+
+    expect(sortByStartDateAsc(futureTrip, pastTrip)).toStrictEqual(0);
+  });
+});
+
+describe('sortByStartDateDesc()', () => {
+  it('returns 0 if trip A is before trip B', () => {
+    expect(sortByStartDateDesc(pastTrip, futureTrip)).toStrictEqual(0);
+  });
+
+  it('returns -1 if trip A is after trip B', () => {
+    const pastTrip = mockTrip({
+      startDate: moment(new Date())
+        .subtract(1, 'days')
+        .toDate(),
+    });
+    const futureTrip = mockTrip({
+      startDate: moment(new Date())
+        .add(1, 'days')
+        .toDate(),
+    });
+
+    expect(sortByStartDateDesc(futureTrip, pastTrip)).toStrictEqual(-1);
+  });
+});
