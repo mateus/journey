@@ -13,7 +13,7 @@ export function App() {
       <AppProvider i18n={enTranslations}>
         {isDevelopment && <DevelopmentHead />}
         <TopNav />
-        <TravelHistory />
+        <TravelHistory trips={undefined} />
         <Footer />
       </AppProvider>
     </>

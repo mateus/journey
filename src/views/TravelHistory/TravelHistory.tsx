@@ -15,10 +15,15 @@ import {
 import {mockTrips} from './tests/fixtures/mockTrips';
 import './TravelHistory.scss';
 
-export function TravelHistory() {
+export interface TravelHistoryProps {
+  trips?: Trip[];
+}
+
+// Connected with Mock Trips for now to make it easier to test it. Single Query App.
+export function TravelHistory({trips = mockTrips}: TravelHistoryProps) {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
 
-  const tripsByYear = mockTrips.reduce((map, trip) => {
+  const tripsByYear = trips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
     if (map[year]) {
       map[year] = insertOrdered(trip, map[year], {desc: true});
@@ -28,7 +33,7 @@ export function TravelHistory() {
     return map;
   }, {} as {[key: string]: Trip[]});
 
-  const upcomingTrips = mockTrips
+  const upcomingTrips = trips
     .filter(({completed}) => !completed)
     .sort(sortByStartDateAsc);
 
