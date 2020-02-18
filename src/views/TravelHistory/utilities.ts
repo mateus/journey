@@ -12,9 +12,9 @@ export function insertOrdered(
 }
 
 export function sortByStartDateAsc(tripA: Trip, tripB: Trip) {
-  return tripA.startDate < tripB.startDate ? -1 : 0;
+  return Number(tripA.startDate) < Number(tripB.startDate) ? -1 : 0;
 }
 
 export function sortByStartDateDesc(tripA: Trip, tripB: Trip) {
-  return tripA.startDate > tripB.startDate ? -1 : 0;
+  return Number(tripA.startDate) > Number(tripB.startDate) ? -1 : 0;
 }
