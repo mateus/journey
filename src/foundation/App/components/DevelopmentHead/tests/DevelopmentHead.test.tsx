@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {AppProvider} from '@shopify/polaris';
 import Favicon from 'react-favicon';
+
 import {publicURL} from 'config';
 
 import {DevelopmentHead} from '../DevelopmentHead';
