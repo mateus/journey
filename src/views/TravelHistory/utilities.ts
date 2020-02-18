@@ -5,8 +5,9 @@ export function insertOrdered(
   array: Trip[],
   opt = {desc: false},
 ): Trip[] {
+  const sortMethod = opt.desc ? sortByStartDateDesc : sortByStartDateAsc;
   array.push(trip);
-  array.sort(opt.desc ? sortByStartDateDesc : sortByStartDateAsc);
+  array.sort(sortMethod);
   return array;
 }
 
