@@ -12,8 +12,8 @@ export function App() {
 
   return (
     <>
+      {isDevelopment && <DevelopmentHead />}
       <AppProvider i18n={enTranslations}>
-        {isDevelopment && <DevelopmentHead />}
         <TopNav />
         <TravelHistory trips={undefined} />
         <Footer />
