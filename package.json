@@ -5,6 +5,9 @@
   "author": "Mateus Ferreira",
   "license": "UNLICENSED",
   "main": "src/index.tsx",
+  "engines": {
+    "node": ">=12.0"
+  },
   "dependencies": {
     "@shopify/polaris": "^4.13.1",
     "@shopify/polaris-icons": "^3.9.0",
