@@ -5,6 +5,7 @@ import {Redirect} from 'react-router-dom';
 import {DisplayText, Stack, Spinner} from '@shopify/polaris';
 
 import {auth, provider} from 'utilities/firebase';
+import {Loading} from 'components';
 
 import './Login.scss';
 
@@ -15,22 +16,8 @@ export function Login() {
     auth.signInWithPopup(provider);
   };
 
-  const LoginFrame = ({children}: {children: React.ReactNode}) => {
-    return (
-      <div className="Login">
-        <Stack vertical alignment="center" distribution="center">
-          {children}
-        </Stack>
-      </div>
-    );
-  };
-
   if (initialising) {
-    return (
-      <LoginFrame>
-        <Spinner accessibilityLabel="Initialising" size="large" color="teal" />
-      </LoginFrame>
-    );
+    return <Loading />;
   }
 
   if (error) throw new Error(error.message);
@@ -40,11 +27,11 @@ export function Login() {
   }
 
   return (
-    <LoginFrame>
+    <div className="Login">
       <Stack vertical alignment="center" spacing="extraLoose">
         <DisplayText size="extraLarge">Login</DisplayText>
         <GoogleButton onClick={login} />
       </Stack>
-    </LoginFrame>
+    </div>
   );
 }

@@ -3,16 +3,17 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect, Route, RouteProps} from 'react-router-dom';
 
 import {auth} from 'utilities/firebase';
+import {Loading} from 'components';
 
 export function ProtectedRoute(props: RouteProps) {
   const [user, initialising, error] = useAuthState(auth);
 
-  if (error) {
-    throw new Error(error.message);
+  if (initialising) {
+    return <Loading />;
   }
 
-  if (initialising) {
-    return <h1>Loading...</h1>;
+  if (error) {
+    throw new Error(error.message);
   }
 
   if (user) {
