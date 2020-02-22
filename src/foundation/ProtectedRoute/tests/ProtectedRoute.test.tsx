@@ -1,50 +1,61 @@
 import React from 'react';
+import {shallow} from 'enzyme';
+import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect, Route, RouteProps} from 'react-router-dom';
-import {
-  mountWithAppContext,
-  mockFirebase,
-  mockUser,
-} from 'foundation/test-utilities';
+import {User} from 'firebase';
 
-import ProtectedRoute from '../ProtectedRoute';
+import {Loading} from 'components';
 
-const mockProps: RouteProps = {
-  path: '/my-route',
-  location: {
-    pathname: '/my-route',
-    search: '',
-    state: '',
-    hash: '',
-  },
-  render: () => <></>,
-};
+import {ProtectedRoute} from '../ProtectedRoute';
+import {Frame} from '../../Frame';
+
+jest.mock('react-firebase-hooks/auth', () => ({
+  ...require.requireActual('react-firebase-hooks/auth'),
+  useAuthState: jest.fn(),
+}));
+const useAuthStateSpy = useAuthState as jest.Mock;
 
 describe('<ProtectedRoute />', () => {
-  it.skip('redirects to homepage if not authenticated', async () => {
-    const wrapper = await mountWithAppContext(
-      <ProtectedRoute {...mockProps} />,
-      {
-        firebaseSdk: await mockFirebase({isAuthenticated: false}),
-      },
-    );
-    console.log(wrapper.debug());
-    const redirect = wrapper.find(Redirect);
+  const mockProps: RouteProps = {
+    path: '/my-route',
+    location: {
+      pathname: '/my-route',
+      search: '',
+      state: '',
+      hash: '',
+    },
+    render: jest.fn(),
+  };
 
-    expect(redirect).toExist();
-    expect(redirect).toHaveProp('to', {
+  beforeEach(() => {
+    useAuthStateSpy.mockReturnValue([{} as User, false, null]);
+  });
+
+  afterEach(() => {
+    useAuthStateSpy.mockReset();
+  });
+
+  it('renders <Loading /> while auth state is still initializing', async () => {
+    useAuthStateSpy.mockReturnValue([null, true, null]);
+    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
+    expect(wrapper.find(Loading)).toExist();
+    useAuthStateSpy.mockRestore();
+  });
+
+  it('redirects to home if not authenticated', async () => {
+    useAuthStateSpy.mockReturnValue([null, false, null]);
+    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
+    expect(wrapper.find(Redirect)).toHaveProp('to', {
       pathname: '/',
       state: {from: mockProps.location},
     });
+    useAuthStateSpy.mockRestore();
   });
 
-  it('renders route if authenticated', async () => {
-    const wrapper = await mountWithAppContext(
-      <ProtectedRoute {...mockProps} />,
-      {
-        firebaseSdk: await mockFirebase({isAuthenticated: true}),
-      },
-    );
+  it('renders route if authenticated with <Frame />', async () => {
+    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
     const route = wrapper
+      .find(Frame)
       .find(Route)
       .filterWhere((route) => route.prop('path') === mockProps.path);
 
