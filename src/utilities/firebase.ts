@@ -1,6 +1,7 @@
 /* eslint-disable no-process-env */
-import * as firebase from 'firebase';
-import 'firebase/database';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+// import 'firebase/database';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
