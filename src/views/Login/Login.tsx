@@ -2,7 +2,7 @@ import React from 'react';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import GoogleButton from 'react-google-button';
 import {Redirect} from 'react-router-dom';
-import {DisplayText, Stack, Spinner} from '@shopify/polaris';
+import {DisplayText, Stack} from '@shopify/polaris';
 
 import {auth, provider} from 'utilities/firebase';
 import {Loading} from 'components';
