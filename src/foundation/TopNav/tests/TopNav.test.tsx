@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {User} from 'firebase';
-import {Avatar, DisplayText} from '@shopify/polaris';
+import {Avatar, Link} from '@shopify/polaris';
 
 import {logo192} from 'assets/images';
 
@@ -37,12 +37,11 @@ describe('<TopNav />', () => {
     ).toBeTruthy();
   });
 
-  it('renders user name', () => {
+  it('renders a <Link /> to Google Timeline ', () => {
     const wrapper = shallow(<TopNav />);
-    expect(
-      wrapper.containsMatchingElement(
-        <DisplayText size="small">{mockName}</DisplayText>,
-      ),
-    ).toBeTruthy();
+    expect(wrapper.find(Link)).toHaveProp({
+      url: 'https://www.google.com/maps/timeline',
+      external: true,
+    });
   });
 });

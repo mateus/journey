@@ -1,5 +1,14 @@
 import React from 'react';
-import {Avatar, Image, Stack, Spinner, DisplayText} from '@shopify/polaris';
+import {
+  Avatar,
+  Icon,
+  Link,
+  TextStyle,
+  Stack,
+  Spinner,
+  DisplayText,
+} from '@shopify/polaris';
+import {GlobeMinor} from '@shopify/polaris-icons';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect} from 'react-router-dom';
 
@@ -26,13 +35,32 @@ export function TopNav() {
 
   return (
     <nav className="TopNav">
-      <Stack vertical spacing="extraTight" alignment="center">
-        {photoURL !== null && displayName !== null && (
-          <Avatar name={displayName} customer size="large" source={photoURL} />
-        )}
-        {displayName !== null && (
-          <DisplayText size="small">{displayName}</DisplayText>
-        )}
+      <Stack vertical alignment="center" spacing="extraTight">
+        <Stack vertical alignment="center" spacing="tight">
+          {photoURL !== null && displayName !== null && (
+            <Avatar
+              name={displayName}
+              customer
+              size="large"
+              source={photoURL}
+            />
+          )}
+          {displayName !== null && (
+            <Stack vertical spacing="none" alignment="center">
+              <DisplayText size="small" element="h2">
+                <TextStyle variation="strong">{displayName}</TextStyle>
+              </DisplayText>
+            </Stack>
+          )}
+        </Stack>
+        <Link url="https://www.google.com/maps/timeline" external>
+          <Icon
+            source={GlobeMinor}
+            backdrop
+            color="inkLighter"
+            accessibilityLabel="Google Timeline"
+          />
+        </Link>
       </Stack>
     </nav>
   );
