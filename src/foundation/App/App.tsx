@@ -9,12 +9,20 @@ import {Routes} from 'foundation/Routes';
 import {DevelopmentHead} from './components';
 
 export function App() {
+  const theme = {
+    colors: {
+      topBar: {
+        background: '#24292e',
+      },
+    },
+  };
+
   // Add a Single Query Request for all the pages
 
   return (
     <Router>
       {isDevelopment && <DevelopmentHead />}
-      <AppProvider i18n={enTranslations}>
+      <AppProvider theme={theme} i18n={enTranslations}>
         <Routes />
       </AppProvider>
     </Router>
