@@ -10,6 +10,8 @@ import {Loading} from 'components';
 import './Login.scss';
 
 export function Login() {
+  // eslint-disable-next-line no-console
+  console.log(process.env);
   const [user, initialising, error] = useAuthState(auth);
 
   const login = () => {
