@@ -2,25 +2,25 @@ import React from 'react';
 import enTranslations from '@shopify/polaris/locales/en.json';
 import {AppProvider} from '@shopify/polaris';
 import {useAuthState} from 'react-firebase-hooks/auth';
+import {BrowserRouter as Router} from 'react-router-dom';
 
 import {auth} from 'utilities/firebase';
-import {TravelHistory} from 'views';
 import {isDevelopment} from 'config';
 
-import {DevelopmentHead, TopNav, Footer} from './components';
+import {Routes} from '../Routes';
+
+import {DevelopmentHead} from './components';
 
 export function App() {
   const [user, initialising, error] = useAuthState(auth);
   // Add a Single Query Request for all the pages
 
   return (
-    <>
+    <Router>
       {isDevelopment && <DevelopmentHead />}
       <AppProvider i18n={enTranslations}>
-        <TopNav />
-        <TravelHistory trips={undefined} />
-        <Footer />
+        <Routes />
       </AppProvider>
-    </>
+    </Router>
   );
 }
