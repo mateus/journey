@@ -32,7 +32,7 @@ describe('<ProtectedRoute />', () => {
   });
 
   afterEach(() => {
-    useAuthStateSpy.mockReset();
+    useAuthStateSpy.mockRestore();
   });
 
   it('renders <Loading /> while auth state is still initializing', async () => {
@@ -46,7 +46,7 @@ describe('<ProtectedRoute />', () => {
     useAuthStateSpy.mockReturnValue([null, false, null]);
     const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
     expect(wrapper.find(Redirect)).toHaveProp('to', {
-      pathname: '/',
+      pathname: '/login',
       state: {from: mockProps.location},
     });
     useAuthStateSpy.mockRestore();
