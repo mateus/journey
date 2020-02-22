@@ -23,7 +23,7 @@ export function Login() {
   if (error) throw new Error(error.message);
 
   if (user) {
-    return <Redirect to={{pathname: '/travels'}} />;
+    return <Redirect to={{pathname: '/'}} />;
   }
 
   return (

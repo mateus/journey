@@ -30,11 +30,11 @@ describe('<Login />', () => {
     useAuthStateSpy.mockRestore();
   });
 
-  it('redirects to travels if authenticated', () => {
+  it('redirects to home if authenticated', () => {
     useAuthStateSpy.mockReturnValue([{} as User, false, null]);
     const wrapper = shallow(<Login />);
     expect(wrapper.find(Redirect)).toHaveProp('to', {
-      pathname: '/travels',
+      pathname: '/',
     });
     useAuthStateSpy.mockRestore();
   });
