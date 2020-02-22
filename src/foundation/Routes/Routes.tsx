@@ -12,6 +12,7 @@ export function Routes() {
       <Route exact path="/login" render={() => <Login />} />
       <ProtectedRoute
         path="/"
+        exact
         render={() => <TravelHistory trips={undefined} />}
       />
       <Route render={() => <NotFound />} />
