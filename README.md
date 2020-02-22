@@ -2,24 +2,30 @@
 ![Build and Deploy](https://github.com/mateus/journey/workflows/Build%20and%20Deploy/badge.svg)
 ![Lint](https://github.com/mateus/journey/workflows/Lint/badge.svg)
 
-## Development
+### Development
 
-Install dependencies:
+1. Add local variables with the Firebase configuration.
 
-##### `$ yarn install`
+```
+# .env
+REACT_APP_API_KEY='api-key'
+REACT_APP_AUTH_DOMAIN='project-id.firebaseapp.com'
+REACT_APP_DATABASE_URL='https://project-id.firebaseio.com'
+REACT_APP_PROJECT_ID='project-id'
+REACT_APP_STORAGE_BUCKET='project-id.appspot.com'
+REACT_APP_MESSAGING_SENDER_ID='sender-id'
+REACT_APP_APP_ID='app-id'
+REACT_APP_MEASUREMENT_ID='G-measurement-id'
+```
 
-Runing project:
+2. Install dependencies
 
-##### `$ yarn start`
+`$ yarn install`
 
-Testing it:
+3. Run project
 
-##### `$ yarn test {file}`
+`$ yarn start`
 
-### Make sure it is running in development mode
+4. Test it
 
-| Dev Status bar   |      Favicon      | 
-|----------|------|
-| ![Screen Shot 2020-02-16 at 4 34 20 PM](https://user-images.githubusercontent.com/2091116/74613186-36c20900-50da-11ea-9f56-244fdfe24f01.png) |  ![Screen Shot 2020-02-16 at 4 34 12 PM](https://user-images.githubusercontent.com/2091116/74613188-375a9f80-50da-11ea-9ea8-4d208477aa5a.png) |
-
-
+`$ yarn test {file}`
