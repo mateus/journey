@@ -1,23 +1,22 @@
 import React from 'react';
 import enTranslations from '@shopify/polaris/locales/en.json';
 import {AppProvider} from '@shopify/polaris';
+import {BrowserRouter as Router} from 'react-router-dom';
 
-import {TravelHistory} from 'views';
 import {isDevelopment} from 'config';
+import {Routes} from 'foundation/Routes';
 
-import {DevelopmentHead, TopNav, Footer} from './components';
+import {DevelopmentHead} from './components';
 
 export function App() {
   // Add a Single Query Request for all the pages
 
   return (
-    <>
+    <Router>
       {isDevelopment && <DevelopmentHead />}
       <AppProvider i18n={enTranslations}>
-        <TopNav />
-        <TravelHistory trips={undefined} />
-        <Footer />
+        <Routes />
       </AppProvider>
-    </>
+    </Router>
   );
 }
