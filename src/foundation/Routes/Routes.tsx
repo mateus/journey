@@ -2,7 +2,7 @@ import React from 'react';
 import {Switch, Route} from 'react-router-dom';
 
 import {NotFound} from 'components';
-import {TravelHistory} from 'views';
+import {Home, Login, TravelHistory} from 'views';
 
 import {ProtectedRoute} from '../ProtectedRoute';
 
@@ -19,11 +19,3 @@ export function Routes() {
     </Switch>
   );
 }
-
-const Login = () => {
-  return <h1>Login page</h1>;
-};
-
-const Home = () => {
-  return <h1>Home page</h1>;
-};
