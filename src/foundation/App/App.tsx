@@ -4,8 +4,7 @@ import {AppProvider} from '@shopify/polaris';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 import {isDevelopment} from 'config';
-
-import {Routes} from '../Routes';
+import {Routes} from 'foundation/Routes';
 
 import {DevelopmentHead} from './components';
 
