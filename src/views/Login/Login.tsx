@@ -1,6 +1,6 @@
 import React from 'react';
-import {useAuthState} from 'react-firebase-hooks/auth';
 import GoogleButton from 'react-google-button';
+import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect} from 'react-router-dom';
 import {DisplayText, Stack} from '@shopify/polaris';
 

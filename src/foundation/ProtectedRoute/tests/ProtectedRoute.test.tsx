@@ -35,16 +35,16 @@ describe('<ProtectedRoute />', () => {
     useAuthStateSpy.mockRestore();
   });
 
-  it('renders <Loading /> while auth state is still initializing', async () => {
+  it('renders <Loading /> while auth state is still initializing', () => {
     useAuthStateSpy.mockReturnValue([null, true, null]);
-    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
+    const wrapper = shallow(<ProtectedRoute {...mockProps} />);
     expect(wrapper.find(Loading)).toExist();
     useAuthStateSpy.mockRestore();
   });
 
-  it('redirects to home if not authenticated', async () => {
+  it('redirects to home if not authenticated', () => {
     useAuthStateSpy.mockReturnValue([null, false, null]);
-    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
+    const wrapper = shallow(<ProtectedRoute {...mockProps} />);
     expect(wrapper.find(Redirect)).toHaveProp('to', {
       pathname: '/login',
       state: {from: mockProps.location},
@@ -52,8 +52,8 @@ describe('<ProtectedRoute />', () => {
     useAuthStateSpy.mockRestore();
   });
 
-  it('renders route if authenticated with <Frame />', async () => {
-    const wrapper = await shallow(<ProtectedRoute {...mockProps} />);
+  it('renders route if authenticated with <Frame />', () => {
+    const wrapper = shallow(<ProtectedRoute {...mockProps} />);
     const route = wrapper
       .find(Frame)
       .find(Route)
