@@ -1,4 +1,8 @@
 import React, {useState} from 'react';
+import {useCollectionData} from 'react-firebase-hooks/firestore';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import moment from 'moment';
+import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {
   Page,
   Card,
@@ -7,10 +11,10 @@ import {
   DisplayText,
   Stack,
 } from '@shopify/polaris';
-import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
-import moment from 'moment';
 
+import {auth, firestore} from 'utilities/firebase';
 import {Trip} from 'types';
+import {Loading} from 'components';
 
 import {insertOrdered, sortByStartDateAsc} from './utilities';
 import {
@@ -26,7 +30,28 @@ export interface TravelHistoryProps {
 }
 
 export function TravelHistory({trips}: TravelHistoryProps) {
+  const [user] = useAuthState(auth);
+  // Needs to come from context?
+  const [value, loading, error] = useCollectionData(
+    firestore
+      .collection('users')
+      .doc(user?.uid)
+      .collection('trips'),
+    {
+      snapshotListenOptions: {includeMetadataChanges: true},
+    },
+  );
+  console.log(value);
+  console.log(loading);
+  console.log(error);
+
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (error) throw new Error(error.message);
 
   const tripsByYear = trips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
@@ -42,8 +67,15 @@ export function TravelHistory({trips}: TravelHistoryProps) {
     .filter(({completed}) => !completed)
     .sort(sortByStartDateAsc);
 
+  const handleSubmitTrip = () => {
+    console.log('SUBMIT');
+  };
+
   const manageTripCardMarkup = (
-    <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
+    <ManageTripCard
+      onClose={() => setNewTripFormOpen(false)}
+      onSubmit={handleSubmitTrip}
+    />
   );
 
   const emptyStateMarkup = newTripFormOpen ? (

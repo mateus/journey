@@ -1,4 +1,6 @@
 import React, {useState, useCallback} from 'react';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import moment from 'moment';
 import {
   Card,
   ComplexAction,
@@ -10,8 +12,8 @@ import {
   TextField,
   TextStyle,
 } from '@shopify/polaris';
-import moment from 'moment';
 
+import {auth, firestore} from 'utilities/firebase';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
@@ -23,10 +25,12 @@ export interface ManageTripCardProps {
   // List of trips. If undefined loads Submit new trio card style
   trip?: Trip;
   onClose(): void;
+  onSubmit(): void;
 }
 
-export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
+export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
   const today = moment();
+  const [user] = useAuthState(auth);
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
@@ -66,14 +70,22 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
     : [{content: 'Cancel', onAction: onClose}];
 
   const handleSubmit = () => {
-    console.log({
-      completed: isCompletedValue,
-      countryCode: countryValue?.countryCode,
-      endDate: selectedDates.end,
-      startDate: selectedDates.start,
-      location: locationValue,
-      notes: notesValue,
-    });
+    onSubmit();
+    // eslint-disable-next-line no-warning-comments
+    // TODO Make sure all the fields are filled
+
+    firestore
+      .collection('users')
+      .doc(user?.uid)
+      .collection('trips')
+      .add({
+        completed: isCompletedValue,
+        countryCode: countryValue?.countryCode,
+        endDate: selectedDates.end,
+        startDate: selectedDates.start,
+        location: locationValue,
+        notes: notesValue,
+      });
   };
 
   return (
