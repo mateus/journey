@@ -1,3 +1,8 @@
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
+
 export interface Trip {
   id: string;
   completed: boolean;

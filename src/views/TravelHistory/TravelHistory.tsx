@@ -13,10 +13,11 @@ import {
 } from '@shopify/polaris';
 
 import {auth, firestore} from 'utilities/firebase';
-import {Trip} from 'types';
+import {useToast} from 'utilities/toast';
+import {Trip, Timestamp} from 'types';
 import {Loading} from 'components';
 
-import {insertOrdered, sortByStartDateAsc} from './utilities';
+import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ManageTripCard,
   RandomQuote,
@@ -29,10 +30,14 @@ export interface TravelHistoryProps {
   trips: Trip[];
 }
 
+interface QueryTripData extends Omit<Trip, 'endDate' | 'startDate'> {
+  endDate: Timestamp;
+  startDate: Timestamp;
+}
+
 export function TravelHistory({trips}: TravelHistoryProps) {
   const [user] = useAuthState(auth);
-  // Needs to come from context?
-  const [value, loading, error] = useCollectionData(
+  const [tripsData, loading, error] = useCollectionData<QueryTripData>(
     firestore
       .collection('users')
       .doc(user?.uid)
@@ -41,35 +46,20 @@ export function TravelHistory({trips}: TravelHistoryProps) {
       snapshotListenOptions: {includeMetadataChanges: true},
     },
   );
-  console.log(value);
-  console.log(loading);
-  console.log(error);
-
+  const [Toast, showToast] = useToast();
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
 
   if (error) throw new Error(error.message);
 
-  const tripsByYear = trips.reduce((map, trip) => {
-    const year = moment(trip.endDate).year();
-    if (map[year]) {
-      map[year] = insertOrdered(trip, map[year], {desc: true});
-    } else {
-      map[year] = [trip];
-    }
-    return map;
-  }, {} as {[key: string]: Trip[]});
-
-  const upcomingTrips = trips
-    .filter(({completed}) => !completed)
-    .sort(sortByStartDateAsc);
-
-  const handleSubmitTrip = () => {
-    console.log('SUBMIT');
-  };
+  const reconciledTrips = tripsData?.map<Trip>((trip) => {
+    return {
+      ...trip,
+      endDate: moment(new Date(trip.endDate.seconds)).toDate(),
+      startDate: moment(new Date(trip.startDate.seconds)).toDate(),
+    };
+  });
 
   const manageTripCardMarkup = (
     <ManageTripCard
@@ -90,40 +80,9 @@ export function TravelHistory({trips}: TravelHistoryProps) {
   );
 
   const content =
-    trips.length > 0 ? (
-      <Layout>
-        <Layout.Section>
-          <Stack vertical>
-            {newTripFormOpen && manageTripCardMarkup}
-            <Card sectioned>
-              <RandomQuote />
-            </Card>
-            {Object.keys(tripsByYear)
-              .reverse()
-              .map((year) => {
-                return (
-                  <div key={year}>
-                    {tripsByYear[year].map((trip) => (
-                      <TripDetailsCard
-                        key={trip.location + trip.id}
-                        {...trip}
-                      />
-                    ))}
-                    <div className="Separator">
-                      <DisplayText size="extraLarge">{year}</DisplayText>
-                    </div>
-                  </div>
-                );
-              })}
-          </Stack>
-        </Layout.Section>
-        <Layout.Section secondary>
-          <UpcomingTripsCard list={upcomingTrips} />
-        </Layout.Section>
-      </Layout>
-    ) : (
-      emptyStateMarkup
-    );
+    reconciledTrips && reconciledTrips.length > 0
+      ? renderTrips(reconciledTrips)
+      : emptyStateMarkup;
 
   return (
     <Page
@@ -139,6 +98,50 @@ export function TravelHistory({trips}: TravelHistoryProps) {
       ]}
     >
       {content}
+      <Toast />
     </Page>
   );
+
+  function renderTrips(trips: Trip[]) {
+    const byYear = tripsByYear(trips);
+    const upcoming = upcomingTrips(trips);
+
+    return (
+      <Layout>
+        <Layout.Section>
+          <Stack vertical>
+            {newTripFormOpen && manageTripCardMarkup}
+            <Card sectioned>
+              <RandomQuote />
+            </Card>
+            {Object.keys(byYear)
+              .reverse()
+              .map((year) => {
+                return (
+                  <div key={year}>
+                    {byYear[year].map((trip) => (
+                      <TripDetailsCard
+                        key={trip.location + trip.id}
+                        {...trip}
+                      />
+                    ))}
+                    <div className="Separator">
+                      <DisplayText size="extraLarge">{year}</DisplayText>
+                    </div>
+                  </div>
+                );
+              })}
+          </Stack>
+        </Layout.Section>
+        <Layout.Section secondary>
+          <UpcomingTripsCard list={upcoming} />
+        </Layout.Section>
+      </Layout>
+    );
+  }
+
+  function handleSubmitTrip() {
+    setNewTripFormOpen(false);
+    showToast({content: 'New trip added'});
+  }
 }

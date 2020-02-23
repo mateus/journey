@@ -69,25 +69,6 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
     ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove trip'}]
     : [{content: 'Cancel', onAction: onClose}];
 
-  const handleSubmit = () => {
-    onSubmit();
-    // eslint-disable-next-line no-warning-comments
-    // TODO Make sure all the fields are filled
-
-    firestore
-      .collection('users')
-      .doc(user?.uid)
-      .collection('trips')
-      .add({
-        completed: isCompletedValue,
-        countryCode: countryValue?.countryCode,
-        endDate: selectedDates.end,
-        startDate: selectedDates.start,
-        location: locationValue,
-        notes: notesValue,
-      });
-  };
-
   return (
     <Card
       title={cardTitle}
@@ -189,5 +170,24 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
         </Stack>
       </div>
     );
+  }
+
+  function handleSubmit() {
+    onSubmit();
+    // eslint-disable-next-line no-warning-comments
+    // TODO Make sure all the fields are filled
+
+    firestore
+      .collection('users')
+      .doc(user?.uid)
+      .collection('trips')
+      .add({
+        completed: isCompletedValue,
+        countryCode: countryValue?.countryCode,
+        endDate: selectedDates.end,
+        startDate: selectedDates.start,
+        location: locationValue,
+        notes: notesValue,
+      });
   }
 }
