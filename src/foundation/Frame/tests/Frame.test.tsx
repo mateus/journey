@@ -1,4 +1,5 @@
 import React from 'react';
+import {act} from 'react-dom/test-utils';
 import {Navigation} from '@shopify/polaris';
 import {
   TransportMajorTwotone,
@@ -9,6 +10,7 @@ import {
 } from '@shopify/polaris-icons';
 
 import {mountWithAppProvider} from 'utilities/tests';
+import {auth} from 'utilities/firebase';
 
 import {Frame} from '../Frame';
 import {TopNav} from '../../TopNav';
@@ -98,7 +100,8 @@ describe('<Frame />', () => {
           <MyComponent />
         </Frame>,
       );
-      expect(wrapper.find(Navigation.Section).last()).toHaveProp({
+      const lastNavSection = wrapper.find(Navigation.Section).last();
+      expect(lastNavSection).toHaveProp({
         items: [
           expect.objectContaining({
             label: 'Log out',
@@ -106,6 +109,20 @@ describe('<Frame />', () => {
           }),
         ],
       });
+    });
+
+    it('logges out the user when clicking Log out', async () => {
+      auth.signOut = jest.fn();
+      const wrapper = await mountWithAppProvider(
+        <Frame>
+          <MyComponent />
+        </Frame>,
+      );
+      const lastNavSection = wrapper.find(Navigation.Section).last();
+      act(() => {
+        lastNavSection!.prop('items')[0].onClick!();
+      });
+      expect(auth.signOut).toHaveBeenCalled();
     });
   });
 });
