@@ -3,6 +3,8 @@ import faker from 'faker';
 
 import {Trip} from 'types';
 
+export const DEFAULT_TRIP_LENGTH = 3;
+
 export function mockTrip(trip?: Partial<Trip>): Trip {
   const today = moment();
   const fakeTrip: Trip = {

@@ -12,8 +12,10 @@ import {
 } from '@shopify/polaris';
 import moment from 'moment';
 
+import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
+import {getCountryByCode} from 'utilities/countries';
+import {Country, Trip} from 'types';
 import {CountryTextField, Flag} from 'components';
-import {Trip} from 'types';
 
 import './ManageTripCard.scss';
 
@@ -23,14 +25,14 @@ export interface ManageTripCardProps {
   onClose(): void;
 }
 
-const DEFAULT_TRIP_LENGTH = 3;
-
 export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
-  const [countryValue, setCountry] = useState(trip?.countryCode || '');
+  const [countryValue, setCountry] = useState<Country | undefined>(
+    trip ? getCountryByCode(trip.countryCode) : undefined,
+  );
   const [isCompletedValue, setIsCompleted] = useState(trip?.completed || false);
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
@@ -77,11 +79,11 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
         <TextField
           label="City"
           value={locationValue}
-          placeholder="Anywhere"
+          placeholder="Ottawa, ON"
           onChange={(newLocation) => setLocation(newLocation)}
         />
         <CountryTextField
-          value={countryValue}
+          country={countryValue}
           onChange={(selected) => setCountry(selected)}
         />
         {hasNotes && (
@@ -89,7 +91,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
             multiline={2}
             label="Notes"
             value={notesValue}
-            placeholder="Anything extra"
+            placeholder="Anything important to add?"
             onChange={(newNotes) => setNotes(newNotes)}
           />
         )}
@@ -159,7 +161,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
               </p>
             )}
           </Stack>
-          <Flag countryCode="CA" />
+          {countryValue && <Flag countryCode={countryValue.countryCode} />}
         </Stack>
       </div>
     );
