@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, Caption, Heading, List} from '@shopify/polaris';
 import moment from 'moment';
 
-import {mountWithPolarisProvider} from 'utilities/tests';
+import {mountWithAppProvider} from 'utilities/tests';
 import {mockTrip} from 'utilities/trip';
 
 import {UpcomingTripsCard, UpcomingTripsCardProps} from '../UpcomingTripsCard';
@@ -21,29 +21,25 @@ describe('<UpcomingTripsCard />', () => {
     }),
   ];
 
-  it('renders a Card', () => {
-    const wrapper = mountWithPolarisProvider(<UpcomingTripsCard list={list} />);
+  it('renders a Card', async () => {
+    const wrapper = await mountWithAppProvider(
+      <UpcomingTripsCard list={list} />,
+    );
 
-    expect(wrapper.find(Card).prop('title')).toEqual('Upcoming');
+    expect(wrapper.find(Card)).toHaveProp({title: 'Upcoming'});
   });
 
-  it('renders a list of upcoming trips', () => {
-    const wrapper = mountWithPolarisProvider(<UpcomingTripsCard list={list} />);
+  it('renders a list of upcoming trips', async () => {
+    const wrapper = await mountWithAppProvider(
+      <UpcomingTripsCard list={list} />,
+    );
     const upcomingList = wrapper.find(List.Item);
 
     list.forEach(({location, startDate, endDate}, index) => {
-      expect(
-        upcomingList
-          .find(Heading)
-          .at(index)
-          .text(),
-      ).toEqual(`Trip to ${location}`);
-      expect(
-        upcomingList
-          .find(Caption)
-          .at(index)
-          .text(),
-      ).toEqual(
+      expect(upcomingList.find(Heading).at(index)).toHaveText(
+        `Trip to ${location}`,
+      );
+      expect(upcomingList.find(Caption).at(index)).toHaveText(
         `${moment(startDate).format('ll')} until ${moment(endDate).format(
           'll',
         )}`,
