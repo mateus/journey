@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
-import {Trip} from 'types';
+import {Country, Trip} from 'types';
 import {CountryTextField, Flag} from 'components';
 
 import './ManageTripCard.scss';
@@ -30,8 +30,8 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
-  const [countryValue, setCountry] = useState(
-    getCountryByCode(trip?.countryCode),
+  const [countryValue, setCountry] = useState<Country | undefined>(
+    trip ? getCountryByCode(trip.countryCode) : undefined,
   );
   const [isCompletedValue, setIsCompleted] = useState(trip?.completed || false);
   const [sameDayValue, setSameDay] = useState(false);
@@ -79,7 +79,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
         <TextField
           label="City"
           value={locationValue}
-          placeholder="Anywhere"
+          placeholder="Ottawa, ON"
           onChange={(newLocation) => setLocation(newLocation)}
         />
         <CountryTextField
@@ -91,7 +91,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
             multiline={2}
             label="Notes"
             value={notesValue}
-            placeholder="Anything extra"
+            placeholder="Anything important to add?"
             onChange={(newNotes) => setNotes(newNotes)}
           />
         )}
