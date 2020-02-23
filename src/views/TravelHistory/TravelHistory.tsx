@@ -42,14 +42,27 @@ export function TravelHistory({trips}: TravelHistoryProps) {
     .filter(({completed}) => !completed)
     .sort(sortByStartDateAsc);
 
+  const manageTripCardMarkup = (
+    <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
+  );
+
+  const emptyStateMarkup = newTripFormOpen ? (
+    <Layout>
+      <Layout.Section>{manageTripCardMarkup}</Layout.Section>
+      <Layout.Section secondary></Layout.Section>
+    </Layout>
+  ) : (
+    <EmptyState image="https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg">
+      <RandomQuote />
+    </EmptyState>
+  );
+
   const content =
     trips.length > 0 ? (
       <Layout>
         <Layout.Section>
           <Stack vertical>
-            {newTripFormOpen && (
-              <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
-            )}
+            {newTripFormOpen && manageTripCardMarkup}
             <Card sectioned>
               <RandomQuote />
             </Card>
@@ -77,9 +90,7 @@ export function TravelHistory({trips}: TravelHistoryProps) {
         </Layout.Section>
       </Layout>
     ) : (
-      <EmptyState image="https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg">
-        <RandomQuote />
-      </EmptyState>
+      emptyStateMarkup
     );
 
   return (
