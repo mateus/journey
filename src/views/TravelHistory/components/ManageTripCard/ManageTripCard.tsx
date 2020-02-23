@@ -52,8 +52,8 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
     [selectedDates.start],
   );
 
-  const cardTitle = trip ? 'What is new?' : 'What is your next trip?';
-  const primaryFooterActionContent = trip ? 'Update' : 'Submit new trip';
+  const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
+  const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
   const actions = [
     {
       content: 'Add notes',
@@ -62,7 +62,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
     },
   ];
   const secondaryFooterActions: ComplexAction[] | undefined = trip
-    ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove'}]
+    ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove trip'}]
     : [{content: 'Cancel', onAction: onClose}];
 
   return (
