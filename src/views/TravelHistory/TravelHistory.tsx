@@ -56,8 +56,8 @@ export function TravelHistory({trips}: TravelHistoryProps) {
   const reconciledTrips = tripsData?.map<Trip>((trip) => {
     return {
       ...trip,
-      endDate: moment(new Date(trip.endDate.seconds)).toDate(),
-      startDate: moment(new Date(trip.startDate.seconds)).toDate(),
+      endDate: moment.unix(trip.endDate.seconds).toDate(),
+      startDate: moment.unix(trip.startDate.seconds).toDate(),
     };
   });
 
