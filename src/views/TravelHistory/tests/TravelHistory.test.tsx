@@ -58,6 +58,49 @@ describe('<TravelHistory />', () => {
     });
   });
 
+  describe('Export trips', () => {
+    it('renders as <Page /> a action', async () => {
+      const wrapper = await mountWithAppProvider(
+        <TravelHistory {...mockProps} />,
+      );
+      expect(wrapper.find(Page)).toHaveProp({
+        secondaryActions: expect.arrayContaining([
+          expect.objectContaining({
+            content: 'Export',
+            disabled: false,
+          }),
+        ]),
+      });
+    });
+
+    it('is disabled if there are no trips', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory trips={[]} />);
+      expect(wrapper.find(Page)).toHaveProp({
+        secondaryActions: expect.arrayContaining([
+          expect.objectContaining({
+            content: 'Export',
+            disabled: true,
+          }),
+        ]),
+      });
+    });
+  });
+
+  describe('Import trips', () => {
+    it('renders as <Page /> a action', async () => {
+      const wrapper = await mountWithAppProvider(
+        <TravelHistory {...mockProps} />,
+      );
+      expect(wrapper.find(Page)).toHaveProp({
+        secondaryActions: expect.arrayContaining([
+          expect.objectContaining({
+            content: 'Import',
+          }),
+        ]),
+      });
+    });
+  });
+
   describe('<ManageTripCard />', () => {
     it('is closed on first load', async () => {
       const wrapper = await mountWithAppProvider(

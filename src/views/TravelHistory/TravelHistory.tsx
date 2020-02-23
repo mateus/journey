@@ -103,7 +103,7 @@ export function TravelHistory({trips}: TravelHistoryProps) {
       }}
       secondaryActions={[
         {content: 'Import', icon: ImportMinor},
-        {content: 'Export', icon: ExportMinor},
+        {content: 'Export', icon: ExportMinor, disabled: trips.length === 0},
       ]}
     >
       {content}
