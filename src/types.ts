@@ -7,3 +7,8 @@ export interface Trip {
   notes?: string;
   startDate: Date;
 }
+
+export interface Country {
+  label: string;
+  countryCode: string;
+}

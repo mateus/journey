@@ -12,8 +12,10 @@ import {
 } from '@shopify/polaris';
 import moment from 'moment';
 
-import {CountryTextField, Flag} from 'components';
+import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
+import {getCountryByCode} from 'utilities/countries';
 import {Trip} from 'types';
+import {CountryTextField, Flag} from 'components';
 
 import './ManageTripCard.scss';
 
@@ -23,14 +25,14 @@ export interface ManageTripCardProps {
   onClose(): void;
 }
 
-const DEFAULT_TRIP_LENGTH = 3;
-
 export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const today = moment();
   const [locationValue, setLocation] = useState(trip?.location || '');
   const [notesValue, setNotes] = useState(trip?.notes || '');
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
-  const [countryValue, setCountry] = useState(trip?.countryCode || '');
+  const [countryValue, setCountry] = useState(
+    getCountryByCode(trip?.countryCode),
+  );
   const [isCompletedValue, setIsCompleted] = useState(trip?.completed || false);
   const [sameDayValue, setSameDay] = useState(false);
   const [{month, year}, setDate] = useState({
@@ -81,7 +83,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
           onChange={(newLocation) => setLocation(newLocation)}
         />
         <CountryTextField
-          value={countryValue}
+          country={countryValue}
           onChange={(selected) => setCountry(selected)}
         />
         {hasNotes && (
@@ -159,7 +161,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
               </p>
             )}
           </Stack>
-          <Flag countryCode="CA" />
+          {countryValue && <Flag countryCode={countryValue.countryCode} />}
         </Stack>
       </div>
     );
