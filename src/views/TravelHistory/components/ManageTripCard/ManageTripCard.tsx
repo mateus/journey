@@ -1,22 +1,25 @@
 import React, {useState, useCallback} from 'react';
 import {
   Card,
+  ComplexAction,
   Checkbox,
   DisplayText,
   DatePicker,
   FormLayout,
   Stack,
+  Heading,
   TextField,
   TextStyle,
-  TextContainer,
-  ComplexAction,
 } from '@shopify/polaris';
 import moment from 'moment';
 
-import {CountryTextField} from 'components';
+import {CountryTextField, Flag} from 'components';
 import {Trip} from 'types';
 
-interface ManageTripCardProps {
+import './ManageTripCard.scss';
+
+export interface ManageTripCardProps {
+  // List of trips. If undefined loads Submit new trio card style
   trip?: Trip;
   onClose(): void;
 }
@@ -50,6 +53,13 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
 
   const cardTitle = trip ? 'What is new?' : 'What is your next trip?';
   const primaryFooterActionContent = trip ? 'Update' : 'Submit new trip';
+  const actions = [
+    {
+      content: 'Add notes',
+      disabled: hasNotes,
+      onAction: () => setHasNotes(true),
+    },
+  ];
   const secondaryFooterActions: ComplexAction[] | undefined = trip
     ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove'}]
     : [{content: 'Cancel', onAction: onClose}];
@@ -61,35 +71,30 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
         content: primaryFooterActionContent,
       }}
       secondaryFooterActions={secondaryFooterActions}
-      actions={[
-        {
-          content: 'Add notes',
-          onAction: () => setHasNotes(true),
-          disabled: hasNotes,
-        },
-      ]}
+      actions={actions}
+      sectioned
     >
-      <Card.Section>
-        <FormLayout>
+      <FormLayout>
+        <TextField
+          label="City"
+          value={locationValue}
+          placeholder="Anywhere"
+          onChange={(newLocation) => setLocation(newLocation)}
+        />
+        <CountryTextField
+          value={countryValue}
+          onChange={(selected) => setCountry(selected)}
+        />
+        {hasNotes && (
           <TextField
-            label="City"
-            value={locationValue}
-            placeholder="Anywhere"
-            onChange={(newLocation) => setLocation(newLocation)}
+            multiline={2}
+            label="Notes"
+            value={notesValue}
+            placeholder="Anything extra"
+            onChange={(newNotes) => setNotes(newNotes)}
           />
-          <CountryTextField
-            value={countryValue}
-            onChange={(selected) => setCountry(selected)}
-          />
-          {hasNotes && (
-            <TextField
-              multiline={2}
-              label="Notes"
-              value={notesValue}
-              placeholder="Anything extra"
-              onChange={(newNotes) => setNotes(newNotes)}
-            />
-          )}
+        )}
+        <FormLayout.Group>
           <DatePicker
             month={month}
             year={year}
@@ -100,45 +105,64 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
             selected={selectedDates}
             allowRange={!sameDayValue}
           />
-          <FormLayout.Group>
-            <Checkbox
-              label="Same day trip"
-              checked={sameDayValue}
-              onChange={handleSameDayChange}
-            />
-            <Checkbox
-              label="I have completed this trip"
-              checked={isCompletedValue}
-              onChange={() => setIsCompleted(!isCompletedValue)}
-            />
-          </FormLayout.Group>
-        </FormLayout>
-      </Card.Section>
+          {summaryMarkup()}
+        </FormLayout.Group>
+        <FormLayout.Group condensed>
+          <Checkbox
+            label="Same day trip"
+            checked={sameDayValue}
+            onChange={handleSameDayChange}
+          />
+          <Checkbox
+            label="I have completed this trip"
+            checked={isCompletedValue}
+            onChange={() => setIsCompleted(!isCompletedValue)}
+          />
+        </FormLayout.Group>
+      </FormLayout>
+    </Card>
+  );
 
-      <Card.Section>
-        <Stack vertical>
-          <TextContainer spacing="tight">
+  function tripDatesHumanized() {
+    return sameDayValue ? (
+      <TextStyle variation="strong">
+        {moment(selectedDates.start).format('ll')}
+      </TextStyle>
+    ) : (
+      <>
+        <TextStyle variation="strong">
+          {moment(selectedDates.start).format('ll')}
+        </TextStyle>{' '}
+        until{' '}
+        <TextStyle variation="strong">
+          {moment(selectedDates.end).format('ll')}
+        </TextStyle>
+      </>
+    );
+  }
+
+  function summaryMarkup() {
+    return (
+      <div className="Summary">
+        <Stack vertical alignment="center" spacing="loose">
+          <Stack vertical alignment="center" spacing="tight">
             <DisplayText size="small" element="h3">
-              Trip to {locationValue || '...'}
-            </DisplayText>
-            <p>
-              Traveling from{' '}
-              <TextStyle variation="strong">
-                {moment(selectedDates.start).format('LL')}
-              </TextStyle>{' '}
-              until{' '}
-              <TextStyle variation="strong">
-                {moment(selectedDates.end).format('LL')}
+              <TextStyle variation="subdued">
+                <TextStyle variation="strong">
+                  {locationValue || '...'}
+                </TextStyle>
               </TextStyle>
-            </p>
+            </DisplayText>
+            <p>{tripDatesHumanized()}</p>
             {notesValue && (
               <p>
                 <TextStyle variation="subdued">{notesValue}</TextStyle>
               </p>
             )}
-          </TextContainer>
+          </Stack>
+          <Flag countryCode="CA" />
         </Stack>
-      </Card.Section>
-    </Card>
-  );
+      </div>
+    );
+  }
 }

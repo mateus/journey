@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
-import ReactCountryFlag from 'react-country-flag';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
+import {Flag} from 'components';
 import {Trip} from 'types';
 
 import {ManageTripCard} from '..';
@@ -41,7 +41,7 @@ export function TripDetailsCard(trip: TripDetailsCardProps) {
     >
       <Stack wrap={false} spacing="extraLoose" alignment="trailing">
         <Stack.Item fill>{notes && <p>{notes}</p>}</Stack.Item>
-        <ReactCountryFlag
+        <Flag
           countryCode={countryCode}
           svg
           style={{
