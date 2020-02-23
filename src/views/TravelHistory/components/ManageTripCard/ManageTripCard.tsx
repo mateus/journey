@@ -51,8 +51,8 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
   const cardTitle = trip ? 'What is new?' : 'What is your next trip?';
   const primaryFooterActionContent = trip ? 'Update' : 'Submit new trip';
   const secondaryFooterActions: ComplexAction[] | undefined = trip
-    ? [{content: 'Remove'}]
-    : undefined;
+    ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove'}]
+    : [{content: 'Cancel', onAction: onClose}];
 
   return (
     <Card
@@ -67,7 +67,6 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
           onAction: () => setHasNotes(true),
           disabled: hasNotes,
         },
-        {content: 'Close', onAction: onClose},
       ]}
     >
       <Card.Section>
