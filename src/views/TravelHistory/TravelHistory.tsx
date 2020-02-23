@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {Page, Card, Layout, DisplayText, Stack} from '@shopify/polaris';
+import {
+  Page,
+  Card,
+  EmptyState,
+  Layout,
+  DisplayText,
+  Stack,
+} from '@shopify/polaris';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import moment from 'moment';
 
@@ -12,15 +19,13 @@ import {
   TripDetailsCard,
   UpcomingTripsCard,
 } from './components';
-import {mockTrips} from './tests/fixtures/mockTrips';
 import './TravelHistory.scss';
 
 export interface TravelHistoryProps {
-  trips?: Trip[];
+  trips: Trip[];
 }
 
-// Connected with Mock Trips for now to make it easier to test it. Single Query App.
-export function TravelHistory({trips = mockTrips}: TravelHistoryProps) {
+export function TravelHistory({trips}: TravelHistoryProps) {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
 
   const tripsByYear = trips.reduce((map, trip) => {
@@ -37,19 +42,8 @@ export function TravelHistory({trips = mockTrips}: TravelHistoryProps) {
     .filter(({completed}) => !completed)
     .sort(sortByStartDateAsc);
 
-  return (
-    <Page
-      title="Travel History"
-      primaryAction={{
-        content: 'Add trip',
-        disabled: newTripFormOpen,
-        onAction: () => setNewTripFormOpen(!newTripFormOpen),
-      }}
-      secondaryActions={[
-        {content: 'Import', icon: ImportMinor},
-        {content: 'Export', icon: ExportMinor},
-      ]}
-    >
+  const content =
+    trips.length > 0 ? (
       <Layout>
         <Layout.Section>
           <Stack vertical>
@@ -82,6 +76,26 @@ export function TravelHistory({trips = mockTrips}: TravelHistoryProps) {
           <UpcomingTripsCard list={upcomingTrips} />
         </Layout.Section>
       </Layout>
+    ) : (
+      <EmptyState image="https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg">
+        <RandomQuote />
+      </EmptyState>
+    );
+
+  return (
+    <Page
+      title="Travel History"
+      primaryAction={{
+        content: 'Add trip',
+        disabled: newTripFormOpen,
+        onAction: () => setNewTripFormOpen(!newTripFormOpen),
+      }}
+      secondaryActions={[
+        {content: 'Import', icon: ImportMinor},
+        {content: 'Export', icon: ExportMinor},
+      ]}
+    >
+      {content}
     </Page>
   );
 }

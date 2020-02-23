@@ -1,6 +1,6 @@
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import {Card, Page} from '@shopify/polaris';
+import {Card, EmptyState, Page} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip} from 'utilities/trip';
@@ -26,22 +26,22 @@ describe('<TravelHistory />', () => {
     const wrapper = await mountWithAppProvider(
       <TravelHistory {...mockProps} />,
     );
-    expect(wrapper.find(Page).exists()).toBeTruthy();
-    expect(wrapper.find(Page).props()).toMatchObject({
+    expect(wrapper.find(Page)).toHaveProp({
       title: 'Travel History',
     });
+  });
+
+  it('renders <EmptySate /> if list of trips is empty', async () => {
+    const wrapper = await mountWithAppProvider(<TravelHistory trips={[]} />);
+    expect(wrapper.find(EmptyState)).toExist();
+    expect(wrapper.find(EmptyState).find(RandomQuote)).toExist();
   });
 
   it('renders <RandomQuote />', async () => {
     const wrapper = await mountWithAppProvider(
       <TravelHistory {...mockProps} />,
     );
-    expect(
-      wrapper
-        .find(Card)
-        .find(RandomQuote)
-        .exists(),
-    ).toBeTruthy();
+    expect(wrapper.find(Card).find(RandomQuote)).toExist();
   });
 
   describe('<UpcomingTripsCard />', () => {
@@ -52,9 +52,9 @@ describe('<TravelHistory />', () => {
       const upcoming = mockProps
         .trips!.filter(({completed}) => !completed)
         .sort(sortByStartDateAsc);
-      expect(wrapper.find(UpcomingTripsCard).prop('list')).toStrictEqual(
-        upcoming,
-      );
+      expect(wrapper.find(UpcomingTripsCard)).toHaveProp({
+        list: upcoming,
+      });
     });
   });
 
@@ -63,7 +63,7 @@ describe('<TravelHistory />', () => {
       const wrapper = await mountWithAppProvider(
         <TravelHistory {...mockProps} />,
       );
-      expect(wrapper.find(ManageTripCard).exists()).toBeFalsy();
+      expect(wrapper.find(ManageTripCard)).not.toExist();
     });
 
     it('renders when clicking "Add trip" action from Page', async () => {
@@ -74,7 +74,7 @@ describe('<TravelHistory />', () => {
         wrapper.find(Page).prop('primaryAction')!.onAction!();
       });
       await updateWrapper(wrapper);
-      expect(wrapper.find(ManageTripCard).exists()).toBeTruthy();
+      expect(wrapper.find(ManageTripCard)).toExist();
     });
 
     it('disables Add trip Page action when showing', async () => {
@@ -85,10 +85,11 @@ describe('<TravelHistory />', () => {
         wrapper.find(Page).prop('primaryAction')!.onAction!();
       });
       await updateWrapper(wrapper);
-      expect(wrapper.find(Page).props()).toMatchObject({
-        primaryAction: {
+      expect(wrapper.find(Page)).toHaveProp({
+        primaryAction: expect.objectContaining({
+          content: 'Add trip',
           disabled: true,
-        },
+        }),
       });
     });
   });

@@ -13,7 +13,7 @@ export function Routes() {
       <ProtectedRoute
         path="/"
         exact
-        render={() => <TravelHistory trips={undefined} />}
+        render={() => <TravelHistory trips={[]} />}
       />
       <Route render={() => <NotFound />} />
     </Switch>
