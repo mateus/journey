@@ -7,7 +7,6 @@ import {
   DatePicker,
   FormLayout,
   Stack,
-  Heading,
   TextField,
   TextStyle,
 } from '@shopify/polaris';
@@ -114,7 +113,7 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
             onChange={handleSameDayChange}
           />
           <Checkbox
-            label="I have completed this trip"
+            label="Completed trip"
             checked={isCompletedValue}
             onChange={() => setIsCompleted(!isCompletedValue)}
           />
