@@ -1,7 +1,7 @@
 /* eslint-disable no-process-env */
 import firebase from 'firebase/app';
 import 'firebase/auth';
-// import 'firebase/database';
+import 'firebase/firebase-firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -20,5 +20,6 @@ firebase.initializeApp(firebaseConfig);
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const auth = firebase.auth();
+export const firestore = firebase.firestore();
 
 export default firebase;

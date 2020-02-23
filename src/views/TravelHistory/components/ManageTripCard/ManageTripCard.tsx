@@ -65,11 +65,23 @@ export function ManageTripCard({trip, onClose}: ManageTripCardProps) {
     ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove trip'}]
     : [{content: 'Cancel', onAction: onClose}];
 
+  const handleSubmit = () => {
+    console.log({
+      completed: isCompletedValue,
+      countryCode: countryValue?.countryCode,
+      endDate: selectedDates.end,
+      startDate: selectedDates.start,
+      location: locationValue,
+      notes: notesValue,
+    });
+  };
+
   return (
     <Card
       title={cardTitle}
       primaryFooterAction={{
         content: primaryFooterActionContent,
+        onAction: handleSubmit,
       }}
       secondaryFooterActions={secondaryFooterActions}
       actions={actions}
