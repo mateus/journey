@@ -14,7 +14,7 @@ import {
 
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
-import {Trip, Timestamp} from 'types';
+import {Trip, QueryTripCollection} from 'types';
 import {LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
@@ -26,16 +26,11 @@ import {
 } from './components';
 import './TravelHistory.scss';
 
-interface QueryTripData extends Omit<Trip, 'endDate' | 'startDate'> {
-  endDate: Timestamp;
-  startDate: Timestamp;
-}
-
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
-  const [tripsData, loading, error] = useCollectionData<QueryTripData>(
+  const [tripsData, loading, error] = useCollectionData<QueryTripCollection>(
     firestore
       .collection('users')
       .doc(user?.uid)

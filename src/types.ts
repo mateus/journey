@@ -17,3 +17,9 @@ export interface Country {
   label: string;
   countryCode: string;
 }
+
+export interface QueryTripCollection
+  extends Omit<Trip, 'endDate' | 'startDate'> {
+  endDate: Timestamp;
+  startDate: Timestamp;
+}
