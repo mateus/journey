@@ -58,16 +58,26 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
 
   const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
   const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
-  const actions = [
-    {
-      content: 'Add notes',
-      disabled: hasNotes,
-      onAction: () => setHasNotes(true),
-    },
+  const actions: ComplexAction[] = trip
+    ? [
+        {content: 'Remove trip', disabled: true},
+        {
+          content: 'Add notes',
+          disabled: hasNotes,
+          onAction: () => setHasNotes(true),
+        },
+      ]
+    : [
+        {
+          content: 'Add notes',
+          disabled: hasNotes,
+          onAction: () => setHasNotes(true),
+        },
+      ];
+
+  const secondaryFooterActions: ComplexAction[] = [
+    {content: 'Cancel', onAction: onClose},
   ];
-  const secondaryFooterActions: ComplexAction[] | undefined = trip
-    ? [{content: 'Cancel', onAction: onClose}, {content: 'Remove trip'}]
-    : [{content: 'Cancel', onAction: onClose}];
 
   return (
     <Card
@@ -75,6 +85,7 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
       primaryFooterAction={{
         content: primaryFooterActionContent,
         onAction: handleSubmit,
+        disabled: Boolean(trip),
       }}
       secondaryFooterActions={secondaryFooterActions}
       actions={actions}
