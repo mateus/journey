@@ -6,7 +6,7 @@ import {User} from 'firebase';
 import {DisplayText, Stack} from '@shopify/polaris';
 
 import {auth, provider, firestore} from 'utilities/firebase';
-import {Loading} from 'components';
+import {LoadingPage} from 'components';
 
 import './Login.scss';
 
@@ -14,7 +14,7 @@ export function Login() {
   const [user, initialising, error] = useAuthState(auth);
 
   if (initialising) {
-    return <Loading />;
+    return <LoadingPage />;
   }
 
   if (error) throw new Error(error.message);

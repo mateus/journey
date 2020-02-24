@@ -15,7 +15,7 @@ import {
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
 import {Trip, Timestamp} from 'types';
-import {Loading} from 'components';
+import {LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
@@ -26,16 +26,14 @@ import {
 } from './components';
 import './TravelHistory.scss';
 
-export interface TravelHistoryProps {
-  trips: Trip[];
-}
-
 interface QueryTripData extends Omit<Trip, 'endDate' | 'startDate'> {
   endDate: Timestamp;
   startDate: Timestamp;
 }
 
-export function TravelHistory({trips}: TravelHistoryProps) {
+export function TravelHistory() {
+  const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+  const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
   const [tripsData, loading, error] = useCollectionData<QueryTripData>(
     firestore
@@ -46,10 +44,8 @@ export function TravelHistory({trips}: TravelHistoryProps) {
       snapshotListenOptions: {includeMetadataChanges: true},
     },
   );
-  const [Toast, showToast] = useToast();
-  const [newTripFormOpen, setNewTripFormOpen] = useState(false);
 
-  if (loading) return <Loading />;
+  if (loading) return <LoadingPage />;
 
   if (error) throw new Error(error.message);
 
@@ -94,7 +90,11 @@ export function TravelHistory({trips}: TravelHistoryProps) {
       }}
       secondaryActions={[
         {content: 'Import', icon: ImportMinor},
-        {content: 'Export', icon: ExportMinor, disabled: trips.length === 0},
+        {
+          content: 'Export',
+          icon: ExportMinor,
+          disabled: reconciledTrips?.length === 0,
+        },
       ]}
     >
       {content}

@@ -4,7 +4,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect, Route, RouteProps} from 'react-router-dom';
 import {User} from 'firebase';
 
-import {Loading} from 'components';
+import {LoadingPage} from 'components';
 
 import {ProtectedRoute} from '../ProtectedRoute';
 import {Frame} from '../../Frame';
@@ -35,10 +35,10 @@ describe('<ProtectedRoute />', () => {
     useAuthStateSpy.mockRestore();
   });
 
-  it('renders <Loading /> while auth state is still initializing', () => {
+  it('renders <LoadingPage /> while auth state is still initializing', () => {
     useAuthStateSpy.mockReturnValue([null, true, null]);
     const wrapper = shallow(<ProtectedRoute {...mockProps} />);
-    expect(wrapper.find(Loading)).toExist();
+    expect(wrapper.find(LoadingPage)).toExist();
     useAuthStateSpy.mockRestore();
   });
 

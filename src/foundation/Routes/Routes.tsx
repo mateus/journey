@@ -10,11 +10,7 @@ export function Routes() {
   return (
     <Switch>
       <Route exact path="/login" render={() => <Login />} />
-      <ProtectedRoute
-        path="/"
-        exact
-        render={() => <TravelHistory trips={[]} />}
-      />
+      <ProtectedRoute path="/" exact render={() => <TravelHistory />} />
       <Route render={() => <NotFound />} />
     </Switch>
   );
