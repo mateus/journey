@@ -24,29 +24,33 @@ export function mockTrip(trip?: Partial<Trip>): Trip {
 }
 
 export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
+  const today = moment();
   const startDate = trip?.startDate;
   const endDate = trip?.endDate;
 
-  const today = moment();
+  const epochStartDateSeconds = startDate
+    ? moment(new Date(startDate)).unix()
+    : today.unix();
+
+  const epochEndDateSeconds = endDate
+    ? moment(new Date(endDate)).unix()
+    : today.add(3, 'days').unix();
+
   const fakeTrip: QueryTripCollection = {
-    id: faker.random.uuid(),
-    countryCode: faker.address.countryCode(),
-    completed: faker.random.boolean(),
-    notes: faker.lorem.sentences(),
-    location: faker.address.city(),
+    id: trip?.id || faker.random.uuid(),
+    countryCode: trip?.countryCode || faker.address.countryCode(),
+    completed: trip?.completed || faker.random.boolean(),
+    notes: trip?.notes || faker.lorem.sentences(),
+    location: trip?.location || faker.address.city(),
     startDate: {
       // Not trully Seconds and Nanoseconds (both the same)
-      seconds: startDate ? moment(new Date(startDate)).unix() : today.unix(),
-      nanoseconds: startDate
-        ? moment(new Date(startDate)).unix()
-        : today.unix(),
+      seconds: epochStartDateSeconds,
+      nanoseconds: epochStartDateSeconds,
     },
     endDate: {
       // Not trully Seconds and Nanoseconds (both the same)
-      seconds: endDate ? moment(new Date(endDate)).unix() : today.unix(),
-      nanoseconds: endDate
-        ? moment(new Date(endDate)).unix()
-        : today.add(3, 'days').unix(),
+      seconds: epochEndDateSeconds,
+      nanoseconds: epochEndDateSeconds,
     },
   };
 

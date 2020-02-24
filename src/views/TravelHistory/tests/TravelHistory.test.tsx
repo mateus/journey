@@ -4,8 +4,7 @@ import {useCollectionData} from 'react-firebase-hooks/firestore';
 import {Card, EmptyState, Page} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
-import {mockTripCollection} from 'utilities/trip';
-import {Trip} from 'types';
+import {mockTrip, mockTripCollection} from 'utilities/trip';
 import {LoadingPage} from 'components';
 
 import {sortByStartDateAsc} from '../utilities';
@@ -151,14 +150,18 @@ describe('<TravelHistory />', () => {
       expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
     });
 
-    it('renders with the Trip prop set', async () => {
+    it.only('renders with the Trip prop set', async () => {
       const [first, second, third] = [
-        mockTripCollection({endDate: new Date('01/01/2019')}),
-        mockTripCollection({endDate: new Date('02/02/2019')}),
-        mockTripCollection({endDate: new Date('01/01/2020')}),
+        mockTrip({endDate: new Date('01/01/2019')}),
+        mockTrip({endDate: new Date('06/06/2019')}),
+        mockTrip({endDate: new Date('01/01/2020')}),
       ];
       useCollectionDataSpy.mockReturnValue([
-        [first, second, third],
+        [
+          mockTripCollection(first),
+          mockTripCollection(second),
+          mockTripCollection(third),
+        ],
         false,
         null,
       ]);
