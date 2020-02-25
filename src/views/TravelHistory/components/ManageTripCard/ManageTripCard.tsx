@@ -71,7 +71,7 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
           // Update existing trip
         } else {
           // Add new trip
-          firestore
+          await firestore
             .collection('users')
             .doc(user?.uid)
             .collection('trips')
@@ -82,10 +82,10 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
               startDate: selectedDates.start,
               location,
               notes,
-            });
+            })
+            .then(onSubmit);
         }
 
-        onSubmit();
         return {status: 'success'};
       } catch (error) {
         return {status: 'fail', errors: [{message: error.message}]};
@@ -129,54 +129,56 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
       actions={actions}
       sectioned
     >
-      {errorBanner()}
-      <Form onSubmit={submit}>
-        <FormLayout>
-          <TextField
-            {...fields.location}
-            label="City"
-            placeholder="Ottawa, ON"
-          />
-          <CountryTextField
-            error={fields.country.error}
-            country={fields.country.value}
-            onChange={fields.country.onChange}
-          />
-          {hasNotes && (
+      <Stack vertical>
+        {errorBanner()}
+        <Form onSubmit={submit}>
+          <FormLayout>
             <TextField
-              {...fields.notes}
-              multiline={2}
-              label="Notes"
-              placeholder="Anything important to add?"
+              {...fields.location}
+              label="City"
+              placeholder="Ottawa, ON"
             />
-          )}
-          <FormLayout.Group>
-            <DatePicker
-              month={fields.datePicker.value.month}
-              year={fields.datePicker.value.year}
-              onChange={setSelectedDates}
-              onMonthChange={(newMonth, newYear) =>
-                fields.datePicker.onChange({month: newMonth, year: newYear})
-              }
-              selected={selectedDates}
-              allowRange={!sameDayValue}
+            <CountryTextField
+              error={fields.country.error}
+              country={fields.country.value}
+              onChange={fields.country.onChange}
             />
-            {summaryMarkup()}
-          </FormLayout.Group>
-          <FormLayout.Group condensed>
-            <Checkbox
-              label="Same day trip"
-              checked={sameDayValue}
-              onChange={handleSameDayChange}
-            />
-            <Checkbox
-              label="Completed trip"
-              checked={fields.completed.value}
-              onChange={fields.completed.onChange}
-            />
-          </FormLayout.Group>
-        </FormLayout>
-      </Form>
+            {hasNotes && (
+              <TextField
+                {...fields.notes}
+                multiline={2}
+                label="Notes"
+                placeholder="Anything important to add?"
+              />
+            )}
+            <FormLayout.Group>
+              <DatePicker
+                month={fields.datePicker.value.month}
+                year={fields.datePicker.value.year}
+                onChange={setSelectedDates}
+                onMonthChange={(newMonth, newYear) =>
+                  fields.datePicker.onChange({month: newMonth, year: newYear})
+                }
+                selected={selectedDates}
+                allowRange={!sameDayValue}
+              />
+              {summaryMarkup()}
+            </FormLayout.Group>
+            <FormLayout.Group condensed>
+              <Checkbox
+                label="Same day trip"
+                checked={sameDayValue}
+                onChange={handleSameDayChange}
+              />
+              <Checkbox
+                label="Completed trip"
+                checked={fields.completed.value}
+                onChange={fields.completed.onChange}
+              />
+            </FormLayout.Group>
+          </FormLayout>
+        </Form>
+      </Stack>
     </Card>
   );
 
