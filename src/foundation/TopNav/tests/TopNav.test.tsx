@@ -14,9 +14,10 @@ const useAuthStateSpy = useAuthState as jest.Mock;
 
 describe('<TopNav />', () => {
   const mockName = 'Mateus F.';
+  const mockPhoto = 'user-image';
   beforeEach(() => {
     useAuthStateSpy.mockReturnValue([
-      {displayName: mockName, photoURL: 'user-image'} as User,
+      {displayName: mockName, photoURL: mockPhoto} as User,
       false,
       null,
     ]);
@@ -30,7 +31,7 @@ describe('<TopNav />', () => {
     const wrapper = shallow(<TopNav />);
     expect(
       wrapper.containsMatchingElement(
-        <Avatar name={mockName} customer size="large" source="user-image" />,
+        <Avatar name={mockName} customer size="large" source={mockPhoto} />,
       ),
     ).toBeTruthy();
   });
