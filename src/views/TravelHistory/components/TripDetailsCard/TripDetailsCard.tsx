@@ -19,7 +19,11 @@ export function TripDetailsCard(trip: TripDetailsCardProps) {
   );
 
   return isEditing ? (
-    <ManageTripCard trip={trip} onClose={() => setIsEditing(false)} />
+    <ManageTripCard
+      trip={trip}
+      onClose={() => setIsEditing(false)}
+      onSubmit={() => {}}
+    />
   ) : (
     <Card
       title={

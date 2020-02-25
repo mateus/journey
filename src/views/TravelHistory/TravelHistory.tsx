@@ -1,4 +1,8 @@
 import React, {useState} from 'react';
+import {useCollectionData} from 'react-firebase-hooks/firestore';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import moment from 'moment';
+import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {
   Page,
   Card,
@@ -7,12 +11,13 @@ import {
   DisplayText,
   Stack,
 } from '@shopify/polaris';
-import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
-import moment from 'moment';
 
-import {Trip} from 'types';
+import {auth, firestore} from 'utilities/firebase';
+import {useToast} from 'utilities/toast';
+import {Trip, QueryTripCollection} from 'types';
+import {LoadingPage} from 'components';
 
-import {insertOrdered, sortByStartDateAsc} from './utilities';
+import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ManageTripCard,
   RandomQuote,
@@ -21,29 +26,37 @@ import {
 } from './components';
 import './TravelHistory.scss';
 
-export interface TravelHistoryProps {
-  trips: Trip[];
-}
-
-export function TravelHistory({trips}: TravelHistoryProps) {
+export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+  const [Toast, showToast] = useToast();
+  const [user] = useAuthState(auth);
+  const [tripsData, loading, error] = useCollectionData<QueryTripCollection>(
+    firestore
+      .collection('users')
+      .doc(user?.uid)
+      .collection('trips'),
+    {
+      snapshotListenOptions: {includeMetadataChanges: true},
+    },
+  );
 
-  const tripsByYear = trips.reduce((map, trip) => {
-    const year = moment(trip.endDate).year();
-    if (map[year]) {
-      map[year] = insertOrdered(trip, map[year], {desc: true});
-    } else {
-      map[year] = [trip];
-    }
-    return map;
-  }, {} as {[key: string]: Trip[]});
+  if (loading) return <LoadingPage />;
 
-  const upcomingTrips = trips
-    .filter(({completed}) => !completed)
-    .sort(sortByStartDateAsc);
+  if (error) throw new Error(error.message);
+
+  const reconciledTrips = tripsData?.map<Trip>((trip) => {
+    return {
+      ...trip,
+      endDate: moment.unix(trip.endDate.seconds).toDate(),
+      startDate: moment.unix(trip.startDate.seconds).toDate(),
+    };
+  });
 
   const manageTripCardMarkup = (
-    <ManageTripCard onClose={() => setNewTripFormOpen(false)} />
+    <ManageTripCard
+      onClose={() => setNewTripFormOpen(false)}
+      onSubmit={handleSubmitTrip}
+    />
   );
 
   const emptyStateMarkup = newTripFormOpen ? (
@@ -58,7 +71,37 @@ export function TravelHistory({trips}: TravelHistoryProps) {
   );
 
   const content =
-    trips.length > 0 ? (
+    reconciledTrips && reconciledTrips.length > 0
+      ? renderTrips(reconciledTrips)
+      : emptyStateMarkup;
+
+  return (
+    <Page
+      title="Travel History"
+      primaryAction={{
+        content: 'Add trip',
+        disabled: newTripFormOpen,
+        onAction: () => setNewTripFormOpen(!newTripFormOpen),
+      }}
+      secondaryActions={[
+        {content: 'Import', icon: ImportMinor},
+        {
+          content: 'Export',
+          icon: ExportMinor,
+          disabled: reconciledTrips?.length === 0,
+        },
+      ]}
+    >
+      {content}
+      <Toast />
+    </Page>
+  );
+
+  function renderTrips(trips: Trip[]) {
+    const byYear = tripsByYear(trips);
+    const upcoming = upcomingTrips(trips);
+
+    return (
       <Layout>
         <Layout.Section>
           <Stack vertical>
@@ -66,12 +109,12 @@ export function TravelHistory({trips}: TravelHistoryProps) {
             <Card sectioned>
               <RandomQuote />
             </Card>
-            {Object.keys(tripsByYear)
+            {Object.keys(byYear)
               .reverse()
               .map((year) => {
                 return (
                   <div key={year}>
-                    {tripsByYear[year].map((trip) => (
+                    {byYear[year].map((trip) => (
                       <TripDetailsCard
                         key={trip.location + trip.id}
                         {...trip}
@@ -86,27 +129,14 @@ export function TravelHistory({trips}: TravelHistoryProps) {
           </Stack>
         </Layout.Section>
         <Layout.Section secondary>
-          <UpcomingTripsCard list={upcomingTrips} />
+          <UpcomingTripsCard list={upcoming} />
         </Layout.Section>
       </Layout>
-    ) : (
-      emptyStateMarkup
     );
+  }
 
-  return (
-    <Page
-      title="Travel History"
-      primaryAction={{
-        content: 'Add trip',
-        disabled: newTripFormOpen,
-        onAction: () => setNewTripFormOpen(!newTripFormOpen),
-      }}
-      secondaryActions={[
-        {content: 'Import', icon: ImportMinor},
-        {content: 'Export', icon: ExportMinor, disabled: trips.length === 0},
-      ]}
-    >
-      {content}
-    </Page>
-  );
+  function handleSubmitTrip() {
+    setNewTripFormOpen(false);
+    showToast({content: 'New trip added'});
+  }
 }

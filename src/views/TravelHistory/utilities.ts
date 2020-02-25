@@ -1,4 +1,26 @@
+import moment from 'moment';
+
 import {Trip} from 'types';
+
+export interface TripsByYear {
+  [key: string]: Trip[];
+}
+
+export function tripsByYear(trips: Trip[]): TripsByYear {
+  return trips.reduce((map, trip) => {
+    const year = moment(trip.endDate).year();
+    if (map[year]) {
+      map[year] = insertOrdered(trip, map[year], {desc: true});
+    } else {
+      map[year] = [trip];
+    }
+    return map;
+  }, {} as {[key: string]: Trip[]});
+}
+
+export function upcomingTrips(trips: Trip[]) {
+  return trips.filter(({completed}) => !completed).sort(sortByStartDateAsc);
+}
 
 export function insertOrdered(
   trip: Trip,

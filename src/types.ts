@@ -1,3 +1,8 @@
+export interface Timestamp {
+  seconds: number;
+  nanoseconds: number;
+}
+
 export interface Trip {
   id: string;
   completed: boolean;
@@ -11,4 +16,10 @@ export interface Trip {
 export interface Country {
   label: string;
   countryCode: string;
+}
+
+export interface QueryTripCollection
+  extends Omit<Trip, 'endDate' | 'startDate'> {
+  endDate: Timestamp;
+  startDate: Timestamp;
 }
