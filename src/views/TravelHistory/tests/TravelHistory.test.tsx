@@ -1,7 +1,8 @@
 import React from 'react';
 import {act} from 'react-dom/test-utils';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
-import {Card, EmptyState, Page} from '@shopify/polaris';
+import {Card, EmptyState, Toast, Page} from '@shopify/polaris';
+import {ReactWrapper} from 'enzyme';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
@@ -138,6 +139,13 @@ describe('<TravelHistory />', () => {
   });
 
   describe('<ManageTripCard />', () => {
+    async function clickAddTrip(wrapper: ReactWrapper) {
+      act(() => {
+        wrapper.find(Page).prop('primaryAction')!.onAction!();
+      });
+      await updateWrapper(wrapper);
+    }
+
     it('is closed on first load', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(wrapper.find(ManageTripCard)).not.toExist();
@@ -145,25 +153,39 @@ describe('<TravelHistory />', () => {
 
     it('renders when clicking "Add trip" action from Page', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      act(() => {
-        wrapper.find(Page).prop('primaryAction')!.onAction!();
-      });
-      await updateWrapper(wrapper);
+      await clickAddTrip(wrapper);
       expect(wrapper.find(ManageTripCard)).toExist();
     });
 
     it('disables Add trip Page action when showing', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      act(() => {
-        wrapper.find(Page).prop('primaryAction')!.onAction!();
-      });
-      await updateWrapper(wrapper);
+      await clickAddTrip(wrapper);
       expect(wrapper.find(Page)).toHaveProp({
         primaryAction: expect.objectContaining({
           content: 'Add trip',
           disabled: true,
         }),
       });
+    });
+
+    it('hides the compoent after onSubmit is triggered', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      await clickAddTrip(wrapper);
+      act(() => {
+        wrapper.find(ManageTripCard).prop('onSubmit')();
+      });
+      await updateWrapper(wrapper);
+      expect(wrapper.find(ManageTripCard)).not.toExist();
+    });
+
+    it('shows <Toast /> with success message ', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      await clickAddTrip(wrapper);
+      act(() => {
+        wrapper.find(ManageTripCard).prop('onSubmit')();
+      });
+      await updateWrapper(wrapper);
+      expect(wrapper.find(Toast)).toHaveProp({content: 'New trip added'});
     });
   });
 

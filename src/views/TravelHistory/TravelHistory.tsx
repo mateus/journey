@@ -101,9 +101,6 @@ export function TravelHistory() {
     const byYear = tripsByYear(trips);
     const upcoming = upcomingTrips(trips);
 
-    // console.log(upcoming);
-    // console.log(byYear);
-
     return (
       <Layout>
         <Layout.Section>
