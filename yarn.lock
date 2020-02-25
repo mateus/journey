@@ -1449,6 +1449,26 @@
     lodash "^4.17.4"
     tslib "^1.9.3"
 
+"@shopify/predicates@^1.2.5":
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/@shopify/predicates/-/predicates-1.2.5.tgz#995d6c82408467f5d4d3738a6f4c8c5e3730f949"
+  integrity sha512-7UbhCx3XHsGt0awg8ntjyks9RKrTE82UMllFPDm8KC2NPjh1pT7VAN2znGHhD2S0GNgIbj7dhGXBVYSD+iSeQQ==
+
+"@shopify/react-form@^0.3.33":
+  version "0.3.33"
+  resolved "https://registry.yarnpkg.com/@shopify/react-form/-/react-form-0.3.33.tgz#f547d73ebd969fa20a3c6a3c85a6cdd060eead7c"
+  integrity sha512-p1c1g63+yHmFU2uHWrDTjmOIPMNIGq9DRptlRKBKIo5qGfWzBcK5eL8FS743gHjssuOubWTKRd7g6UM02VbyOQ==
+  dependencies:
+    "@shopify/predicates" "^1.2.5"
+    "@shopify/react-hooks" "^1.4.2"
+    fast-deep-equal "^2.0.1"
+    get-value "^3.0.1"
+
+"@shopify/react-hooks@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@shopify/react-hooks/-/react-hooks-1.4.2.tgz#45856e8ebc18d6a6823743fd0daf7ccb5b49eed4"
+  integrity sha512-CkbYKrJVy0W9ndPi1goQ6VrBNZHwCnTtkc5KrM85nLfjxW1DMtBO8goMPzsLLcNS7BgARSytOh5wPPzv9s4sRg==
+
 "@shopify/useful-types@^1.2.4":
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/@shopify/useful-types/-/useful-types-1.3.0.tgz#79cfb6722d2cc192c05f14e55789bcfe2b40a6de"
@@ -5166,6 +5186,11 @@ faker@^4.1.0:
   resolved "https://registry.yarnpkg.com/faker/-/faker-4.1.0.tgz#1e45bbbecc6774b3c195fad2835109c6d748cc3f"
   integrity sha1-HkW7vsxndLPBlfrSg1EJxtdIzD8=
 
+fast-deep-equal@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz#7b05218ddf9667bf7f370bf7fdb2cb15fdd0aa49"
+  integrity sha1-ewUhjd+WZ79/Nwv3/bLLFf3Qqkk=
+
 fast-deep-equal@^3.1.1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.1.tgz#545145077c501491e33b15ec408c294376e94ae4"
@@ -5661,6 +5686,13 @@ get-value@^2.0.3, get-value@^2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/get-value/-/get-value-2.0.6.tgz#dc15ca1c672387ca76bd37ac0a395ba2042a2c28"
   integrity sha1-3BXKHGcjh8p2vTesCjlbogQqLCg=
+
+get-value@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/get-value/-/get-value-3.0.1.tgz#5efd2a157f1d6a516d7524e124ac52d0a39ef5a8"
+  integrity sha512-mKZj9JLQrwMBtj5wxi6MH8Z5eSKaERpAwjg43dPtlGI1ZVEgH/qC7T8/6R2OBSUA+zzHBZgICsVJaEIV2tKTDA==
+  dependencies:
+    isobject "^3.0.1"
 
 getpass@^0.1.1:
   version "0.1.7"

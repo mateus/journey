@@ -11,6 +11,7 @@
   "dependencies": {
     "@shopify/polaris": "^4.13.1",
     "@shopify/polaris-icons": "^3.9.0",
+    "@shopify/react-form": "^0.3.33",
     "firebase": "^7.9.1",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
