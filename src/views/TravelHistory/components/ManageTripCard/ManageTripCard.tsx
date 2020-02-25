@@ -36,10 +36,6 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
 
-  const [{month, year}, setDate] = useState({
-    month: moment(trip?.startDate).month() || today.month(),
-    year: moment(trip?.startDate).year() || today.year(),
-  });
   const [selectedDates, setSelectedDates] = useState({
     start: trip?.startDate || today.toDate(),
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
@@ -60,26 +56,38 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
       country: useField<Country | undefined>(
         trip ? getCountryByCode(trip.countryCode) : undefined,
       ),
-      dates: useField({
+      datePicker: useField({
         month: moment(trip?.startDate).month() || today.month(),
         year: moment(trip?.startDate).year() || today.year(),
       }),
+      // selectedDates: useField({
+      //   start: trip?.startDate || today.toDate(),
+      //   end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
+      // }),
       completed: useField(trip?.completed || false),
     },
     async onSubmit({location, notes, country, completed}) {
       try {
-        firestore
-          .collection('users')
-          .doc(user?.uid)
-          .collection('trips')
-          .add({
-            completed,
-            countryCode: country?.countryCode,
-            endDate: selectedDates.end,
-            startDate: selectedDates.start,
-            location,
-            notes,
-          });
+        console.log({
+          completed,
+          countryCode: country?.countryCode,
+          endDate: selectedDates.end,
+          startDate: selectedDates.start,
+          location,
+          notes,
+        });
+        // firestore
+        //   .collection('users')
+        //   .doc(user?.uid)
+        //   .collection('trips')
+        //   .add({
+        //     completed,
+        //     countryCode: country?.countryCode,
+        //     endDate: selectedDates.end,
+        //     startDate: selectedDates.start,
+        //     location,
+        //     notes,
+        //   });
         onSubmit();
         return {status: 'success'};
       } catch (error) {
@@ -145,11 +153,11 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
           )}
           <FormLayout.Group>
             <DatePicker
-              month={month}
-              year={year}
+              month={fields.datePicker.value.month}
+              year={fields.datePicker.value.year}
               onChange={setSelectedDates}
               onMonthChange={(newMonth, newYear) =>
-                setDate({month: newMonth, year: newYear})
+                fields.datePicker.onChange({month: newMonth, year: newYear})
               }
               selected={selectedDates}
               allowRange={!sameDayValue}
