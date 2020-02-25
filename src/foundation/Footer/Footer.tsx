@@ -1,14 +1,18 @@
 import React from 'react';
-import {Image} from '@shopify/polaris';
-
-import {logo192} from 'assets/images';
+import {FooterHelp, Link} from '@shopify/polaris';
 
 import './Footer.scss';
 
 export function Footer() {
   return (
     <footer className="Footer">
-      <Image source={logo192} alt="Journey app" width={40} height={40} />
+      <FooterHelp>
+        Help it at{' '}
+        <Link external url="https://github.com/mateus/journey">
+          GitHub
+        </Link>
+        .
+      </FooterHelp>
     </footer>
   );
 }

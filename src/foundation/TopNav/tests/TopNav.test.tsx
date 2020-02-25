@@ -4,8 +4,6 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import {User} from 'firebase';
 import {Avatar, Link} from '@shopify/polaris';
 
-import {logo192} from 'assets/images';
-
 import {TopNav} from '../TopNav';
 
 jest.mock('react-firebase-hooks/auth', () => ({
@@ -18,7 +16,7 @@ describe('<TopNav />', () => {
   const mockName = 'Mateus F.';
   beforeEach(() => {
     useAuthStateSpy.mockReturnValue([
-      {displayName: mockName, photoURL: logo192} as User,
+      {displayName: mockName, photoURL: 'user-image'} as User,
       false,
       null,
     ]);
@@ -32,7 +30,7 @@ describe('<TopNav />', () => {
     const wrapper = shallow(<TopNav />);
     expect(
       wrapper.containsMatchingElement(
-        <Avatar name={mockName} customer size="large" source={logo192} />,
+        <Avatar name={mockName} customer size="large" source="user-image" />,
       ),
     ).toBeTruthy();
   });

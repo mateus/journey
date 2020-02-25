@@ -1,18 +1,15 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import {Image} from '@shopify/polaris';
-
-import {logo192} from 'assets/images';
+import {Link} from '@shopify/polaris';
 
 import {Footer} from '../Footer';
 
 describe('<Footer />', () => {
-  it('renders Image with logo', () => {
+  it('renders <Link /> to Github', () => {
     const wrapper = shallow(<Footer />);
-    expect(
-      wrapper.containsMatchingElement(
-        <Image source={logo192} alt="Journey app" width={40} height={40} />,
-      ),
-    ).toBeTruthy();
+    expect(wrapper.find(Link)).toHaveProp({
+      url: 'https://github.com/mateus/journey',
+      external: true,
+    });
   });
 });
