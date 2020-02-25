@@ -1,8 +1,7 @@
 import React from 'react';
 import {Switch, Route} from 'react-router-dom';
 
-import {NotFound} from 'components';
-import {Login, TravelHistory} from 'pages';
+import {Login, NotFound, TravelHistory} from 'pages';
 
 import {ProtectedRoute} from '../ProtectedRoute';
 
