@@ -7,7 +7,6 @@ import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
 import {LoadingPage} from 'components';
 
-import {sortByStartDateAsc} from '../utilities';
 import {TravelHistory} from '../TravelHistory';
 import {
   ManageTripCard,
@@ -63,13 +62,37 @@ describe('<TravelHistory />', () => {
   });
 
   describe('<UpcomingTripsCard />', () => {
-    it('renders list of not completed trips', async () => {
+    it('renders ordered list of upcoming trips', async () => {
+      const trips = [
+        mockTrip({
+          startDate: new Date('01/01/2020'),
+          endDate: new Date('01/02/2020'),
+          completed: false,
+        }),
+        mockTrip({
+          startDate: new Date('01/01/2019'),
+          endDate: new Date('01/02/2019'),
+          completed: false,
+        }),
+        mockTrip({
+          startDate: new Date('01/01/2018'),
+          endDate: new Date('01/02/2018'),
+          completed: true,
+        }),
+      ];
+      const [first, second, third] = trips;
+      useCollectionDataSpy.mockReturnValue([
+        [
+          mockTripCollection(first),
+          mockTripCollection(second),
+          mockTripCollection(third),
+        ],
+        false,
+        null,
+      ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      const upcoming = mockTrips
-        .filter(({completed}) => !completed)
-        .sort(sortByStartDateAsc);
       expect(wrapper.find(UpcomingTripsCard)).toHaveProp({
-        list: upcoming,
+        list: [second, first],
       });
     });
   });
@@ -150,11 +173,20 @@ describe('<TravelHistory />', () => {
       expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
     });
 
-    it.only('renders with the Trip prop set', async () => {
+    it('renders descending ordered list of trips', async () => {
       const [first, second, third] = [
-        mockTrip({endDate: new Date('01/01/2019')}),
-        mockTrip({endDate: new Date('06/06/2019')}),
-        mockTrip({endDate: new Date('01/01/2020')}),
+        mockTrip({
+          endDate: new Date('01/01/2019'),
+          startDate: new Date('01/2/2019'),
+        }),
+        mockTrip({
+          endDate: new Date('06/06/2019'),
+          startDate: new Date('06/07/2019'),
+        }),
+        mockTrip({
+          endDate: new Date('12/12/2019'),
+          startDate: new Date('12/13/2019'),
+        }),
       ];
       useCollectionDataSpy.mockReturnValue([
         [

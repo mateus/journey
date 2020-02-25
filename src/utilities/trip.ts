@@ -24,6 +24,7 @@ export function mockTrip(trip?: Partial<Trip>): Trip {
 }
 
 export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
+  const mockedTrip = mockTrip(trip);
   const today = moment();
   const startDate = trip?.startDate;
   const endDate = trip?.endDate;
@@ -37,11 +38,7 @@ export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
     : today.add(3, 'days').unix();
 
   const fakeTrip: QueryTripCollection = {
-    id: trip?.id || faker.random.uuid(),
-    countryCode: trip?.countryCode || faker.address.countryCode(),
-    completed: trip?.completed || faker.random.boolean(),
-    notes: trip?.notes || faker.lorem.sentences(),
-    location: trip?.location || faker.address.city(),
+    ...mockedTrip,
     startDate: {
       // Not trully Seconds and Nanoseconds (both the same)
       seconds: epochStartDateSeconds,
