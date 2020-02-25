@@ -1,7 +1,8 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState} from 'react';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import {
+  Banner,
   Card,
   ComplexAction,
   Checkbox,
@@ -9,11 +10,12 @@ import {
   DatePicker,
   Form,
   FormLayout,
+  List,
   Stack,
   TextField,
   TextStyle,
 } from '@shopify/polaris';
-import {useForm, useField} from '@shopify/react-form';
+import {useForm, useField, notEmpty} from '@shopify/react-form';
 
 import {auth, firestore} from 'utilities/firebase';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
@@ -36,26 +38,23 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
 
+  // This should be in useForm. Getting error when adding initial value.
   const [selectedDates, setSelectedDates] = useState({
     start: trip?.startDate || today.toDate(),
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
-  const handleSameDayChange = useCallback(
-    (newSameDay) => {
-      setSameDay(newSameDay);
-      setSelectedDates({start: selectedDates.start, end: selectedDates.start});
-    },
-    [selectedDates.start],
-  );
-
   const {fields, submit, submitting, dirty, submitErrors} = useForm({
     fields: {
-      location: useField(trip?.location || ''),
+      location: useField({
+        value: trip?.location || '',
+        validates: [notEmpty('Location is required')],
+      }),
       notes: useField(trip?.notes || ''),
-      country: useField<Country | undefined>(
-        trip ? getCountryByCode(trip.countryCode) : undefined,
-      ),
+      country: useField<Country | undefined>({
+        value: trip ? getCountryByCode(trip.countryCode) : undefined,
+        validates: [notEmpty('Country is required')],
+      }),
       datePicker: useField({
         month: moment(trip?.startDate).month() || today.month(),
         year: moment(trip?.startDate).year() || today.year(),
@@ -68,26 +67,24 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
     },
     async onSubmit({location, notes, country, completed}) {
       try {
-        console.log({
-          completed,
-          countryCode: country?.countryCode,
-          endDate: selectedDates.end,
-          startDate: selectedDates.start,
-          location,
-          notes,
-        });
-        // firestore
-        //   .collection('users')
-        //   .doc(user?.uid)
-        //   .collection('trips')
-        //   .add({
-        //     completed,
-        //     countryCode: country?.countryCode,
-        //     endDate: selectedDates.end,
-        //     startDate: selectedDates.start,
-        //     location,
-        //     notes,
-        //   });
+        if (trip) {
+          // Update existing trip
+        } else {
+          // Add new trip
+          firestore
+            .collection('users')
+            .doc(user?.uid)
+            .collection('trips')
+            .add({
+              completed,
+              countryCode: country?.countryCode,
+              endDate: selectedDates.end,
+              startDate: selectedDates.start,
+              location,
+              notes,
+            });
+        }
+
         onSubmit();
         return {status: 'success'};
       } catch (error) {
@@ -132,6 +129,7 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
       actions={actions}
       sectioned
     >
+      {errorBanner()}
       <Form onSubmit={submit}>
         <FormLayout>
           <TextField
@@ -140,6 +138,7 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
             placeholder="Ottawa, ON"
           />
           <CountryTextField
+            error={fields.country.error}
             country={fields.country.value}
             onChange={fields.country.onChange}
           />
@@ -224,5 +223,23 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
         </Stack>
       </div>
     );
+  }
+
+  function errorBanner() {
+    return submitErrors.length > 0 ? (
+      <Banner status="critical">
+        <p>There were some issues with your form submission:</p>
+        <List type="bullet">
+          {submitErrors.map(({message}) => {
+            return <List.Item key={message}>{message}</List.Item>;
+          })}
+        </List>
+      </Banner>
+    ) : null;
+  }
+
+  function handleSameDayChange(newSameDay: boolean) {
+    setSameDay(newSameDay);
+    setSelectedDates({start: selectedDates.start, end: selectedDates.start});
   }
 }

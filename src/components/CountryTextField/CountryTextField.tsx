@@ -7,11 +7,16 @@ import {DEFAULT_COUNTRY} from 'utilities/countries';
 import {Country} from 'types';
 
 interface CountryTextFieldProps {
+  error?: string;
   country?: Country;
   onChange(country: Country): void;
 }
 
-export function CountryTextField({country, onChange}: CountryTextFieldProps) {
+export function CountryTextField({
+  error,
+  country,
+  onChange,
+}: CountryTextFieldProps) {
   const deselectedOptions = countries.map(({name, code}) => {
     return {value: code, label: name};
   });
@@ -63,6 +68,7 @@ export function CountryTextField({country, onChange}: CountryTextFieldProps) {
 
   const textField = (
     <Autocomplete.TextField
+      error={error}
       onChange={updateText}
       label="Country"
       value={inputValue}
