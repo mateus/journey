@@ -7,11 +7,9 @@ export function Footer() {
   return (
     <footer className="Footer">
       <FooterHelp>
-        Help it at{' '}
         <Link external url="https://github.com/mateus/journey">
           GitHub
         </Link>
-        .
       </FooterHelp>
     </footer>
   );
