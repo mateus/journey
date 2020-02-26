@@ -1,26 +1,12 @@
 import React from 'react';
 import {EmptyState} from '@shopify/polaris';
-import {useHistory} from 'react-router-dom';
 
-import {EmptyStateWomanTraveller} from 'assets';
+import {EmptyStateNotFound} from 'assets';
 
 export function NotFound() {
-  const history = useHistory();
-
-  const goBackHome = () => {
-    history.push('/');
-  };
-
   return (
-    <EmptyState
-      heading="Page not found"
-      action={{
-        content: 'Go back to homepage',
-        onAction: goBackHome,
-      }}
-      image={EmptyStateWomanTraveller}
-    >
-      <p>The page your are looking for was not found.</p>
+    <EmptyState heading="Page not found" image={EmptyStateNotFound}>
+      <p>Nothing here.</p>
     </EmptyState>
   );
 }

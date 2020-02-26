@@ -1,0 +1,1 @@
+export {WondersOfTheWorld} from './WondersOfTheWorld';
