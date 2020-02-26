@@ -5,8 +5,6 @@ import {Redirect, Route, RouteProps} from 'react-router-dom';
 import {auth} from 'utilities/firebase';
 import {LoadingPage} from 'components';
 
-import {Frame} from '../Frame';
-
 export function ProtectedRoute(props: RouteProps) {
   const [user, initialising, error] = useAuthState(auth);
 
@@ -19,11 +17,7 @@ export function ProtectedRoute(props: RouteProps) {
   }
 
   if (user) {
-    return (
-      <Frame>
-        <Route {...props} />
-      </Frame>
-    );
+    return <Route {...props} />;
   }
 
   return <Redirect to={{pathname: '/login', state: {from: props.location}}} />;

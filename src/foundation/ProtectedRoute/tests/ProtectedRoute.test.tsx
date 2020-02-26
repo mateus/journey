@@ -51,15 +51,4 @@ describe('<ProtectedRoute />', () => {
     });
     useAuthStateSpy.mockRestore();
   });
-
-  it('renders route if authenticated with <Frame />', () => {
-    const wrapper = shallow(<ProtectedRoute {...mockProps} />);
-    const route = wrapper
-      .find(Frame)
-      .find(Route)
-      .filterWhere((route) => route.prop('path') === mockProps.path);
-
-    expect(route).toExist();
-    expect(route.props()).toMatchObject(mockProps);
-  });
 });

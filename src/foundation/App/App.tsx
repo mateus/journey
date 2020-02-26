@@ -4,7 +4,7 @@ import {AppProvider} from '@shopify/polaris';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 import {isDevelopment} from 'config';
-import {Routes} from 'foundation/Routes';
+import {Frame, Routes} from 'foundation';
 
 import {DevelopmentHead} from './components';
 
@@ -21,7 +21,9 @@ export function App() {
     <Router>
       {isDevelopment && <DevelopmentHead />}
       <AppProvider theme={theme} i18n={enTranslations}>
-        <Routes />
+        <Frame>
+          <Routes />
+        </Frame>
       </AppProvider>
     </Router>
   );

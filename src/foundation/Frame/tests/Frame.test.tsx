@@ -67,29 +67,26 @@ describe('<Frame />', () => {
       expect(wrapper.find(Navigation.Section).first()).toHaveProp({
         title: 'Journey App',
         items: [
-          {
+          expect.objectContaining({
             url: '/',
             label: 'Travel History',
             icon: TransportMajorTwotone,
-          },
-          {
+          }),
+          expect.objectContaining({
             url: '/plans',
-            disabled: true,
             label: 'Future Plans',
             icon: NoteMajorTwotone,
-          },
-          {
+          }),
+          expect.objectContaining({
             url: '/wonders',
-            disabled: true,
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
-          },
-          {
+          }),
+          expect.objectContaining({
             url: '/bucket-list',
-            disabled: true,
             label: 'Bucket List',
             icon: ChecklistMajorTwotone,
-          },
+          }),
         ],
       });
     });

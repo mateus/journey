@@ -9,15 +9,10 @@ import {EmptyStateWomanTraveller} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
 import {Trip, QueryTripCollection} from 'types';
-import {LoadingPage} from 'components';
+import {RandomQuote, LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
-import {
-  ManageTripCard,
-  RandomQuote,
-  TripDetailsCard,
-  UpcomingTripsCard,
-} from './components';
+import {ManageTripCard, TripDetailsCard, UpcomingTripsCard} from './components';
 import './TravelHistory.scss';
 
 export function TravelHistory() {

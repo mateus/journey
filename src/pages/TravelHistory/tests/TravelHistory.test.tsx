@@ -1,19 +1,18 @@
 import React from 'react';
 import {act} from 'react-dom/test-utils';
 import {useCollection} from 'react-firebase-hooks/firestore';
-import {Card, EmptyState, Toast, Page} from '@shopify/polaris';
+import {EmptyState, Toast, Page} from '@shopify/polaris';
 import {ReactWrapper} from 'enzyme';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
-import {LoadingPage} from 'components';
+import {LoadingPage, RandomQuote} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
 import {
   ManageTripCard,
   TripDetailsCard,
-  RandomQuote,
   UpcomingTripsCard,
 } from '../components';
 

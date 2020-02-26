@@ -1,11 +1,6 @@
-import React, {useState, useCallback} from 'react';
-import {
-  Card,
-  ActionList,
-  Navigation,
-  TopBar,
-  Frame as PolarisFrame,
-} from '@shopify/polaris';
+import React, {useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {Navigation, TopBar, Frame as PolarisFrame} from '@shopify/polaris';
 import {
   TransportMajorTwotone,
   LogOutMinor,
@@ -24,6 +19,7 @@ export interface FrameProps {
 }
 
 export function Frame({children}: FrameProps) {
+  const history = useHistory();
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
   const toggleMobileNavigationActive = () =>
     setMobileNavigationActive(
@@ -42,31 +38,32 @@ export function Frame({children}: FrameProps) {
   );
 
   const navigationMarkup = (
-    <Navigation location="/">
+    <Navigation location={history.location.pathname}>
       <TopNav />
       <Navigation.Section
         title="Journey App"
         items={[
           {
             url: '/',
+            exactMatch: true,
             label: 'Travel History',
             icon: TransportMajorTwotone,
           },
           {
             url: '/plans',
-            disabled: true,
+            exactMatch: true,
             label: 'Future Plans',
             icon: NoteMajorTwotone,
           },
           {
             url: '/wonders',
-            disabled: true,
+            exactMatch: true,
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
           },
           {
             url: '/bucket-list',
-            disabled: true,
+            exactMatch: true,
             label: 'Bucket List',
             icon: ChecklistMajorTwotone,
           },
