@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
@@ -30,7 +30,7 @@ export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
-  const [tripsData, loading, error] = useCollectionData<QueryTripCollection>(
+  const [tripsSnapshot, loading, error] = useCollection(
     firestore
       .collection('users')
       .doc(user?.uid)
@@ -40,22 +40,31 @@ export function TravelHistory() {
     },
   );
 
-  if (loading) return <LoadingPage />;
+  if (loading || !tripsSnapshot) return <LoadingPage />;
 
   if (error) throw new Error(error.message);
 
-  const reconciledTrips = tripsData?.map<Trip>((trip) => {
+  const tripsData = tripsSnapshot.docs.map<QueryTripCollection>((doc) => {
     return {
-      ...trip,
-      endDate: moment.unix(trip.endDate.seconds).toDate(),
-      startDate: moment.unix(trip.startDate.seconds).toDate(),
+      id: doc.id,
+      // data() does not have inferred types from firestore
+      ...(doc.data() as QueryTripCollection),
     };
   });
+  const reconciledTrips = tripsData.map<Trip>(
+    ({endDate, startDate, ...rest}) => {
+      return {
+        ...rest,
+        endDate: moment.unix(endDate.seconds).toDate(),
+        startDate: moment.unix(startDate.seconds).toDate(),
+      };
+    },
+  );
 
   const manageTripCardMarkup = (
     <ManageTripCard
       onClose={() => setNewTripFormOpen(false)}
-      onSubmit={handleSubmitTrip}
+      onSuccess={handleSubmitTrip}
     />
   );
 
