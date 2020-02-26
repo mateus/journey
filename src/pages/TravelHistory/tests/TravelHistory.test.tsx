@@ -168,11 +168,11 @@ describe('<TravelHistory />', () => {
       });
     });
 
-    it('hides the compoent after onSubmit is triggered', async () => {
+    it('hides the compoent after onSuccess is triggered', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
       act(() => {
-        wrapper.find(ManageTripCard).prop('onSubmit')();
+        wrapper.find(ManageTripCard).prop('onSuccess')();
       });
       await updateWrapper(wrapper);
       expect(wrapper.find(ManageTripCard)).not.toExist();
@@ -182,7 +182,7 @@ describe('<TravelHistory />', () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
       act(() => {
-        wrapper.find(ManageTripCard).prop('onSubmit')();
+        wrapper.find(ManageTripCard).prop('onSuccess')();
       });
       await updateWrapper(wrapper);
       expect(wrapper.find(Toast)).toHaveProp({content: 'New trip added'});
