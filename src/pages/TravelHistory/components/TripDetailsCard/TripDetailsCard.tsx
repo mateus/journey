@@ -2,27 +2,22 @@ import React, {useState} from 'react';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
+import {useToast} from 'utilities/toast';
 import {Flag} from 'components';
 import {Trip} from 'types';
 
 import {ManageTripCard} from '..';
 
-interface TripDetailsCardProps extends Trip {}
-
-export function TripDetailsCard(trip: TripDetailsCardProps) {
+export function TripDetailsCard(trip: Trip) {
   const {location, notes, startDate, endDate, countryCode, completed} = trip;
   const [isEditing, setIsEditing] = useState(false);
-  const cardBadge = completed ? (
-    <Badge>Completed</Badge>
-  ) : (
-    <Badge status="attention">Upcoming</Badge>
-  );
+  const [Toast, showToast] = useToast();
 
-  return isEditing ? (
+  const cardMarkup = isEditing ? (
     <ManageTripCard
       trip={trip}
       onClose={() => setIsEditing(false)}
-      onSubmit={() => {}}
+      onSuccess={handleUpdateTrip}
     />
   ) : (
     <Card
@@ -32,11 +27,9 @@ export function TripDetailsCard(trip: TripDetailsCardProps) {
             <DisplayText size="small" element="h3">
               {location}
             </DisplayText>
-            {cardBadge}
+            {renderBadge()}
           </Stack>
-          <Caption>
-            {moment(startDate).format('LL')} - {moment(endDate).format('LL')}
-          </Caption>
+          {renderDatesCaption()}
         </Stack>
       }
       actions={[{content: 'Edit', onAction: () => setIsEditing(true)}]}
@@ -57,4 +50,39 @@ export function TripDetailsCard(trip: TripDetailsCardProps) {
       </Stack>
     </Card>
   );
+
+  return (
+    <>
+      {cardMarkup}
+      <Toast />
+    </>
+  );
+
+  function renderDatesCaption() {
+    const start = moment(startDate).format('LL');
+    const end = moment(endDate).format('LL');
+
+    if (start === end) {
+      return <Caption>{start}</Caption>;
+    } else {
+      return (
+        <Caption>
+          {start} - {end}
+        </Caption>
+      );
+    }
+  }
+
+  function renderBadge() {
+    return completed ? (
+      <Badge>Completed</Badge>
+    ) : (
+      <Badge status="attention">Upcoming</Badge>
+    );
+  }
+
+  function handleUpdateTrip() {
+    setIsEditing(false);
+    showToast({content: 'Trip updated'});
+  }
 }

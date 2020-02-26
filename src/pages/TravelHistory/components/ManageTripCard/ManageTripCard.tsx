@@ -29,16 +29,21 @@ export interface ManageTripCardProps {
   // List of trips. If undefined loads Submit new trio card style
   trip?: Trip;
   onClose(): void;
-  onSubmit(): void;
+  onSuccess(): void;
 }
 
-export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
+export function ManageTripCard({
+  trip,
+  onClose,
+  onSuccess,
+}: ManageTripCardProps) {
   const today = moment();
   const [user] = useAuthState(auth);
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
 
   // This should be in useForm. Getting error when adding initial value.
+  // It won't manage the dirty state properly until it's included
   const [selectedDates, setSelectedDates] = useState({
     start: trip?.startDate || today.toDate(),
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
@@ -67,14 +72,27 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
     },
     async onSubmit({location, notes, country, completed}) {
       try {
+        const tripsCollection = firestore
+          .collection('users')
+          .doc(user?.uid)
+          .collection('trips');
+
         if (trip) {
           // Update existing trip
+          await tripsCollection
+            .doc(trip.id)
+            .update({
+              completed,
+              countryCode: country?.countryCode,
+              endDate: selectedDates.end,
+              startDate: selectedDates.start,
+              location,
+              notes,
+            })
+            .then(onSuccess);
         } else {
           // Add new trip
-          await firestore
-            .collection('users')
-            .doc(user?.uid)
-            .collection('trips')
+          await tripsCollection
             .add({
               completed,
               countryCode: country?.countryCode,
@@ -83,7 +101,7 @@ export function ManageTripCard({trip, onClose, onSubmit}: ManageTripCardProps) {
               location,
               notes,
             })
-            .then(onSubmit);
+            .then(onSuccess);
         }
 
         return {status: 'success'};
