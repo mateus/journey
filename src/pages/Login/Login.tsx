@@ -7,20 +7,18 @@ import {DisplayText, EmptyState, Stack} from '@shopify/polaris';
 
 import {EmptyStateLogin} from 'assets';
 import {auth, provider, firestore} from 'utilities/firebase';
+import {useAppContext} from 'hooks/useAppContext';
 import {LoadingPage, RandomQuote} from 'components';
 
 import './Login.scss';
 
 export function Login() {
-  const [user, initialising, error] = useAuthState(auth);
-
-  if (initialising) {
-    return <LoadingPage />;
-  }
-
-  if (error) throw new Error(error.message);
+  const {
+    app: {user},
+  } = useAppContext();
 
   if (user) {
+    alert('Login in page WITH user');
     return <Redirect to={{pathname: '/'}} />;
   }
 

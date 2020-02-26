@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
 import {useCollection} from 'react-firebase-hooks/firestore';
-import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {EmptyStateWomanTraveller} from 'assets';
-import {auth, firestore} from 'utilities/firebase';
+import {firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
 import {Trip, QueryTripCollection} from 'types';
 import {RandomQuote, LoadingPage} from 'components';
+import {useAppContext} from 'hooks/useAppContext';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {ManageTripCard, TripDetailsCard, UpcomingTripsCard} from './components';
@@ -18,7 +18,9 @@ import './TravelHistory.scss';
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
   const [Toast, showToast] = useToast();
-  const [user] = useAuthState(auth);
+  const {
+    app: {user},
+  } = useAppContext();
   const [tripsSnapshot, loading, error] = useCollection(
     firestore
       .collection('users')

@@ -17,9 +17,10 @@ import {
 } from '@shopify/polaris';
 import {useForm, useField, notEmpty} from '@shopify/react-form';
 
-import {auth, firestore} from 'utilities/firebase';
+import {firestore} from 'utilities/firebase';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
+import {useAppContext} from 'hooks/useAppContext';
 import {Country, Trip} from 'types';
 import {CountryTextField, Flag} from 'components';
 
@@ -38,7 +39,9 @@ export function ManageTripCard({
   onSuccess,
 }: ManageTripCardProps) {
   const today = moment();
-  const [user] = useAuthState(auth);
+  const {
+    app: {user},
+  } = useAppContext();
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
 

@@ -8,14 +8,15 @@ import {
   DisplayText,
 } from '@shopify/polaris';
 import {GlobeMinor} from '@shopify/polaris-icons';
-import {useAuthState} from 'react-firebase-hooks/auth';
 
-import {auth} from 'utilities/firebase';
+import {useAppContext} from 'hooks/useAppContext';
 
 import './TopNav.scss';
 
 export function TopNav() {
-  const [user] = useAuthState(auth);
+  const {
+    app: {user},
+  } = useAppContext();
 
   return (
     <nav className="TopNav">
