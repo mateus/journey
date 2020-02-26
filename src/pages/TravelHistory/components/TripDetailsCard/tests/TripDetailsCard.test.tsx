@@ -19,21 +19,21 @@ describe('<TripDetailsCard />', () => {
     const title = await mountWithAppProvider(
       wrapper.find(Card).prop('title') as React.ReactElement,
     );
-    expect(title.find(DisplayText).text()).toEqual(location);
+    expect(title.find(DisplayText)).toHaveText(location);
   });
 
   it('renders a subdued Card if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
       <TripDetailsCard {...mockTrip({completed: true})} />,
     );
-    expect(wrapper.find(Card).prop('subdued')).toBeTruthy();
+    expect(wrapper.find(Card)).toHaveProp({subdued: true});
   });
 
   it('renders Completed Badge if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
       <TripDetailsCard {...mockTrip({completed: true})} />,
     );
-    expect(wrapper.find(Badge).text()).toEqual('Completed');
+    expect(wrapper.find(Badge)).toHaveText('Completed');
   });
 
   it('renders Upcoming Badge if trip is not completed', async () => {
@@ -58,7 +58,7 @@ describe('<TripDetailsCard />', () => {
     const wrapper = await mountWithAppProvider(
       <TripDetailsCard {...mockTrip({countryCode})} />,
     );
-    expect(wrapper.find(ReactCountryFlag).props()).toMatchObject({
+    expect(wrapper.find(ReactCountryFlag)).toHaveProp({
       countryCode,
       svg: true,
     });
@@ -71,13 +71,13 @@ describe('<TripDetailsCard />', () => {
       wrapper.find(Card).prop('actions')![0].onAction!();
     });
     await updateWrapper(wrapper);
-    expect(wrapper.find(ManageTripCard).prop('trip')).toStrictEqual(trip);
+    expect(wrapper.find(ManageTripCard)).toHaveProp({trip});
   });
 
   it('renders <Caption /> with start and end dates', async () => {
     const trip = mockTrip();
     const wrapper = await mountWithAppProvider(<TripDetailsCard {...trip} />);
-    expect(wrapper.find(Caption).text()).toEqual(
+    expect(wrapper.find(Caption)).toHaveText(
       `${moment(trip.startDate).format('LL')} - ${moment(trip.endDate).format(
         'LL',
       )}`,
