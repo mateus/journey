@@ -9,8 +9,8 @@ export interface UpcomingTripsCardProps {
 }
 
 export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
-  return (
-    <Card title="Upcoming" sectioned subdued>
+  const content =
+    list.length > 0 ? (
       <List type="bullet">
         {list.map(({location, startDate, endDate}) => (
           <List.Item key={location}>
@@ -31,6 +31,15 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
           </List.Item>
         ))}
       </List>
+    ) : (
+      <p>
+        <TextStyle variation="subdued">You have no upcoming trips.</TextStyle>
+      </p>
+    );
+
+  return (
+    <Card title="Upcoming" sectioned subdued>
+      {content}
     </Card>
   );
 }

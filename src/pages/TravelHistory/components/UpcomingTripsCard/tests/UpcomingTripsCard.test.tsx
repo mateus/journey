@@ -46,4 +46,9 @@ describe('<UpcomingTripsCard />', () => {
       );
     });
   });
+
+  it('renders empty state message', async () => {
+    const wrapper = await mountWithAppProvider(<UpcomingTripsCard list={[]} />);
+    expect(wrapper.find('p')).toHaveText('You have no upcoming trips.');
+  });
 });
