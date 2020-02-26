@@ -1,13 +1,13 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import {useAuthState} from 'react-firebase-hooks/auth';
-import {Redirect, Route, RouteProps} from 'react-router-dom';
+import {Redirect, RouteProps} from 'react-router-dom';
 import {User} from 'firebase';
 
 import {LoadingPage} from 'components';
+import {Frame} from 'foundation';
 
 import {ProtectedRoute} from '../ProtectedRoute';
-import {Frame} from '../../Frame';
 
 jest.mock('react-firebase-hooks/auth', () => ({
   ...require.requireActual('react-firebase-hooks/auth'),
@@ -50,5 +50,10 @@ describe('<ProtectedRoute />', () => {
       state: {from: mockProps.location},
     });
     useAuthStateSpy.mockRestore();
+  });
+
+  it('renders <Frame />', () => {
+    const wrapper = shallow(<ProtectedRoute {...mockProps} />);
+    expect(wrapper.find(Frame)).toExist();
   });
 });
