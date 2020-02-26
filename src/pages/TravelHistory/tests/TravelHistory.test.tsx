@@ -32,7 +32,7 @@ const useCollectionSpy = useCollection as jest.Mock;
 describe('<TravelHistory />', () => {
   beforeEach(() => {
     useCollectionSpy.mockReturnValue([
-      createCollectionSnapshot(mockDataTrips),
+      createCollectionsSnapshot(mockDataTrips),
       false,
       null,
     ]);
@@ -57,7 +57,7 @@ describe('<TravelHistory />', () => {
 
   it('renders <EmptySate /> if list of trips is empty', async () => {
     useCollectionSpy.mockReturnValue([
-      createCollectionSnapshot([]),
+      createCollectionsSnapshot([]),
       false,
       null,
     ]);
@@ -92,7 +92,7 @@ describe('<TravelHistory />', () => {
       ];
       const [first, second, third] = trips;
       useCollectionSpy.mockReturnValue([
-        createCollectionSnapshot([
+        createCollectionsSnapshot([
           mockTripCollection(first),
           mockTripCollection(second),
           mockTripCollection(third),
@@ -122,7 +122,7 @@ describe('<TravelHistory />', () => {
 
     it('is disabled if there are no trips', async () => {
       useCollectionSpy.mockReturnValue([
-        createCollectionSnapshot([]),
+        createCollectionsSnapshot([]),
         false,
         null,
       ]);
@@ -224,7 +224,7 @@ describe('<TravelHistory />', () => {
         }),
       ];
       useCollectionSpy.mockReturnValue([
-        createCollectionSnapshot([
+        createCollectionsSnapshot([
           mockTripCollection(first),
           mockTripCollection(second),
           mockTripCollection(third),
@@ -247,7 +247,7 @@ describe('<TravelHistory />', () => {
         mockTripCollection({endDate: new Date('01/01/2018')}),
       ];
       useCollectionSpy.mockReturnValue([
-        createCollectionSnapshot(trips),
+        createCollectionsSnapshot(trips),
         false,
         null,
       ]);
@@ -257,13 +257,12 @@ describe('<TravelHistory />', () => {
   });
 });
 
-function createCollectionSnapshot(dataTrips: QueryTripCollection[]) {
+// Mimics Firestore data snapshots
+function createCollectionsSnapshot(dataTrips: QueryTripCollection[]) {
   const docs = dataTrips.map((trip) => {
     return {
       id: trip.id,
-      data() {
-        return trip;
-      },
+      data: () => trip,
     };
   });
   return {docs};
