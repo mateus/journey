@@ -5,6 +5,7 @@ import moment from 'moment';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
+import {emptyState} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
 import {Trip, QueryTripCollection} from 'types';
@@ -67,7 +68,7 @@ export function TravelHistory() {
       <Layout.Section secondary></Layout.Section>
     </Layout>
   ) : (
-    <EmptyState image="https://cdn.shopify.com/s/files/1/0757/9955/files/empty-state.svg">
+    <EmptyState image={emptyState}>
       <RandomQuote />
     </EmptyState>
   );
