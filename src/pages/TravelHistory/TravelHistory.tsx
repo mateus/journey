@@ -87,6 +87,7 @@ export function TravelHistory() {
               <ManageTripCard
                 onClose={() => setNewTripFormOpen(false)}
                 onSuccess={handleSubmitTrip}
+                onRemoved={() => showToast({content: 'New trip added'})}
               />
             )}
             {Object.keys(byYear)

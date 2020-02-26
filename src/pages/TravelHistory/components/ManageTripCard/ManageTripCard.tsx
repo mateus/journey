@@ -30,12 +30,14 @@ export interface ManageTripCardProps {
   trip?: Trip;
   onClose(): void;
   onSuccess(): void;
+  onRemoved(): void;
 }
 
 export function ManageTripCard({
   trip,
   onClose,
   onSuccess,
+  onRemoved,
 }: ManageTripCardProps) {
   const today = moment();
   const [user] = useAuthState(auth);
@@ -269,6 +271,6 @@ export function ManageTripCard({
     await tripsCollectionRef
       .doc(uid)
       .delete()
-      .then(onSuccess);
+      .then(onRemoved);
   }
 }

@@ -18,6 +18,7 @@ export function TripDetailsCard(trip: Trip) {
       trip={trip}
       onClose={() => setIsEditing(false)}
       onSuccess={handleUpdateTrip}
+      onRemoved={handleRemoveTrip}
     />
   ) : (
     <Card
@@ -84,5 +85,10 @@ export function TripDetailsCard(trip: Trip) {
   function handleUpdateTrip() {
     setIsEditing(false);
     showToast({content: 'Trip updated'});
+  }
+
+  function handleRemoveTrip() {
+    setIsEditing(false);
+    showToast({content: 'Trip removed'});
   }
 }
