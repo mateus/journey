@@ -67,22 +67,18 @@ describe('<Frame />', () => {
         title: 'Journey App',
         items: [
           expect.objectContaining({
-            url: '/',
             label: 'Travel History',
             icon: TransportMajorTwotone,
           }),
           expect.objectContaining({
-            url: '/plans',
             label: 'Future Plans',
             icon: NoteMajorTwotone,
           }),
           expect.objectContaining({
-            url: '/wonders',
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
           }),
           expect.objectContaining({
-            url: '/bucket-list',
             label: 'Bucket List',
             icon: ChecklistMajorTwotone,
           }),

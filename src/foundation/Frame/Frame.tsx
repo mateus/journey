@@ -43,25 +43,25 @@ export function Frame({children}: FrameProps) {
         title="Journey App"
         items={[
           {
-            url: '/',
+            onClick: () => history.push('/'),
             exactMatch: true,
             label: 'Travel History',
             icon: TransportMajorTwotone,
           },
           {
-            url: '/plans',
+            onClick: () => history.push('/plans'),
             exactMatch: true,
             label: 'Future Plans',
             icon: NoteMajorTwotone,
           },
           {
-            url: '/wonders',
+            onClick: () => history.push('/wonders'),
             exactMatch: true,
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
           },
           {
-            url: '/bucket-list',
+            onClick: () => history.push('/bucket-list'),
             exactMatch: true,
             label: 'Bucket List',
             icon: ChecklistMajorTwotone,
