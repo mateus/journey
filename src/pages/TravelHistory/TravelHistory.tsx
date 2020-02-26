@@ -7,7 +7,7 @@ import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {EmptyStateWomanTraveller} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
-import {useToast} from 'utilities/toast';
+import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
 import {RandomQuote, LoadingPage} from 'components';
 
