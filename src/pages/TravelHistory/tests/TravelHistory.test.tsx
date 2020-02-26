@@ -66,11 +66,6 @@ describe('<TravelHistory />', () => {
     expect(wrapper.find(EmptyState).find(RandomQuote)).toExist();
   });
 
-  it('renders <RandomQuote />', async () => {
-    const wrapper = await mountWithAppProvider(<TravelHistory />);
-    expect(wrapper.find(Card).find(RandomQuote)).toExist();
-  });
-
   describe('<UpcomingTripsCard />', () => {
     it('renders ordered list of upcoming trips', async () => {
       const trips = [
