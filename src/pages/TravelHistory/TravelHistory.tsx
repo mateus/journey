@@ -19,15 +19,15 @@ export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
-  const [tripsSnapshot, loading, error] = useCollection(
-    firestore
-      .collection('users')
-      .doc(user?.uid)
-      .collection('trips'),
-    {
-      snapshotListenOptions: {includeMetadataChanges: true},
-    },
-  );
+  const tripsCollectionRef = user
+    ? firestore
+        .collection('users')
+        .doc(user?.uid)
+        .collection('trips')
+    : null;
+  const [tripsSnapshot, loading, error] = useCollection(tripsCollectionRef, {
+    snapshotListenOptions: {includeMetadataChanges: true},
+  });
 
   if (loading || !tripsSnapshot) return <LoadingPage />;
 
