@@ -49,6 +49,11 @@ export function ManageTripCard({
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
+  const tripsCollectionRef = firestore
+    .collection('users')
+    .doc(user?.uid)
+    .collection('trips');
+
   const {fields, submit, submitting, dirty, submitErrors} = useForm({
     fields: {
       location: useField({
@@ -72,14 +77,9 @@ export function ManageTripCard({
     },
     async onSubmit({location, notes, country, completed}) {
       try {
-        const tripsCollection = firestore
-          .collection('users')
-          .doc(user?.uid)
-          .collection('trips');
-
         if (trip) {
           // Update existing trip
-          await tripsCollection
+          await tripsCollectionRef
             .doc(trip.id)
             .update({
               completed,
@@ -92,7 +92,7 @@ export function ManageTripCard({
             .then(onSuccess);
         } else {
           // Add new trip
-          await tripsCollection
+          await tripsCollectionRef
             .add({
               completed,
               countryCode: country?.countryCode,
@@ -115,7 +115,10 @@ export function ManageTripCard({
   const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
   const actions: ComplexAction[] = trip
     ? [
-        {content: 'Remove trip', disabled: true},
+        {
+          content: 'Remove trip',
+          onAction: () => handleRemoveTrip(trip.id),
+        },
         {
           content: 'Add notes',
           disabled: hasNotes,
@@ -130,10 +133,6 @@ export function ManageTripCard({
         },
       ];
 
-  const secondaryFooterActions: ComplexAction[] = [
-    {content: 'Cancel', onAction: onClose},
-  ];
-
   return (
     <Card
       title={cardTitle}
@@ -143,12 +142,12 @@ export function ManageTripCard({
         loading: submitting,
         disabled: !dirty,
       }}
-      secondaryFooterActions={secondaryFooterActions}
+      secondaryFooterActions={[{content: 'Cancel', onAction: onClose}]}
       actions={actions}
       sectioned
     >
       <Stack vertical>
-        {errorBanner()}
+        {renderErrorBanner()}
         <Form onSubmit={submit}>
           <FormLayout>
             <TextField
@@ -180,7 +179,7 @@ export function ManageTripCard({
                 selected={selectedDates}
                 allowRange={!sameDayValue}
               />
-              {summaryMarkup()}
+              {renderSummary()}
             </FormLayout.Group>
             <FormLayout.Group condensed>
               <Checkbox
@@ -200,7 +199,7 @@ export function ManageTripCard({
     </Card>
   );
 
-  function tripDatesHumanized() {
+  function renderTripDatesHumanized() {
     return sameDayValue ? (
       <TextStyle variation="strong">
         {moment(selectedDates.start).format('ll')}
@@ -218,7 +217,7 @@ export function ManageTripCard({
     );
   }
 
-  function summaryMarkup() {
+  function renderSummary() {
     return (
       <div className="Summary">
         <Stack vertical alignment="center" spacing="loose">
@@ -230,7 +229,7 @@ export function ManageTripCard({
                 </TextStyle>
               </TextStyle>
             </DisplayText>
-            <p>{tripDatesHumanized()}</p>
+            <p>{renderTripDatesHumanized()}</p>
             {fields.notes.value && (
               <p>
                 <TextStyle variation="subdued">{fields.notes.value}</TextStyle>
@@ -245,7 +244,7 @@ export function ManageTripCard({
     );
   }
 
-  function errorBanner() {
+  function renderErrorBanner() {
     return submitErrors.length > 0 ? (
       <Banner status="critical">
         <p>There were some issues with your form submission:</p>
@@ -261,5 +260,15 @@ export function ManageTripCard({
   function handleSameDayChange(newSameDay: boolean) {
     setSameDay(newSameDay);
     setSelectedDates({start: selectedDates.start, end: selectedDates.start});
+  }
+
+  async function handleRemoveTrip(uid?: string) {
+    if (!uid) return;
+
+    // Delete existing trip
+    await tripsCollectionRef
+      .doc(uid)
+      .delete()
+      .then(onSuccess);
   }
 }
