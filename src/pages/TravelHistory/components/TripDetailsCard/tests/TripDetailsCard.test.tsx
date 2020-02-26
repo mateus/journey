@@ -11,6 +11,11 @@ import {mockTrip} from 'utilities/trip';
 import {TripDetailsCard} from '../TripDetailsCard';
 import {ManageTripCard} from '../../ManageTripCard';
 
+jest.mock('react-firebase-hooks/auth', () => ({
+  ...require.requireActual('react-firebase-hooks/auth'),
+  useAuthState: jest.fn(() => [{uid: 'fake-id'}, false, false]),
+}));
+
 describe('<TripDetailsCard />', () => {
   it('renders with the location', async () => {
     const location = 'Tatooine';

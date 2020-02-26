@@ -49,7 +49,7 @@ export function ManageTripCard({
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
 
-  const tripsCollection = firestore
+  const tripsCollectionRef = firestore
     .collection('users')
     .doc(user?.uid)
     .collection('trips');
@@ -79,7 +79,7 @@ export function ManageTripCard({
       try {
         if (trip) {
           // Update existing trip
-          await tripsCollection
+          await tripsCollectionRef
             .doc(trip.id)
             .update({
               completed,
@@ -92,7 +92,7 @@ export function ManageTripCard({
             .then(onSuccess);
         } else {
           // Add new trip
-          await tripsCollection
+          await tripsCollectionRef
             .add({
               completed,
               countryCode: country?.countryCode,
@@ -266,7 +266,7 @@ export function ManageTripCard({
     if (!uid) return;
 
     // Delete existing trip
-    await tripsCollection
+    await tripsCollectionRef
       .doc(uid)
       .delete()
       .then(onSuccess);
