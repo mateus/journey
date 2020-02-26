@@ -12,12 +12,10 @@ export function App() {
   const theme = {
     colors: {
       topBar: {
-        background: '#24292e',
+        background: '#202E78',
       },
     },
   };
-
-  // Add a Single Query Request for all the pages
 
   return (
     <Router>
