@@ -11,8 +11,7 @@ import {
 
 import {auth} from 'utilities/firebase';
 
-import {TopNav} from '../TopNav';
-import {Footer} from '../Footer';
+import {TopNav, Footer} from './components';
 
 export interface FrameProps {
   children?: React.ReactChild;

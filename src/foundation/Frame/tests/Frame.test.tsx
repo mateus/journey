@@ -13,8 +13,7 @@ import {mountWithAppProvider} from 'utilities/tests';
 import {auth} from 'utilities/firebase';
 
 import {Frame} from '../Frame';
-import {TopNav} from '../../TopNav';
-import {Footer} from '../../Footer';
+import {TopNav, Footer} from '../components';
 
 describe('<Frame />', () => {
   const MyComponent = () => {
