@@ -3,14 +3,7 @@ import {useCollection} from 'react-firebase-hooks/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
-import {
-  Page,
-  Card,
-  EmptyState,
-  Layout,
-  DisplayText,
-  Stack,
-} from '@shopify/polaris';
+import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'utilities/toast';
@@ -115,9 +108,6 @@ export function TravelHistory() {
         <Layout.Section>
           <Stack vertical>
             {newTripFormOpen && manageTripCardMarkup}
-            <Card sectioned>
-              <RandomQuote />
-            </Card>
             {Object.keys(byYear)
               .reverse()
               .map((year) => {
