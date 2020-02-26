@@ -43,25 +43,25 @@ export function Frame({children}: FrameProps) {
         title="Journey App"
         items={[
           {
-            onClick: () => history.push('/'),
+            onClick: () => pathTo('/'),
             exactMatch: true,
             label: 'Travel History',
             icon: TransportMajorTwotone,
           },
           {
-            onClick: () => history.push('/plans'),
+            onClick: () => pathTo('/plans'),
             exactMatch: true,
             label: 'Future Plans',
             icon: NoteMajorTwotone,
           },
           {
-            onClick: () => history.push('/wonders'),
+            onClick: () => pathTo('/wonders'),
             exactMatch: true,
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
           },
           {
-            onClick: () => history.push('/bucket-list'),
+            onClick: () => pathTo('/bucket-list'),
             exactMatch: true,
             label: 'Bucket List',
             icon: ChecklistMajorTwotone,
@@ -94,4 +94,9 @@ export function Frame({children}: FrameProps) {
       <Footer />
     </PolarisFrame>
   );
+
+  function pathTo(path: string) {
+    if (history.location.pathname === path) return;
+    history.push(path);
+  }
 }
