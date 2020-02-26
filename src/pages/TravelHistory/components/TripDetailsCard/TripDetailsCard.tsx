@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
-import {useToast} from 'utilities/toast';
+import {useToast} from 'hooks/useToast';
 import {Flag} from 'components';
 import {Trip} from 'types';
 
