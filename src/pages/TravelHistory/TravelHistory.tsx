@@ -47,6 +47,7 @@ export function TravelHistory() {
   const tripsData = tripsSnapshot.docs.map<QueryTripCollection>((doc) => {
     return {
       id: doc.id,
+      // data() does not have inferred types from firestore
       ...(doc.data() as QueryTripCollection),
     };
   });
@@ -114,9 +115,9 @@ export function TravelHistory() {
         <Layout.Section>
           <Stack vertical>
             {newTripFormOpen && manageTripCardMarkup}
-            {/* <Card sectioned>
+            <Card sectioned>
               <RandomQuote />
-            </Card> */}
+            </Card>
             {Object.keys(byYear)
               .reverse()
               .map((year) => {

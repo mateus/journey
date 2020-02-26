@@ -1,12 +1,13 @@
 import React from 'react';
 import {act} from 'react-dom/test-utils';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+import {useCollection} from 'react-firebase-hooks/firestore';
 import {Card, EmptyState, Toast, Page} from '@shopify/polaris';
 import {ReactWrapper} from 'enzyme';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
 import {LoadingPage} from 'components';
+import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
 import {
@@ -24,21 +25,25 @@ jest.mock('react-firebase-hooks/auth', () => ({
 }));
 jest.mock('react-firebase-hooks/firestore', () => ({
   ...require.requireActual('react-firebase-hooks/firestore'),
-  useCollectionData: jest.fn(),
+  useCollection: jest.fn(),
 }));
-const useCollectionDataSpy = useCollectionData as jest.Mock;
+const useCollectionSpy = useCollection as jest.Mock;
 
 describe('<TravelHistory />', () => {
   beforeEach(() => {
-    useCollectionDataSpy.mockReturnValue([mockDataTrips, false, null]);
+    useCollectionSpy.mockReturnValue([
+      createCollectionSnapshot(mockDataTrips),
+      false,
+      null,
+    ]);
   });
 
   afterEach(() => {
-    useCollectionDataSpy.mockRestore();
+    useCollectionSpy.mockRestore();
   });
 
   it('render <LoadingPage /> when collection is still loading', async () => {
-    useCollectionDataSpy.mockReturnValue([null, true, null]);
+    useCollectionSpy.mockReturnValue([null, true, null]);
     const wrapper = await mountWithAppProvider(<TravelHistory />);
     expect(wrapper.find(LoadingPage)).toExist();
   });
@@ -51,7 +56,11 @@ describe('<TravelHistory />', () => {
   });
 
   it('renders <EmptySate /> if list of trips is empty', async () => {
-    useCollectionDataSpy.mockReturnValue([[], false, null]);
+    useCollectionSpy.mockReturnValue([
+      createCollectionSnapshot([]),
+      false,
+      null,
+    ]);
     const wrapper = await mountWithAppProvider(<TravelHistory />);
     expect(wrapper.find(EmptyState)).toExist();
     expect(wrapper.find(EmptyState).find(RandomQuote)).toExist();
@@ -82,12 +91,12 @@ describe('<TravelHistory />', () => {
         }),
       ];
       const [first, second, third] = trips;
-      useCollectionDataSpy.mockReturnValue([
-        [
+      useCollectionSpy.mockReturnValue([
+        createCollectionSnapshot([
           mockTripCollection(first),
           mockTripCollection(second),
           mockTripCollection(third),
-        ],
+        ]),
         false,
         null,
       ]);
@@ -112,7 +121,11 @@ describe('<TravelHistory />', () => {
     });
 
     it('is disabled if there are no trips', async () => {
-      useCollectionDataSpy.mockReturnValue([[], false, null]);
+      useCollectionSpy.mockReturnValue([
+        createCollectionSnapshot([]),
+        false,
+        null,
+      ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(wrapper.find(Page)).toHaveProp({
         secondaryActions: expect.arrayContaining([
@@ -210,12 +223,12 @@ describe('<TravelHistory />', () => {
           startDate: new Date('12/13/2019'),
         }),
       ];
-      useCollectionDataSpy.mockReturnValue([
-        [
+      useCollectionSpy.mockReturnValue([
+        createCollectionSnapshot([
           mockTripCollection(first),
           mockTripCollection(second),
           mockTripCollection(third),
-        ],
+        ]),
         false,
         null,
       ]);
@@ -233,9 +246,25 @@ describe('<TravelHistory />', () => {
         mockTripCollection({endDate: new Date('01/01/2019')}),
         mockTripCollection({endDate: new Date('01/01/2018')}),
       ];
-      useCollectionDataSpy.mockReturnValue([trips, false, null]);
+      useCollectionSpy.mockReturnValue([
+        createCollectionSnapshot(trips),
+        false,
+        null,
+      ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(wrapper.find('.Separator')).toHaveLength(3);
     });
   });
 });
+
+function createCollectionSnapshot(dataTrips: QueryTripCollection[]) {
+  const docs = dataTrips.map((trip) => {
+    return {
+      id: trip.id,
+      data() {
+        return trip;
+      },
+    };
+  });
+  return {docs};
+}
