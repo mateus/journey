@@ -66,6 +66,16 @@ describe('<TravelHistory />', () => {
   });
 
   describe('<UpcomingTripsCard />', () => {
+    it('does not render if there are no trips', async () => {
+      useCollectionSpy.mockReturnValue([
+        createCollectionsSnapshot([]),
+        false,
+        null,
+      ]);
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      expect(wrapper.find(UpcomingTripsCard)).not.toExist();
+    });
+
     it('renders ordered list of upcoming trips', async () => {
       const trips = [
         mockTrip({

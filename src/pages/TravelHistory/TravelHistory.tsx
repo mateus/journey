@@ -50,29 +50,6 @@ export function TravelHistory() {
     },
   );
 
-  const manageTripCardMarkup = (
-    <ManageTripCard
-      onClose={() => setNewTripFormOpen(false)}
-      onSuccess={handleSubmitTrip}
-    />
-  );
-
-  const emptyStateMarkup = newTripFormOpen ? (
-    <Layout>
-      <Layout.Section>{manageTripCardMarkup}</Layout.Section>
-      <Layout.Section secondary></Layout.Section>
-    </Layout>
-  ) : (
-    <EmptyState image={EmptyStateWomanTraveller}>
-      <RandomQuote />
-    </EmptyState>
-  );
-
-  const content =
-    reconciledTrips && reconciledTrips.length > 0
-      ? renderTrips(reconciledTrips)
-      : emptyStateMarkup;
-
   return (
     <Page
       title="Travel History"
@@ -90,7 +67,10 @@ export function TravelHistory() {
         },
       ]}
     >
-      {content}
+      {renderTrips(reconciledTrips)}
+      <EmptyState image={EmptyStateWomanTraveller}>
+        <RandomQuote />
+      </EmptyState>
       <Toast />
     </Page>
   );
@@ -103,7 +83,12 @@ export function TravelHistory() {
       <Layout>
         <Layout.Section>
           <Stack vertical>
-            {newTripFormOpen && manageTripCardMarkup}
+            {newTripFormOpen && (
+              <ManageTripCard
+                onClose={() => setNewTripFormOpen(false)}
+                onSuccess={handleSubmitTrip}
+              />
+            )}
             {Object.keys(byYear)
               .reverse()
               .map((year) => {
@@ -124,7 +109,7 @@ export function TravelHistory() {
           </Stack>
         </Layout.Section>
         <Layout.Section secondary>
-          <UpcomingTripsCard list={upcoming} />
+          {trips.length > 0 && <UpcomingTripsCard list={upcoming} />}
         </Layout.Section>
       </Layout>
     );
