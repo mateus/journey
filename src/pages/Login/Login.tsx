@@ -3,10 +3,11 @@ import GoogleButton from 'react-google-button';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import {Redirect} from 'react-router-dom';
 import {User} from 'firebase';
-import {DisplayText, Stack} from '@shopify/polaris';
+import {DisplayText, EmptyState, Stack} from '@shopify/polaris';
 
+import {EmptyStateLogin} from 'assets';
 import {auth, provider, firestore} from 'utilities/firebase';
-import {LoadingPage} from 'components';
+import {LoadingPage, RandomQuote} from 'components';
 
 import './Login.scss';
 
@@ -24,12 +25,24 @@ export function Login() {
   }
 
   return (
-    <div className="Login">
-      <Stack vertical alignment="center" spacing="extraLoose">
-        <DisplayText size="extraLarge">Login</DisplayText>
+    <EmptyState
+      image={EmptyStateLogin}
+      footerContent={
+        <div className="LoginTextContainer">
+          <RandomQuote />
+        </div>
+      }
+    >
+      <Stack vertical>
+        <DisplayText size="extraLarge">
+          <span className="Brand">Journey app</span>
+        </DisplayText>
+        <div className="LoginTextContainer">
+          <p>A personal travel cataloge and trip manager</p>
+        </div>
         <GoogleButton onClick={handleLogin} />
       </Stack>
-    </div>
+    </EmptyState>
   );
 
   function handleLogin() {
