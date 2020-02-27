@@ -12,7 +12,7 @@ import {QueryTripCollection} from 'types';
 import {TravelHistory} from '../TravelHistory';
 import {
   ManageTripCard,
-  TripDetailsCard,
+  MemoizedTripDetailsCard,
   UpcomingTripsCard,
 } from '../components';
 
@@ -206,10 +206,12 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<TripDetailsCard />', () => {
+  describe('<MemoizedTripDetailsCard />', () => {
     it('renders one for each trip', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
+      expect(wrapper.find(MemoizedTripDetailsCard)).toHaveLength(
+        mockTrips.length,
+      );
     });
 
     it('renders descending ordered list of trips', async () => {
@@ -238,7 +240,7 @@ describe('<TravelHistory />', () => {
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(
-        wrapper.find(TripDetailsCard).map((node) => node.props()),
+        wrapper.find(MemoizedTripDetailsCard).map((node) => node.props()),
       ).toStrictEqual([third, second, first]);
     });
 

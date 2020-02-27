@@ -12,7 +12,11 @@ import {Trip, QueryTripCollection} from 'types';
 import {RandomQuote, LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
-import {ManageTripCard, TripDetailsCard, UpcomingTripsCard} from './components';
+import {
+  ManageTripCard,
+  MemoizedTripDetailsCard,
+  UpcomingTripsCard,
+} from './components';
 import './TravelHistory.scss';
 
 export function TravelHistory() {
@@ -96,7 +100,7 @@ export function TravelHistory() {
                 return (
                   <div key={year}>
                     {byYear[year].map((trip) => (
-                      <TripDetailsCard
+                      <MemoizedTripDetailsCard
                         key={trip.location + trip.id}
                         {...trip}
                       />

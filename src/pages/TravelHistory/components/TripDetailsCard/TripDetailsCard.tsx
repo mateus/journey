@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
@@ -92,3 +92,5 @@ export function TripDetailsCard(trip: Trip) {
     showToast({content: 'Trip removed'});
   }
 }
+
+export const MemoizedTripDetailsCard = memo(TripDetailsCard);
