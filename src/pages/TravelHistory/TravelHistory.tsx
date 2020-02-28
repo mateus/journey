@@ -125,6 +125,8 @@ export function TravelHistory() {
   }
 
   async function handleAddNewTrip(trip: Trip) {
+    // trip.id represents the Document ID, we don't have to include it as a value
+    delete trip.id;
     if (tripsCollectionRef) {
       await tripsCollectionRef.add(trip).then(() => {
         setNewTripFormOpen(false);
@@ -134,9 +136,12 @@ export function TravelHistory() {
   }
 
   async function handleUpdateTrip(trip: Trip) {
+    const docID = trip.id;
+    // trip.id represents the Document ID, we don't have to include it as a value
+    delete trip.id;
     if (tripsCollectionRef) {
       await tripsCollectionRef
-        .doc(trip.id)
+        .doc(docID)
         .update(trip)
         .then(() => {
           showToast({content: `Trip to ${trip.location} updated`});
@@ -145,9 +150,10 @@ export function TravelHistory() {
   }
 
   async function handleDeleteTrip(trip: Trip) {
+    const docID = trip.id;
     if (tripsCollectionRef) {
       await tripsCollectionRef
-        .doc(trip.id)
+        .doc(docID)
         .delete()
         .then(() => {
           showToast({content: `Trip to ${trip.location} removed`});

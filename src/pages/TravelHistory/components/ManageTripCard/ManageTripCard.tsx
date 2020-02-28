@@ -74,7 +74,7 @@ export function ManageTripCard({
     async onSubmit({location, notes, country, completed}) {
       try {
         const payload: Trip = {
-          id: trip?.id,
+          id: trip?.id || 'impossible-case',
           completed,
           countryCode: country!.countryCode,
           endDate: selectedDates.end,
