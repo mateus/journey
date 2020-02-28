@@ -30,7 +30,7 @@ export function Login() {
         image={EmptyStateAirportDude}
         footerContent={
           <div className="LoginTextContainer QuoteSpace">
-            <RandomQuote />
+            <RandomQuote small />
           </div>
         }
       >

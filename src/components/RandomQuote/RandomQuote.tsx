@@ -1,15 +1,25 @@
 import React from 'react';
-import {TextStyle} from '@shopify/polaris';
+import {DisplayText, TextStyle} from '@shopify/polaris';
 
 import {quotes} from './quotes';
 import './RandomQuote.scss';
 
-export function RandomQuote() {
+interface RandomQuoteProps {
+  small?: boolean;
+}
+
+export function RandomQuote({small}: RandomQuoteProps) {
+  const content = small ? (
+    <TextStyle variation="subdued">{getRandomQuote()}</TextStyle>
+  ) : (
+    <DisplayText size="small">
+      <TextStyle variation="subdued">{getRandomQuote()}</TextStyle>
+    </DisplayText>
+  );
+
   return (
     <blockquote>
-      <i>
-        <TextStyle variation="subdued">{getRandomQuote()}</TextStyle>
-      </i>
+      <i>{content}</i>
     </blockquote>
   );
 }
