@@ -1,12 +1,19 @@
 .Login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
+  max-width: 100%;
   height: 100vh;
+}
+
+.ContentWrapper {
+  margin-top: 20px;
 }
 
 .LoginTextContainer {
   max-width: 260px;
+}
+
+.QuoteSpace {
+  margin-bottom: 40px;
 }
 
 .Brand {

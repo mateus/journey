@@ -5,7 +5,7 @@ import {Redirect} from 'react-router-dom';
 import {User} from 'firebase';
 import {DisplayText, EmptyState, Stack} from '@shopify/polaris';
 
-import {EmptyStateLogin} from 'assets';
+import {EmptyStateAirportDude} from 'assets';
 import {auth, provider, firestore} from 'utilities/firebase';
 import {LoadingPage, RandomQuote} from 'components';
 
@@ -25,24 +25,28 @@ export function Login() {
   }
 
   return (
-    <EmptyState
-      image={EmptyStateLogin}
-      footerContent={
-        <div className="LoginTextContainer">
-          <RandomQuote />
+    <div className="Login">
+      <EmptyState
+        image={EmptyStateAirportDude}
+        footerContent={
+          <div className="LoginTextContainer QuoteSpace">
+            <RandomQuote />
+          </div>
+        }
+      >
+        <div className="ContentWrapper">
+          <Stack vertical>
+            <DisplayText size="extraLarge">
+              <span className="Brand">Journey app</span>
+            </DisplayText>
+            <div className="LoginTextContainer">
+              <p>A personal travel cataloge and trip manager</p>
+            </div>
+            <GoogleButton onClick={handleLogin} />
+          </Stack>
         </div>
-      }
-    >
-      <Stack vertical>
-        <DisplayText size="extraLarge">
-          <span className="Brand">Journey app</span>
-        </DisplayText>
-        <div className="LoginTextContainer">
-          <p>A personal travel cataloge and trip manager</p>
-        </div>
-        <GoogleButton onClick={handleLogin} />
-      </Stack>
-    </EmptyState>
+      </EmptyState>
+    </div>
   );
 
   function handleLogin() {

@@ -18,6 +18,7 @@ export interface Country {
   countryCode: string;
 }
 
+// Firestore will return endDate and startDate as Timestamp instead of Date
 export interface QueryTripCollection
   extends Omit<Trip, 'endDate' | 'startDate'> {
   endDate: Timestamp;
