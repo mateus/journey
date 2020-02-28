@@ -1,26 +1,31 @@
 import React from 'react';
-import {ReactWrapper} from 'enzyme';
 import ReactCountryFlag from 'react-country-flag';
 import {act} from 'react-dom/test-utils';
+import {ReactWrapper} from 'enzyme';
 import moment from 'moment';
-import {Badge, Caption, Card, DisplayText, Toast} from '@shopify/polaris';
+import {Badge, Caption, Card, DisplayText} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip} from 'utilities/trip';
+import {Trip} from 'types';
 
-import {TripDetailsCard} from '../TripDetailsCard';
+import {TripDetailsCard, TripDetailsCardProps} from '../TripDetailsCard';
 import {ManageTripCard} from '../../ManageTripCard';
 
-jest.mock('react-firebase-hooks/auth', () => ({
-  ...require.requireActual('react-firebase-hooks/auth'),
-  useAuthState: jest.fn(() => [{uid: 'fake-id'}, false, false]),
-}));
-
 describe('<TripDetailsCard />', () => {
+  function createMockProps(trip?: Partial<Trip>): TripDetailsCardProps {
+    return {
+      ...mockTrip(trip),
+      onAddNew: jest.fn(Promise.resolve),
+      onUpdate: jest.fn(Promise.resolve),
+      onDelete: jest.fn(Promise.resolve),
+    };
+  }
+
   it('renders with the location', async () => {
     const location = 'Tatooine';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({location})} />,
+      <TripDetailsCard {...createMockProps({location})} />,
     );
     const title = await mountWithAppProvider(
       wrapper.find(Card).prop('title') as React.ReactElement,
@@ -30,21 +35,21 @@ describe('<TripDetailsCard />', () => {
 
   it('renders a subdued Card if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({completed: true})} />,
+      <TripDetailsCard {...createMockProps({completed: true})} />,
     );
     expect(wrapper.find(Card)).toHaveProp({subdued: true});
   });
 
   it('renders Completed Badge if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({completed: true})} />,
+      <TripDetailsCard {...createMockProps({completed: true})} />,
     );
     expect(wrapper.find(Badge)).toHaveText('Completed');
   });
 
   it('renders Upcoming Badge if trip is not completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({completed: false})} />,
+      <TripDetailsCard {...createMockProps({completed: false})} />,
     );
     expect(wrapper.find(Badge).text()).toContain('Upcoming');
   });
@@ -52,7 +57,7 @@ describe('<TripDetailsCard />', () => {
   it('renders a paragraph for the notes', async () => {
     const notes = 'Awesome notes';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({notes})} />,
+      <TripDetailsCard {...createMockProps({notes})} />,
     );
     expect(
       wrapper.find('p').findWhere((node) => node.text() === notes),
@@ -62,7 +67,7 @@ describe('<TripDetailsCard />', () => {
   it('renders <ReactCountryFlag />', async () => {
     const countryCode = 'CA';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...mockTrip({countryCode})} />,
+      <TripDetailsCard {...createMockProps({countryCode})} />,
     );
     expect(wrapper.find(ReactCountryFlag)).toHaveProp({
       countryCode,
@@ -72,7 +77,9 @@ describe('<TripDetailsCard />', () => {
 
   it('renders <Caption /> with start and end dates', async () => {
     const trip = mockTrip();
-    const wrapper = await mountWithAppProvider(<TripDetailsCard {...trip} />);
+    const wrapper = await mountWithAppProvider(
+      <TripDetailsCard {...createMockProps()} />,
+    );
     expect(wrapper.find(Caption)).toHaveText(
       `${moment(trip.startDate).format('LL')} - ${moment(trip.endDate).format(
         'LL',
@@ -85,7 +92,9 @@ describe('<TripDetailsCard />', () => {
       startDate: new Date('01/01/2020'),
       endDate: new Date('01/01/2020'),
     });
-    const wrapper = await mountWithAppProvider(<TripDetailsCard {...trip} />);
+    const wrapper = await mountWithAppProvider(
+      <TripDetailsCard {...createMockProps(trip)} />,
+    );
     expect(wrapper.find(Caption)).toHaveText(
       moment(trip.startDate).format('LL'),
     );
@@ -101,33 +110,24 @@ describe('<TripDetailsCard />', () => {
 
     it('renders when Edit action is triggered', async () => {
       const trip = mockTrip();
-      const wrapper = await mountWithAppProvider(<TripDetailsCard {...trip} />);
-      await clickEditTrip(wrapper);
-      expect(wrapper.find(ManageTripCard)).toHaveProp({trip});
-    });
-
-    it('hides the compoent after onSuccess is triggered', async () => {
+      const onAddNew = jest.fn(Promise.resolve);
+      const onUpdate = jest.fn(Promise.resolve);
+      const onDelete = jest.fn(Promise.resolve);
       const wrapper = await mountWithAppProvider(
-        <TripDetailsCard {...mockTrip()} />,
+        <TripDetailsCard
+          {...trip}
+          onAddNew={onAddNew}
+          onUpdate={onUpdate}
+          onDelete={onDelete}
+        />,
       );
       await clickEditTrip(wrapper);
-      act(() => {
-        wrapper.find(ManageTripCard).prop('onSuccess')();
+      expect(wrapper.find(ManageTripCard)).toHaveProp({
+        trip,
+        onAddNew,
+        onUpdate,
+        onDelete,
       });
-      await updateWrapper(wrapper);
-      expect(wrapper.find(ManageTripCard)).not.toExist();
-    });
-
-    it('shows Toast with success message when onSuccess is called', async () => {
-      const wrapper = await mountWithAppProvider(
-        <TripDetailsCard {...mockTrip()} />,
-      );
-      await clickEditTrip(wrapper);
-      act(() => {
-        wrapper.find(ManageTripCard).prop('onSuccess')();
-      });
-      await updateWrapper(wrapper);
-      expect(wrapper.find(Toast)).toHaveProp({content: 'Trip updated'});
     });
   });
 });

@@ -13,7 +13,7 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
     list.length > 0 ? (
       <List type="bullet">
         {list.map(({location, startDate, endDate}) => (
-          <List.Item key={location}>
+          <List.Item key={startDate + location}>
             <Stack vertical spacing="extraTight">
               <Heading>Trip to {location}</Heading>
               <TextStyle variation="subdued">

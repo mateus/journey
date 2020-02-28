@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import {
   Banner,
@@ -17,7 +16,6 @@ import {
 } from '@shopify/polaris';
 import {useForm, useField, notEmpty} from '@shopify/react-form';
 
-import {auth, firestore} from 'utilities/firebase';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
@@ -29,18 +27,19 @@ export interface ManageTripCardProps {
   // List of trips. If undefined loads Submit new trio card style
   trip?: Trip;
   onClose(): void;
-  onSuccess(): void;
-  onRemoved(): void;
+  onAddNew(trip: Trip): Promise<unknown>;
+  onUpdate(trip: Trip): Promise<unknown>;
+  onDelete(trip: Trip): Promise<unknown>;
 }
 
 export function ManageTripCard({
   trip,
   onClose,
-  onSuccess,
-  onRemoved,
+  onAddNew,
+  onUpdate,
+  onDelete,
 }: ManageTripCardProps) {
   const today = moment();
-  const [user] = useAuthState(auth);
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
 
@@ -50,11 +49,6 @@ export function ManageTripCard({
     start: trip?.startDate || today.toDate(),
     end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
   });
-
-  const tripsCollectionRef = firestore
-    .collection('users')
-    .doc(user?.uid)
-    .collection('trips');
 
   const {fields, submit, submitting, dirty, submitErrors} = useForm({
     fields: {
@@ -79,31 +73,19 @@ export function ManageTripCard({
     },
     async onSubmit({location, notes, country, completed}) {
       try {
+        const payload: Trip = {
+          id: trip?.id,
+          completed,
+          countryCode: country!.countryCode,
+          endDate: selectedDates.end,
+          startDate: selectedDates.start,
+          location,
+          notes,
+        };
         if (trip) {
-          // Update existing trip
-          await tripsCollectionRef
-            .doc(trip.id)
-            .update({
-              completed,
-              countryCode: country?.countryCode,
-              endDate: selectedDates.end,
-              startDate: selectedDates.start,
-              location,
-              notes,
-            })
-            .then(onSuccess);
+          await onUpdate(payload);
         } else {
-          // Add new trip
-          await tripsCollectionRef
-            .add({
-              completed,
-              countryCode: country?.countryCode,
-              endDate: selectedDates.end,
-              startDate: selectedDates.start,
-              location,
-              notes,
-            })
-            .then(onSuccess);
+          await onAddNew(payload);
         }
 
         return {status: 'success'};
@@ -114,12 +96,12 @@ export function ManageTripCard({
   });
 
   const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
-  const primaryFooterActionContent = trip ? 'Update trip' : 'Submit new trip';
+  const primaryFooterActionContent = trip ? 'Save changes' : 'Submit new trip';
   const actions: ComplexAction[] = trip
     ? [
         {
           content: 'Remove trip',
-          onAction: () => handleRemoveTrip(trip.id),
+          onAction: () => onDelete(trip),
         },
         {
           content: 'Add notes',
@@ -249,12 +231,14 @@ export function ManageTripCard({
   function renderErrorBanner() {
     return submitErrors.length > 0 ? (
       <Banner status="critical">
-        <p>There were some issues with your form submission:</p>
-        <List type="bullet">
-          {submitErrors.map(({message}) => {
-            return <List.Item key={message}>{message}</List.Item>;
-          })}
-        </List>
+        <Stack vertical spacing="tight">
+          <p>There were some issues with your form submission:</p>
+          <List type="bullet">
+            {submitErrors.map(({message}) => {
+              return <List.Item key={message}>{message}</List.Item>;
+            })}
+          </List>
+        </Stack>
       </Banner>
     ) : null;
   }
@@ -262,15 +246,5 @@ export function ManageTripCard({
   function handleSameDayChange(newSameDay: boolean) {
     setSameDay(newSameDay);
     setSelectedDates({start: selectedDates.start, end: selectedDates.start});
-  }
-
-  async function handleRemoveTrip(uid?: string) {
-    if (!uid) return;
-
-    // Delete existing trip
-    await tripsCollectionRef
-      .doc(uid)
-      .delete()
-      .then(onRemoved);
   }
 }

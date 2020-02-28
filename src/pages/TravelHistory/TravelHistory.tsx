@@ -90,8 +90,9 @@ export function TravelHistory() {
             {newTripFormOpen && (
               <ManageTripCard
                 onClose={() => setNewTripFormOpen(false)}
-                onSuccess={handleSubmitTrip}
-                onRemoved={() => showToast({content: 'New trip added'})}
+                onAddNew={handleAddNewTrip}
+                onUpdate={handleUpdateTrip}
+                onDelete={handleDeleteTrip}
               />
             )}
             {Object.keys(byYear)
@@ -101,8 +102,11 @@ export function TravelHistory() {
                   <div key={year}>
                     {byYear[year].map((trip) => (
                       <MemoizedTripDetailsCard
-                        key={trip.location + trip.id}
                         {...trip}
+                        key={trip.startDate + trip.location}
+                        onAddNew={handleAddNewTrip}
+                        onUpdate={handleUpdateTrip}
+                        onDelete={handleDeleteTrip}
                       />
                     ))}
                     <div className="Separator">
@@ -120,8 +124,34 @@ export function TravelHistory() {
     );
   }
 
-  function handleSubmitTrip() {
-    setNewTripFormOpen(false);
-    showToast({content: 'New trip added'});
+  async function handleAddNewTrip(trip: Trip) {
+    if (tripsCollectionRef) {
+      await tripsCollectionRef.add(trip).then(() => {
+        setNewTripFormOpen(false);
+        showToast({content: `Trip to ${trip.location} added`});
+      });
+    }
+  }
+
+  async function handleUpdateTrip(trip: Trip) {
+    if (tripsCollectionRef) {
+      await tripsCollectionRef
+        .doc(trip.id)
+        .update(trip)
+        .then(() => {
+          showToast({content: `Trip to ${trip.location} updated`});
+        });
+    }
+  }
+
+  async function handleDeleteTrip(trip: Trip) {
+    if (tripsCollectionRef) {
+      await tripsCollectionRef
+        .doc(trip.id)
+        .delete()
+        .then(() => {
+          showToast({content: `Trip to ${trip.location} removed`});
+        });
+    }
   }
 }
