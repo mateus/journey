@@ -9,7 +9,7 @@ import {
   NoteMajorTwotone,
 } from '@shopify/polaris-icons';
 
-import {mountWithAppProvider} from 'utilities/tests';
+import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {auth} from 'utilities/firebase';
 
 import {Frame} from '../Frame';
@@ -64,7 +64,7 @@ describe('<Frame />', () => {
         </Frame>,
       );
       expect(wrapper.find(Navigation.Section).first()).toHaveProp({
-        title: 'Journey App',
+        title: 'Journey',
         items: [
           expect.objectContaining({
             label: 'Travel History',
@@ -114,6 +114,7 @@ describe('<Frame />', () => {
       act(() => {
         lastNavSection!.prop('items')[0].onClick!();
       });
+      await updateWrapper(wrapper);
       expect(auth.signOut).toHaveBeenCalled();
     });
   });

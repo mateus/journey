@@ -37,7 +37,7 @@ export function Login() {
         <div className="ContentWrapper">
           <Stack vertical>
             <DisplayText size="extraLarge">
-              <span className="Brand">Journey app</span>
+              <span className="Brand">Journey</span>
             </DisplayText>
             <p>A personal travel cataloge and trip manager</p>
             <GoogleButton onClick={handleLogin} />
