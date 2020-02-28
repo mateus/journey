@@ -26,6 +26,7 @@ jest.mock('react-firebase-hooks/firestore', () => ({
   ...require.requireActual('react-firebase-hooks/firestore'),
   useCollection: jest.fn(),
 }));
+
 const useCollectionSpy = useCollection as jest.Mock;
 
 describe('<TravelHistory />', () => {
@@ -185,24 +186,29 @@ describe('<TravelHistory />', () => {
       });
     });
 
-    it('hides the compoent after onSuccess is triggered', async () => {
+    it.todo('triggers firestore add action with a new trip');
+
+    it.skip('hides the compoent after new trip is added', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
-      act(() => {
-        wrapper.find(ManageTripCard).prop('onSuccess')();
+      act(async () => {
+        await wrapper.find(ManageTripCard).prop('onAddNew')(mockTrip());
       });
       await updateWrapper(wrapper);
       expect(wrapper.find(ManageTripCard)).not.toExist();
     });
 
-    it('shows <Toast /> with success message ', async () => {
+    it.skip('shows <Toast /> with success message after adding new trip', async () => {
+      const trip = mockTrip({location: 'Tatooine'});
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
-      act(() => {
-        wrapper.find(ManageTripCard).prop('onSuccess')();
+      act(async () => {
+        await wrapper.find(ManageTripCard).prop('onAddNew')(mockTrip());
       });
       await updateWrapper(wrapper);
-      expect(wrapper.find(Toast)).toHaveProp({content: 'New trip added'});
+      expect(wrapper.find(Toast)).toHaveProp({
+        content: `New trip to ${trip.location} added`,
+      });
     });
   });
 
@@ -241,7 +247,11 @@ describe('<TravelHistory />', () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(
         wrapper.find(MemoizedTripDetailsCard).map((node) => node.props()),
-      ).toStrictEqual([third, second, first]);
+      ).toStrictEqual([
+        expect.objectContaining(third),
+        expect.objectContaining(second),
+        expect.objectContaining(first),
+      ]);
     });
 
     it('renders a separator for each group of year', async () => {
@@ -260,6 +270,14 @@ describe('<TravelHistory />', () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(wrapper.find('.Separator')).toHaveLength(3);
     });
+
+    it.todo('triggers firestore update action with a new trip');
+
+    it.todo('triggers firestore delete action with a new trip');
+
+    it.todo('shows <Toast /> with success message after updating trip');
+
+    it.todo('shows <Toast /> with success message after deleting new trip');
   });
 });
 

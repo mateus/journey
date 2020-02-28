@@ -1,24 +1,35 @@
-import React, {useState, memo} from 'react';
+import React, {memo, useState} from 'react';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
-import {useToast} from 'hooks/useToast';
 import {Flag} from 'components';
 import {Trip} from 'types';
 
-import {ManageTripCard} from '..';
+import {ManageTripCard} from '../ManageTripCard';
 
-export function TripDetailsCard(trip: Trip) {
-  const {location, notes, startDate, endDate, countryCode, completed} = trip;
+export interface TripDetailsCardProps extends Trip {
+  onAddNew(trip: Trip): Promise<unknown>;
+  onUpdate(trip: Trip): Promise<unknown>;
+  onDelete(trip: Trip): Promise<unknown>;
+}
+
+export function TripDetailsCard({
+  onAddNew,
+  onUpdate,
+  onDelete,
+  ...trip
+}: TripDetailsCardProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [Toast, showToast] = useToast();
+
+  const {location, notes, startDate, endDate, countryCode, completed} = trip;
 
   const cardMarkup = isEditing ? (
     <ManageTripCard
       trip={trip}
       onClose={() => setIsEditing(false)}
-      onSuccess={handleUpdateTrip}
-      onRemoved={handleRemoveTrip}
+      onAddNew={onAddNew}
+      onUpdate={onUpdate}
+      onDelete={onDelete}
     />
   ) : (
     <Card
@@ -52,12 +63,7 @@ export function TripDetailsCard(trip: Trip) {
     </Card>
   );
 
-  return (
-    <>
-      {cardMarkup}
-      <Toast />
-    </>
-  );
+  return cardMarkup;
 
   function renderDatesCaption() {
     const start = moment(startDate).format('LL');
@@ -80,16 +86,6 @@ export function TripDetailsCard(trip: Trip) {
     ) : (
       <Badge status="attention">Upcoming</Badge>
     );
-  }
-
-  function handleUpdateTrip() {
-    setIsEditing(false);
-    showToast({content: 'Trip updated'});
-  }
-
-  function handleRemoveTrip() {
-    setIsEditing(false);
-    showToast({content: 'Trip removed'});
   }
 }
 
