@@ -5,7 +5,7 @@ import moment from 'moment';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
-import {EmptyStateWomanTraveller} from 'assets';
+import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
@@ -72,7 +72,7 @@ export function TravelHistory() {
       ]}
     >
       {renderTrips(reconciledTrips)}
-      <EmptyState image={EmptyStateWomanTraveller}>
+      <EmptyState image={EmptyStateAirportDude}>
         <RandomQuote />
       </EmptyState>
       <Toast />
