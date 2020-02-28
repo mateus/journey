@@ -20,14 +20,6 @@ export interface FrameProps {
 export function Frame({children}: FrameProps) {
   const history = useHistory();
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
-  const toggleMobileNavigationActive = () =>
-    setMobileNavigationActive(
-      (mobileNavigationActive) => !mobileNavigationActive,
-    );
-
-  const logout = () => {
-    auth.signOut();
-  };
 
   const topBarMarkup = (
     <TopBar
@@ -40,7 +32,7 @@ export function Frame({children}: FrameProps) {
     <Navigation location={history.location.pathname}>
       <TopNav />
       <Navigation.Section
-        title="Journey App"
+        title="Journey"
         items={[
           {
             label: 'Travel History',
@@ -99,5 +91,15 @@ export function Frame({children}: FrameProps) {
     if (history.location.pathname === path) return;
     toggleMobileNavigationActive();
     history.push(path);
+  }
+
+  function toggleMobileNavigationActive() {
+    setMobileNavigationActive(
+      (mobileNavigationActive) => !mobileNavigationActive,
+    );
+  }
+
+  function logout() {
+    auth.signOut();
   }
 }
