@@ -138,6 +138,7 @@ export function ManageTripCard({
               {...fields.location}
               label="City"
               placeholder="Ottawa, ON"
+              autoComplete={false}
             />
             <CountryTextField
               error={fields.country.error}
