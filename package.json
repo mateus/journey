@@ -51,6 +51,7 @@
     "eslint-plugin-react": "^7.18.3",
     "eslint-plugin-shopify": "^35.0.0",
     "faker": "^4.1.0",
+    "firebase-mock": "^2.3.2",
     "jest-enzyme": "^7.1.2",
     "react-test-renderer": "^16.12.0"
   },
