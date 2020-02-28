@@ -128,10 +128,15 @@ export function TravelHistory() {
     // trip.id represents the Document ID, we don't have to include it as a value
     delete trip.id;
     if (tripsCollectionRef) {
-      await tripsCollectionRef.add(trip).then(() => {
-        setNewTripFormOpen(false);
-        showToast({content: `Trip to ${trip.location} added`});
-      });
+      await tripsCollectionRef
+        .add({
+          ...trip,
+          createdAt: moment().toDate(),
+        })
+        .then(() => {
+          setNewTripFormOpen(false);
+          showToast({content: `Trip to ${trip.location} added`});
+        });
     }
   }
 
@@ -142,7 +147,10 @@ export function TravelHistory() {
     if (tripsCollectionRef) {
       await tripsCollectionRef
         .doc(docID)
-        .update(trip)
+        .update({
+          ...trip,
+          updatedAt: moment().toDate(),
+        })
         .then(() => {
           showToast({content: `Trip to ${trip.location} updated`});
         });
