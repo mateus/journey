@@ -29,7 +29,7 @@ export function Login() {
       <EmptyState
         image={EmptyStateAirportDude}
         footerContent={
-          <div className="LoginTextContainer QuoteSpace">
+          <div className="QuoteSpace">
             <RandomQuote small />
           </div>
         }
@@ -39,9 +39,7 @@ export function Login() {
             <DisplayText size="extraLarge">
               <span className="Brand">Journey app</span>
             </DisplayText>
-            <div className="LoginTextContainer">
-              <p>A personal travel cataloge and trip manager</p>
-            </div>
+            <p>A personal travel cataloge and trip manager</p>
             <GoogleButton onClick={handleLogin} />
           </Stack>
         </div>
