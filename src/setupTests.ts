@@ -7,5 +7,8 @@ import {mocksdk} from './firebaseMocks';
 configure({adapter: new Adapter()});
 
 jest.mock('firebase/app', () => {
-  return mocksdk;
+  return {
+    ...mocksdk,
+    analytics: jest.fn(),
+  };
 });
