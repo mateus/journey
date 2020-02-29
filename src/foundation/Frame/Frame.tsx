@@ -89,7 +89,7 @@ export function Frame({children}: FrameProps) {
 
   function pushTo(path: string) {
     if (history.location.pathname === path) return;
-    toggleMobileNavigationActive();
+    if (mobileNavigationActive) toggleMobileNavigationActive();
     history.push(path);
   }
 

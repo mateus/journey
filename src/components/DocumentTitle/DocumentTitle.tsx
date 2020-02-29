@@ -1,9 +1,11 @@
 import {useEffect} from 'react';
 
-interface DocumentTitleProps {
+export interface DocumentTitleProps {
   title: string;
   source?: string;
 }
+
+export const DEFAULT_SOURCE = 'Journey';
 
 export function DocumentTitle({title, source}: DocumentTitleProps) {
   useEffect(() => {
@@ -16,6 +18,6 @@ export function DocumentTitle({title, source}: DocumentTitleProps) {
   return null;
 }
 
-export function createDocumentTitle(title: string, source = 'Journey') {
+export function createDocumentTitle(title: string, source = DEFAULT_SOURCE) {
   return [source, title].join(' - ');
 }
