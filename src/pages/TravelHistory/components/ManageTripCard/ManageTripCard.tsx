@@ -19,7 +19,7 @@ import {useForm, useField, notEmpty} from '@shopify/react-form';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
-import {CountryTextField, Flag} from 'components';
+import {ConfirmActionModal, CountryTextField, Flag} from 'components';
 
 import './ManageTripCard.scss';
 
@@ -42,6 +42,9 @@ export function ManageTripCard({
   const today = moment();
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
+  const [confirmActionModalVisible, setConfirmActionModalVisible] = useState(
+    false,
+  );
 
   // This should be in useForm. Getting error when adding initial value.
   // It won't manage the dirty state properly until it's included
@@ -95,13 +98,25 @@ export function ManageTripCard({
     },
   });
 
+  const confirmActionModal = trip && (
+    <ConfirmActionModal
+      open={confirmActionModalVisible}
+      title={`Delete trip to ${trip.location}`}
+      details={`Are you sure you want to remove the trip to ${trip.location}?`}
+      primaryActionLabel="Remove trip"
+      onClose={() => setConfirmActionModalVisible(false)}
+      onConfirmed={() => onDelete(trip)}
+      destructive
+    />
+  );
+
   const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
   const primaryFooterActionContent = trip ? 'Save changes' : 'Submit new trip';
   const actions: ComplexAction[] = trip
     ? [
         {
           content: 'Remove trip',
-          onAction: () => onDelete(trip),
+          onAction: () => setConfirmActionModalVisible(true),
         },
         {
           content: 'Add notes',
@@ -181,6 +196,7 @@ export function ManageTripCard({
           </FormLayout>
         </Form>
       </Stack>
+      {confirmActionModal}
     </Card>
   );
 
