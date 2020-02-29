@@ -2,7 +2,7 @@ import React from 'react';
 import {Card, Caption, Heading, List} from '@shopify/polaris';
 import moment from 'moment';
 
-import {mountWithAppProvider} from 'utilities/tests';
+import {mountWithAppProvider} from 'tests/utilities';
 import {mockTrip} from 'utilities/trip';
 
 import {UpcomingTripsCard, UpcomingTripsCardProps} from '../UpcomingTripsCard';

@@ -5,7 +5,7 @@ import {ReactWrapper} from 'enzyme';
 import moment from 'moment';
 import {Badge, Caption, Card, DisplayText} from '@shopify/polaris';
 
-import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
+import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {mockTrip} from 'utilities/trip';
 import {Trip} from 'types';
 
