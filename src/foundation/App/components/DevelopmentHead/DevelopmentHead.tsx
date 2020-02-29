@@ -1,7 +1,7 @@
 import React from 'react';
 import Favicon from 'react-favicon';
 
-import {publicURL} from 'config';
+import {publicURL} from 'config/variables';
 
 import './DevelopmentHead.scss';
 
