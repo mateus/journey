@@ -16,6 +16,7 @@ describe('<TripDetailsCard />', () => {
   function createMockProps(trip?: Partial<Trip>): TripDetailsCardProps {
     return {
       ...mockTrip(trip),
+      completed: true,
       onAddNew: jest.fn(Promise.resolve),
       onUpdate: jest.fn(Promise.resolve),
       onDelete: jest.fn(Promise.resolve),
@@ -35,21 +36,21 @@ describe('<TripDetailsCard />', () => {
 
   it('renders a subdued Card if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({completed: true})} />,
+      <TripDetailsCard {...createMockProps()} completed />,
     );
     expect(wrapper.find(Card)).toHaveProp({subdued: true});
   });
 
   it('renders Completed Badge if trip is completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({completed: true})} />,
+      <TripDetailsCard {...createMockProps()} completed />,
     );
     expect(wrapper.find(Badge)).toHaveText('Completed');
   });
 
   it('renders Upcoming Badge if trip is not completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({completed: false})} />,
+      <TripDetailsCard {...createMockProps()} completed={false} />,
     );
     expect(wrapper.find(Badge).text()).toContain('Upcoming');
   });

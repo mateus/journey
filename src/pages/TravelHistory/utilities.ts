@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import {Trip} from 'types';
+import {isFutureDate, isTodayDate} from 'utilities/dates';
 
 export interface TripsByYear {
   [key: string]: Trip[];
@@ -19,7 +20,9 @@ export function tripsByYear(trips: Trip[]): TripsByYear {
 }
 
 export function upcomingTrips(trips: Trip[]) {
-  return trips.filter(({completed}) => !completed).sort(sortByStartDateAsc);
+  return trips
+    .filter(({endDate}) => isFutureDate(endDate) || isTodayDate(endDate))
+    .sort(sortByEndDateAsc);
 }
 
 export function insertOrdered(
@@ -39,4 +42,12 @@ export function sortByStartDateAsc(tripA: Trip, tripB: Trip) {
 
 export function sortByStartDateDesc(tripA: Trip, tripB: Trip) {
   return Number(tripA.startDate) > Number(tripB.startDate) ? -1 : 0;
+}
+
+export function sortByEndDateAsc(tripA: Trip, tripB: Trip) {
+  return Number(tripA.endDate) < Number(tripB.endDate) ? -1 : 0;
+}
+
+export function sortByEndDateDesc(tripA: Trip, tripB: Trip) {
+  return Number(tripA.endDate) > Number(tripB.endDate) ? -1 : 0;
 }

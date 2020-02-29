@@ -1,3 +1,4 @@
+export {default as Document} from './documents.svg';
 export {default as EmptyStateWomanTraveller} from './emptyStateWomanTraveller.svg';
 export {default as EmptyStateAirportDude} from './emptyStateAirportDude.svg';
 export {default as EmptyStateBucketList} from './emptyStateBucketList.svg';

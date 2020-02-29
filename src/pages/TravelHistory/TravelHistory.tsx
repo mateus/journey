@@ -7,12 +7,14 @@ import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
+import {isPastDate} from 'utilities/dates';
 import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
-import {DocumentTitle, RandomQuote, LoadingPage} from 'components';
+import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
+  ImportTripsModal,
   ManageTripCard,
   MemoizedTripDetailsCard,
   UpcomingTripsCard,
@@ -21,6 +23,7 @@ import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+  const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
   const tripsCollectionRef = user
@@ -63,7 +66,11 @@ export function TravelHistory() {
         onAction: () => setNewTripFormOpen(!newTripFormOpen),
       }}
       secondaryActions={[
-        {content: 'Import', icon: ImportMinor},
+        {
+          content: 'Import',
+          icon: ImportMinor,
+          onAction: () => setImportTripsModalOpen(true),
+        },
         {
           content: 'Export',
           icon: ExportMinor,
@@ -74,8 +81,13 @@ export function TravelHistory() {
       <DocumentTitle title="Travel History" />
       {renderTrips(reconciledTrips)}
       <EmptyState image={EmptyStateAirportDude}>
-        <RandomQuote />
+        <MemoizedRandomQuote />
       </EmptyState>
+      <ImportTripsModal
+        open={importTripsModalOpen}
+        onClose={() => setImportTripsModalOpen(false)}
+        onConfirmed={handleImportTrips}
+      />
       <Toast />
     </Page>
   );
@@ -104,6 +116,7 @@ export function TravelHistory() {
                     {byYear[year].map((trip) => (
                       <MemoizedTripDetailsCard
                         {...trip}
+                        completed={isPastDate(trip.endDate)}
                         key={trip.startDate + trip.location}
                         onAddNew={handleAddNewTrip}
                         onUpdate={handleUpdateTrip}
@@ -123,6 +136,11 @@ export function TravelHistory() {
         </Layout.Section>
       </Layout>
     );
+  }
+
+  function handleImportTrips(trips: Trip[]) {
+    // eslint-disable-next-line no-console
+    console.log(trips);
   }
 
   async function handleAddNewTrip(trip: Trip) {

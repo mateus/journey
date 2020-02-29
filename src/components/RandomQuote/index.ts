@@ -1,1 +1,1 @@
-export {RandomQuote} from './RandomQuote';
+export {RandomQuote, MemoizedRandomQuote} from './RandomQuote';

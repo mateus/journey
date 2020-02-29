@@ -10,7 +10,6 @@ export function mockTrip(trip?: Partial<Trip>): Trip {
   const fakeTrip: Trip = {
     id: faker.random.uuid(),
     countryCode: faker.address.countryCode(),
-    completed: faker.random.boolean(),
     notes: faker.lorem.sentences(),
     location: faker.address.city(),
     startDate: today.toDate(),
