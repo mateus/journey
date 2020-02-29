@@ -17,7 +17,7 @@ export function getCountryByCode(
   }
 }
 
-export function getCountryCodeByLabel(
+export function getCountryByLabel(
   label: Country['label'],
 ): Country | undefined {
   const country = countries.find(({name}) => name === label);

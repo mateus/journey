@@ -4,7 +4,7 @@ import PapaParse from 'papaparse';
 
 import {Trip, QueryTripCollection} from 'types';
 import {isValidDate} from 'utilities/dates';
-import {getCountryCodeByLabel, DEFAULT_COUNTRY} from 'utilities/countries';
+import {getCountryByLabel, DEFAULT_COUNTRY} from 'utilities/countries';
 
 export const DEFAULT_TRIP_LENGTH = 3;
 
@@ -77,7 +77,7 @@ export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
       startDate: moment(row[index.startDate].trim()).toDate(),
       endDate: moment(row[index.endDate].trim()).toDate(),
       countryCode:
-        getCountryCodeByLabel(row[index.countryCode].trim())?.countryCode ||
+        getCountryByLabel(row[index.countryCode].trim())?.countryCode ||
         DEFAULT_COUNTRY.countryCode,
       location: row[index.location].trim(),
     };
