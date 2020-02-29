@@ -63,6 +63,7 @@ export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
     endDate: columns.indexOf('end date'),
     countryCode: columns.indexOf('country'),
     location: columns.indexOf('location'),
+    notes: columns.indexOf('notes'),
   };
   const filtedData = data.filter(
     (row) =>
@@ -78,12 +79,14 @@ export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
       getCountryByLabel(row[indexMap.countryCode].trim())?.countryCode ||
       DEFAULT_COUNTRY.countryCode;
     const location = row[indexMap.location].trim();
+    const notes = row[indexMap.notes].trim();
 
     return {
       startDate,
       endDate,
       countryCode,
       location,
+      notes: notes || undefined,
     };
   });
 }
