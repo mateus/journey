@@ -8,6 +8,7 @@ import {Trip} from 'types';
 import {ManageTripCard} from '../ManageTripCard';
 
 export interface TripDetailsCardProps extends Trip {
+  completed: boolean;
   onAddNew(trip: Trip): Promise<unknown>;
   onUpdate(trip: Trip): Promise<unknown>;
   onDelete(trip: Trip): Promise<unknown>;

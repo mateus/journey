@@ -19,7 +19,10 @@ export function tripsByYear(trips: Trip[]): TripsByYear {
 }
 
 export function upcomingTrips(trips: Trip[]) {
-  return trips.filter(({completed}) => !completed).sort(sortByStartDateAsc);
+  const today = moment();
+  return trips
+    .filter(({endDate}) => today.diff(endDate, 'days') <= 0)
+    .sort(sortByEndDateAsc);
 }
 
 export function insertOrdered(
@@ -39,4 +42,12 @@ export function sortByStartDateAsc(tripA: Trip, tripB: Trip) {
 
 export function sortByStartDateDesc(tripA: Trip, tripB: Trip) {
   return Number(tripA.startDate) > Number(tripB.startDate) ? -1 : 0;
+}
+
+export function sortByEndDateAsc(tripA: Trip, tripB: Trip) {
+  return Number(tripA.endDate) < Number(tripB.endDate) ? -1 : 0;
+}
+
+export function sortByEndDateDesc(tripA: Trip, tripB: Trip) {
+  return Number(tripA.endDate) > Number(tripB.endDate) ? -1 : 0;
 }

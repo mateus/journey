@@ -72,13 +72,11 @@ export function ManageTripCard({
       //   start: trip?.startDate || today.toDate(),
       //   end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
       // }),
-      completed: useField(trip?.completed || false),
     },
-    async onSubmit({location, notes, country, completed}) {
+    async onSubmit({location, notes, country}) {
       try {
         const payload: Trip = {
           id: trip?.id || 'impossible-case',
-          completed,
           countryCode: country!.countryCode,
           endDate: selectedDates.end,
           startDate: selectedDates.start,
@@ -186,11 +184,6 @@ export function ManageTripCard({
                 label="Same day trip"
                 checked={sameDayValue}
                 onChange={handleSameDayChange}
-              />
-              <Checkbox
-                label="Completed trip"
-                checked={fields.completed.value}
-                onChange={fields.completed.onChange}
               />
             </FormLayout.Group>
           </FormLayout>

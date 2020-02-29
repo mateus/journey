@@ -82,17 +82,14 @@ describe('<TravelHistory />', () => {
         mockTrip({
           startDate: new Date('01/01/2020'),
           endDate: new Date('01/02/2020'),
-          completed: false,
         }),
         mockTrip({
           startDate: new Date('01/01/2019'),
           endDate: new Date('01/02/2019'),
-          completed: false,
         }),
         mockTrip({
           startDate: new Date('01/01/2018'),
           endDate: new Date('01/02/2018'),
-          completed: true,
         }),
       ];
       const [first, second, third] = trips;
