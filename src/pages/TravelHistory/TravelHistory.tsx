@@ -13,6 +13,7 @@ import {DocumentTitle, RandomQuote, LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
+  ImportTripsModal,
   ManageTripCard,
   MemoizedTripDetailsCard,
   UpcomingTripsCard,
@@ -21,6 +22,7 @@ import './TravelHistory.scss';
 
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+  const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
   const tripsCollectionRef = user
@@ -63,7 +65,11 @@ export function TravelHistory() {
         onAction: () => setNewTripFormOpen(!newTripFormOpen),
       }}
       secondaryActions={[
-        {content: 'Import', icon: ImportMinor},
+        {
+          content: 'Import',
+          icon: ImportMinor,
+          onAction: () => setImportTripsModalOpen(true),
+        },
         {
           content: 'Export',
           icon: ExportMinor,
@@ -76,6 +82,11 @@ export function TravelHistory() {
       <EmptyState image={EmptyStateAirportDude}>
         <RandomQuote />
       </EmptyState>
+      <ImportTripsModal
+        open={importTripsModalOpen}
+        onClose={() => setImportTripsModalOpen(false)}
+        onConfirmed={handleImportTrips}
+      />
       <Toast />
     </Page>
   );
@@ -123,6 +134,10 @@ export function TravelHistory() {
         </Layout.Section>
       </Layout>
     );
+  }
+
+  function handleImportTrips(trips: Trip[]) {
+    console.log(trips);
   }
 
   async function handleAddNewTrip(trip: Trip) {
