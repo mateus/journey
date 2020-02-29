@@ -3,6 +3,8 @@ import faker from 'faker';
 import PapaParse from 'papaparse';
 
 import {Trip, QueryTripCollection} from 'types';
+import {isValidDate} from 'utilities/dates';
+import {getCountryCodeByLabel, DEFAULT_COUNTRY} from 'utilities/countries';
 
 export const DEFAULT_TRIP_LENGTH = 3;
 
@@ -54,6 +56,34 @@ export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
   return fakeTrip;
 }
 
-export function csvToTrip(parseResult: PapaParse.ParseResult) {
-  return parseResult.data;
+export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
+  const columns = data
+    .shift()
+    .map((col: string) => col.toLocaleLowerCase().trim());
+  const index = {
+    startDate: columns.indexOf('start date'),
+    endDate: columns.indexOf('end date'),
+    countryCode: columns.indexOf('country'),
+    location: columns.indexOf('location'),
+  };
+  const filtedData = data.filter(
+    (row) =>
+      isValidDate(row[index.startDate]) &&
+      isValidDate(row[index.endDate]) &&
+      !hasEmptyValues(row),
+  );
+  return filtedData.map<Trip>((row) => {
+    return {
+      startDate: moment(row[index.startDate].trim()).toDate(),
+      endDate: moment(row[index.endDate].trim()).toDate(),
+      countryCode:
+        getCountryCodeByLabel(row[index.countryCode].trim())?.countryCode ||
+        DEFAULT_COUNTRY.countryCode,
+      location: row[index.location].trim(),
+    };
+  });
+}
+
+function hasEmptyValues(values: string[]) {
+  return values.some((value) => value.trim() === '');
 }

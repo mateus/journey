@@ -14,3 +14,7 @@ export function isTodayDate(date: Date) {
   const today = new Date();
   return moment(date).diff(today, 'days') === 0;
 }
+
+export function isValidDate(date: string) {
+  return Boolean(Date.parse(date));
+}

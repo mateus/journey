@@ -4,7 +4,7 @@ export interface Timestamp {
 }
 
 export interface Trip {
-  id: string;
+  id?: string;
   countryCode: string;
   endDate: Date;
   location: string;

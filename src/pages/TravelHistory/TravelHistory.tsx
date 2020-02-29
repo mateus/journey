@@ -139,8 +139,16 @@ export function TravelHistory() {
   }
 
   function handleImportTrips(trips: Trip[]) {
+    // eslint-disable-next-line no-warning-comments
+    // TODO make it async for the loading state
+    // handleBatchAddNewTrip(trips);
+
     // eslint-disable-next-line no-console
     console.log(trips);
+    // firestore.batch();
+
+    // Not efficient, but works for now
+    trips.forEach(handleAddNewTrip);
   }
 
   async function handleAddNewTrip(trip: Trip) {

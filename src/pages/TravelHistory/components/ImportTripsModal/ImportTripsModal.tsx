@@ -35,6 +35,7 @@ export function ImportTripsModal({
   onClose,
   onConfirmed,
 }: ImportTripsModalProps) {
+  const [importedTrips, setImportedTrips] = useState<Trip[]>([]);
   const [canSubmit, setCanSubmit] = useState(false);
   const [dropZoneKey, setDropZoneKey] = useState(faker.random.uuid());
   const [files, setFiles] = useState<File[]>([]);
@@ -96,11 +97,12 @@ export function ImportTripsModal({
 
   function renderLoadedFileSection(file: File) {
     const data = PapaParse.parse(file, {
+      skipEmptyLines: true,
       error(err) {
         throw new Error(err.message);
       },
       complete(results) {
-        console.log(csvToTrip(results));
+        if (!canSubmit) setImportedTrips(csvToTrip(results));
         setCanSubmit(true);
       },
     });
@@ -128,16 +130,16 @@ export function ImportTripsModal({
       <div className="Example">
         <Scrollable horizontal shadow>
           <TextStyle variation="code">
-            <div>Start Date, End Date, Country, Location</div>
+            <div>Start Date,End Date,Country,Location</div>
             <div>
-              &quot;Jan 10, 2020&quot;, &quot;Jan 20, 2020&quot;,
-              &quot;Canada&quot;, &quot;Montreal, QC&quot;
+              &quot;Jan 10, 2020&quot;,&quot;Jan 20,
+              2020&quot;,&quot;Canada&quot;,&quot;Montreal, QC&quot;
             </div>
             <div>
-              &quot;January 10, 2020&quot;, &quot;January 20, 2020&quot;,
-              Canada, Montreal QC
+              &quot;January 10, 2020&quot;,&quot;January 20,
+              2020&quot;,Canada,Montreal QC
             </div>
-            <div>10/01/2020, 20/01/2020, Canada, Montreal</div>
+            <div>10/01/2020,20/01/2020,Canada,Montreal</div>
           </TextStyle>
         </Scrollable>
       </div>
@@ -156,6 +158,6 @@ export function ImportTripsModal({
   }
 
   function handleImportTripsSubmit() {
-    onConfirmed([]);
+    onConfirmed(importedTrips);
   }
 }
