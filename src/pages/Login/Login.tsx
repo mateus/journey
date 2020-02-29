@@ -7,7 +7,7 @@ import {DisplayText, EmptyState, Stack} from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
 import {auth, provider, firestore} from 'utilities/firebase';
-import {LoadingPage, RandomQuote} from 'components';
+import {DocumentTitle, LoadingPage, RandomQuote} from 'components';
 
 import './Login.scss';
 
@@ -26,6 +26,7 @@ export function Login() {
 
   return (
     <div className="Login">
+      <DocumentTitle title="Login" />
       <EmptyState
         image={EmptyStateAirportDude}
         footerContent={
