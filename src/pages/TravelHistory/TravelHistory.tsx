@@ -7,6 +7,7 @@ import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
+import {isPastDate} from 'utilities/dates';
 import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
 import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
@@ -115,6 +116,7 @@ export function TravelHistory() {
                     {byYear[year].map((trip) => (
                       <MemoizedTripDetailsCard
                         {...trip}
+                        completed={isPastDate(trip.endDate)}
                         key={trip.startDate + trip.location}
                         onAddNew={handleAddNewTrip}
                         onUpdate={handleUpdateTrip}

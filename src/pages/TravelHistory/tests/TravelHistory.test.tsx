@@ -1,8 +1,9 @@
 import React from 'react';
 import {act} from 'react-dom/test-utils';
 import {useCollection} from 'react-firebase-hooks/firestore';
-import {EmptyState, Toast, Page} from '@shopify/polaris';
 import {ReactWrapper} from 'enzyme';
+import moment from 'moment';
+import {EmptyState, Toast, Page} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
@@ -77,34 +78,41 @@ describe('<TravelHistory />', () => {
       expect(wrapper.find(UpcomingTripsCard)).not.toExist();
     });
 
-    it('renders ordered list of upcoming trips', async () => {
-      const trips = [
-        mockTrip({
-          startDate: new Date('01/01/2020'),
-          endDate: new Date('01/02/2020'),
-        }),
-        mockTrip({
-          startDate: new Date('01/01/2019'),
-          endDate: new Date('01/02/2019'),
-        }),
-        mockTrip({
-          startDate: new Date('01/01/2018'),
-          endDate: new Date('01/02/2018'),
-        }),
-      ];
-      const [first, second, third] = trips;
+    it.only('renders ordered list of upcoming trips', async () => {
+      const todayDate = new Date();
+      const pastDate = moment(todayDate)
+        .subtract(1, 'days')
+        .toDate();
+      const futureDate = moment(todayDate)
+        .add(1, 'days')
+        .toDate();
+      const pastTrip = mockTrip({
+        startDate: pastDate,
+        endDate: pastDate,
+      });
+      const todayTrip = mockTrip({
+        startDate: pastDate,
+        endDate: todayDate,
+      });
+      const futureTrip = mockTrip({
+        startDate: pastDate,
+        endDate: futureDate,
+      });
       useCollectionSpy.mockReturnValue([
         createCollectionsSnapshot([
-          mockTripCollection(first),
-          mockTripCollection(second),
-          mockTripCollection(third),
+          mockTripCollection(futureTrip),
+          mockTripCollection(todayTrip),
+          mockTripCollection(pastTrip),
         ]),
         false,
         null,
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
+      const expected = [todayTrip, futureTrip];
+      console.log(expected);
+      console.log(wrapper.find(UpcomingTripsCard).prop('list'));
       expect(wrapper.find(UpcomingTripsCard)).toHaveProp({
-        list: [second, first],
+        list: expected,
       });
     });
   });

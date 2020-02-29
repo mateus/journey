@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import {Trip} from 'types';
+import {isFutureDate, isTodayDate} from 'utilities/dates';
 
 export interface TripsByYear {
   [key: string]: Trip[];
@@ -19,9 +20,8 @@ export function tripsByYear(trips: Trip[]): TripsByYear {
 }
 
 export function upcomingTrips(trips: Trip[]) {
-  const today = moment();
   return trips
-    .filter(({endDate}) => today.diff(endDate, 'days') <= 0)
+    .filter(({endDate}) => isFutureDate(endDate) || isTodayDate(endDate))
     .sort(sortByEndDateAsc);
 }
 
