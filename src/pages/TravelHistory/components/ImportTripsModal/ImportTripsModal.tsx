@@ -99,6 +99,7 @@ export function ImportTripsModal({
         throw new Error(err.message);
       },
       complete(results) {
+        // eslint-disable-next-line no-console
         console.log(results.data);
         setCanSubmit(true);
       },

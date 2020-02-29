@@ -84,7 +84,8 @@ export function ManageTripCard({
           notes,
         };
         if (trip) {
-          await onUpdate(payload);
+          // Update might rerender the page. Can cause no-ops
+          await onUpdate(payload).then(onClose);
         } else {
           await onAddNew(payload);
         }

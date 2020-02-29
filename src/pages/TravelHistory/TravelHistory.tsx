@@ -139,6 +139,7 @@ export function TravelHistory() {
   }
 
   function handleImportTrips(trips: Trip[]) {
+    // eslint-disable-next-line no-console
     console.log(trips);
   }
 
