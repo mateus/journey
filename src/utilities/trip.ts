@@ -54,7 +54,7 @@ export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
   };
 }
 
-export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
+export function csvToTrips({data}: PapaParse.ParseResult): Trip[] {
   const columns = data
     .shift()
     .map((col: string) => col.toLocaleLowerCase().trim());
