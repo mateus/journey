@@ -2,6 +2,7 @@ import React, {useState, useCallback} from 'react';
 import faker from 'faker';
 import PapaParse from 'papaparse';
 import {
+  Banner,
   Caption,
   DropZone,
   Modal,
@@ -15,6 +16,7 @@ import {
 } from '@shopify/polaris';
 import {DeleteMinor} from '@shopify/polaris-icons';
 
+import {Document} from 'assets';
 import {Trip} from 'types';
 
 import './ImportTripsModal.scss';
@@ -71,26 +73,14 @@ export function ImportTripsModal({
   function renderDropZoneSection() {
     return (
       <Stack vertical>
+        <Banner status="info">
+          Just exploring? <Link>Use sample data</Link>
+        </Banner>
         <p>
           Select a <TextStyle variation="strong">CSV</TextStyle> file with the
           following format:
         </p>
-        <div className="Example">
-          <Scrollable horizontal shadow>
-            <TextStyle variation="code">
-              <div>Start Date, End Date, Country, Location</div>
-              <div>
-                &quot;Jan 10, 2020&quot;, &quot;Jan 20, 2020&quot;,
-                &quot;Canada&quot;, &quot;Montreal, QC&quot;
-              </div>
-              <div>
-                &quot;January 10, 2020&quot;, &quot;January 20, 2020&quot;,
-                Canada, &quot;Montreal, QC&quot;
-              </div>
-              <div>10/01/2020, 20/01/2020, Canada, Montreal</div>
-            </TextStyle>
-          </Scrollable>
-        </div>
+        {csvExample()}
         <DropZone
           key={dropZoneKey}
           allowMultiple={false}
@@ -113,15 +103,11 @@ export function ImportTripsModal({
         setCanSubmit(true);
       },
     });
-    const source =
-      validImageTypes.indexOf(file.type) > 0
-        ? window.URL.createObjectURL(files)
-        : 'https://cdn.shopify.com/s/files/1/0757/9955/files/New_Post.png?12678548500147524304';
 
     return (
       <Stack vertical>
         <Stack alignment="center" wrap={false}>
-          <Thumbnail size="large" alt={file.name} source={source} />
+          <Thumbnail size="large" alt={file.name} source={Document} />
           <Stack.Item fill>
             {file.name} <Caption>{file.size} bytes</Caption>
           </Stack.Item>
@@ -136,7 +122,29 @@ export function ImportTripsModal({
     );
   }
 
+  function csvExample() {
+    return (
+      <div className="Example">
+        <Scrollable horizontal shadow>
+          <TextStyle variation="code">
+            <div>Start Date, End Date, Country, Location</div>
+            <div>
+              &quot;Jan 10, 2020&quot;, &quot;Jan 20, 2020&quot;,
+              &quot;Canada&quot;, &quot;Montreal, QC&quot;
+            </div>
+            <div>
+              &quot;January 10, 2020&quot;, &quot;January 20, 2020&quot;,
+              Canada, Montreal QC
+            </div>
+            <div>10/01/2020, 20/01/2020, Canada, Montreal</div>
+          </TextStyle>
+        </Scrollable>
+      </div>
+    );
+  }
+
   function resetDropZone() {
+    setCanSubmit(false);
     setDropZoneKey(faker.random.uuid());
     setFiles([]);
   }
