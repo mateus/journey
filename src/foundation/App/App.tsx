@@ -3,7 +3,7 @@ import enTranslations from '@shopify/polaris/locales/en.json';
 import {AppProvider} from '@shopify/polaris';
 import {BrowserRouter as Router} from 'react-router-dom';
 
-import {isDevelopment} from 'config';
+import {isDevelopment} from 'config/variables';
 import {Routes} from 'foundation';
 
 import {DevelopmentHead} from './components';

@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import Favicon from 'react-favicon';
 
-import {publicURL} from 'config';
+import {publicURL} from 'config/variables';
 
 import {DevelopmentHead} from '../DevelopmentHead';
 

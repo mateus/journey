@@ -1,18 +1,8 @@
 import 'jest-enzyme';
 import {configure} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import {JSDOM} from 'jsdom';
 
-import {mocksdk} from './firebaseMocks';
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface Global {
-      document: Document;
-    }
-  }
-}
+import {mocksdk} from 'config/tests/firebaseMocks';
 
 jest.mock('firebase/app', () => {
   return {
@@ -20,10 +10,5 @@ jest.mock('firebase/app', () => {
     analytics: jest.fn(),
   };
 });
-
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
-const {window} = jsdom;
-
-global.document = window.document;
 
 configure({adapter: new Adapter()});
