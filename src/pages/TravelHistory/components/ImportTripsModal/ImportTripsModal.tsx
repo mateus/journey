@@ -18,6 +18,7 @@ import {DeleteMinor} from '@shopify/polaris-icons';
 
 import {Document} from 'assets';
 import {Trip} from 'types';
+import {csvToTrip} from 'utilities/trip';
 
 import './ImportTripsModal.scss';
 
@@ -99,8 +100,7 @@ export function ImportTripsModal({
         throw new Error(err.message);
       },
       complete(results) {
-        // eslint-disable-next-line no-console
-        console.log(results.data);
+        console.log(csvToTrip(results));
         setCanSubmit(true);
       },
     });

@@ -1,5 +1,6 @@
 import moment from 'moment';
 import faker from 'faker';
+import PapaParse from 'papaparse';
 
 import {Trip, QueryTripCollection} from 'types';
 
@@ -51,4 +52,8 @@ export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
   };
 
   return fakeTrip;
+}
+
+export function csvToTrip(parseResult: PapaParse.ParseResult) {
+  return parseResult.data;
 }
