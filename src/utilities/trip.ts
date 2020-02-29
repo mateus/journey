@@ -39,28 +39,26 @@ export function mockTripCollection(trip?: Partial<Trip>): QueryTripCollection {
     ? moment(new Date(endDate)).unix()
     : today.add(3, 'days').unix();
 
-  const fakeTrip: QueryTripCollection = {
+  return {
     ...mockedTrip,
     startDate: {
-      // Not trully Seconds and Nanoseconds (both the same)
+      // Not trully Seconds and Nanoseconds (both are the same here)
       seconds: epochStartDateSeconds,
       nanoseconds: epochStartDateSeconds,
     },
     endDate: {
-      // Not trully Seconds and Nanoseconds (both the same)
+      // Not trully Seconds and Nanoseconds (both are the same here)
       seconds: epochEndDateSeconds,
       nanoseconds: epochEndDateSeconds,
     },
   };
-
-  return fakeTrip;
 }
 
 export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
   const columns = data
     .shift()
     .map((col: string) => col.toLocaleLowerCase().trim());
-  const index = {
+  const indexMap = {
     startDate: columns.indexOf('start date'),
     endDate: columns.indexOf('end date'),
     countryCode: columns.indexOf('country'),
@@ -68,18 +66,24 @@ export function csvToTrip({data}: PapaParse.ParseResult): Trip[] {
   };
   const filtedData = data.filter(
     (row) =>
-      isValidDate(row[index.startDate]) &&
-      isValidDate(row[index.endDate]) &&
+      isValidDate(row[indexMap.startDate]) &&
+      isValidDate(row[indexMap.endDate]) &&
       !hasEmptyValues(row),
   );
+
   return filtedData.map<Trip>((row) => {
+    const startDate = moment(row[indexMap.startDate].trim()).toDate();
+    const endDate = moment(row[indexMap.endDate].trim()).toDate();
+    const countryCode =
+      getCountryByLabel(row[indexMap.countryCode].trim())?.countryCode ||
+      DEFAULT_COUNTRY.countryCode;
+    const location = row[indexMap.location].trim();
+
     return {
-      startDate: moment(row[index.startDate].trim()).toDate(),
-      endDate: moment(row[index.endDate].trim()).toDate(),
-      countryCode:
-        getCountryByLabel(row[index.countryCode].trim())?.countryCode ||
-        DEFAULT_COUNTRY.countryCode,
-      location: row[index.location].trim(),
+      startDate,
+      endDate,
+      countryCode,
+      location,
     };
   });
 }

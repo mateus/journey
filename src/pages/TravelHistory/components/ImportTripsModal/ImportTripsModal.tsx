@@ -35,7 +35,7 @@ export function ImportTripsModal({
   onClose,
   onConfirmed,
 }: ImportTripsModalProps) {
-  const [importedTrips, setImportedTrips] = useState<Trip[]>([]);
+  const [tripsToImport, setTripsToImport] = useState<Trip[]>([]);
   const [canSubmit, setCanSubmit] = useState(false);
   const [dropZoneKey, setDropZoneKey] = useState(faker.random.uuid());
   const [files, setFiles] = useState<File[]>([]);
@@ -102,7 +102,7 @@ export function ImportTripsModal({
         throw new Error(err.message);
       },
       complete(results) {
-        if (!canSubmit) setImportedTrips(csvToTrip(results));
+        if (!canSubmit) setTripsToImport(csvToTrip(results));
         setCanSubmit(true);
       },
     });
@@ -150,6 +150,7 @@ export function ImportTripsModal({
     setCanSubmit(false);
     setDropZoneKey(faker.random.uuid());
     setFiles([]);
+    setTripsToImport([]);
   }
 
   function handleOnClose() {
@@ -158,6 +159,6 @@ export function ImportTripsModal({
   }
 
   function handleImportTripsSubmit() {
-    onConfirmed(importedTrips);
+    onConfirmed(tripsToImport);
   }
 }
