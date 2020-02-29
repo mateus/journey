@@ -117,6 +117,7 @@ describe('<TripDetailsCard />', () => {
       const wrapper = await mountWithAppProvider(
         <TripDetailsCard
           {...trip}
+          completed
           onAddNew={onAddNew}
           onUpdate={onUpdate}
           onDelete={onDelete}
