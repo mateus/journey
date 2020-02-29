@@ -78,7 +78,7 @@ describe('<TravelHistory />', () => {
       expect(wrapper.find(UpcomingTripsCard)).not.toExist();
     });
 
-    it.only('renders ordered list of upcoming trips', async () => {
+    it('renders ordered list of upcoming trips', async () => {
       const todayDate = new Date();
       const pastDate = moment(todayDate)
         .subtract(1, 'days')
@@ -108,11 +108,11 @@ describe('<TravelHistory />', () => {
         null,
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      const expected = [todayTrip, futureTrip];
-      console.log(expected);
-      console.log(wrapper.find(UpcomingTripsCard).prop('list'));
       expect(wrapper.find(UpcomingTripsCard)).toHaveProp({
-        list: expected,
+        list: [
+          expect.objectContaining({id: todayTrip.id}),
+          expect.objectContaining({id: futureTrip.id}),
+        ],
       });
     });
   });
