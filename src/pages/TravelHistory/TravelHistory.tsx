@@ -9,7 +9,7 @@ import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
 import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
-import {DocumentTitle, RandomQuote, LoadingPage} from 'components';
+import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
@@ -80,7 +80,7 @@ export function TravelHistory() {
       <DocumentTitle title="Travel History" />
       {renderTrips(reconciledTrips)}
       <EmptyState image={EmptyStateAirportDude}>
-        <RandomQuote />
+        <MemoizedRandomQuote />
       </EmptyState>
       <ImportTripsModal
         open={importTripsModalOpen}

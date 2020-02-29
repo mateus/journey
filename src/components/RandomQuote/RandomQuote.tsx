@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {memo} from 'react';
 import {DisplayText, TextStyle} from '@shopify/polaris';
 
 import {quotes} from './quotes';
@@ -23,6 +23,8 @@ export function RandomQuote({small}: RandomQuoteProps) {
     </blockquote>
   );
 }
+
+export const MemoizedRandomQuote = memo(RandomQuote);
 
 function getRandomQuote() {
   const randomValue = Math.floor(Math.random() * Object.keys(quotes).length);

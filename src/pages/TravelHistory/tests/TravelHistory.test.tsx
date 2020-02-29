@@ -6,7 +6,7 @@ import {ReactWrapper} from 'enzyme';
 
 import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
-import {LoadingPage, RandomQuote} from 'components';
+import {LoadingPage, MemoizedRandomQuote} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
@@ -63,7 +63,7 @@ describe('<TravelHistory />', () => {
     ]);
     const wrapper = await mountWithAppProvider(<TravelHistory />);
     expect(wrapper.find(EmptyState)).toExist();
-    expect(wrapper.find(EmptyState).find(RandomQuote)).toExist();
+    expect(wrapper.find(EmptyState).find(MemoizedRandomQuote)).toExist();
   });
 
   describe('<UpcomingTripsCard />', () => {
