@@ -1,0 +1,10 @@
+.Example {
+  width: 100%;
+  overflow: scroll;
+  white-space: nowrap;
+
+  code {
+    min-width: 100%;
+    padding: 10px;
+  }
+}

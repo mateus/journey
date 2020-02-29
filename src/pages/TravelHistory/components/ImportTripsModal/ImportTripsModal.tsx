@@ -7,13 +7,17 @@ import {
   Modal,
   Stack,
   Link,
+  Scrollable,
   Icon,
   Thumbnail,
   Tooltip,
+  TextStyle,
 } from '@shopify/polaris';
 import {DeleteMinor} from '@shopify/polaris-icons';
 
 import {Trip} from 'types';
+
+import './ImportTripsModal.scss';
 
 export interface ImportTripsModalProps {
   open: boolean;
@@ -28,6 +32,7 @@ export function ImportTripsModal({
   onClose,
   onConfirmed,
 }: ImportTripsModalProps) {
+  const [canSubmit, setCanSubmit] = useState(false);
   const [dropZoneKey, setDropZoneKey] = useState(faker.random.uuid());
   const [files, setFiles] = useState<File[]>([]);
   const handleDropZoneDrop = useCallback(
@@ -38,7 +43,7 @@ export function ImportTripsModal({
 
   const validImageTypes = ['text/csv'];
   const fileUpload = files.length ? null : <DropZone.FileUpload />;
-  const uploadedFiles = files.length > 0 && renderFileThumbnail(files[0]);
+  const uploadedFiles = files.length > 0 && renderLoadedFileSection(files[0]);
 
   return (
     <Modal
@@ -49,7 +54,7 @@ export function ImportTripsModal({
         content: 'Import trips',
         onAction: handleImportTripsSubmit,
         loading: Boolean(loading),
-        disabled: Boolean(loading),
+        disabled: !canSubmit || Boolean(loading),
       }}
       secondaryActions={[
         {
@@ -57,27 +62,55 @@ export function ImportTripsModal({
           onAction: handleOnClose,
         },
       ]}
+      sectioned
     >
-      {!uploadedFiles && (
-        <Modal.Section>
-          <DropZone
-            key={dropZoneKey}
-            allowMultiple={false}
-            onDrop={handleDropZoneDrop}
-            accept={validImageTypes.join(', ')}
-          >
-            {fileUpload}
-          </DropZone>
-        </Modal.Section>
-      )}
-      {uploadedFiles}
+      {uploadedFiles || renderDropZoneSection()}
     </Modal>
   );
 
-  function renderFileThumbnail(file: File) {
+  function renderDropZoneSection() {
+    return (
+      <Stack vertical>
+        <p>
+          Select a <TextStyle variation="strong">CSV</TextStyle> file with the
+          following format:
+        </p>
+        <div className="Example">
+          <Scrollable horizontal shadow>
+            <TextStyle variation="code">
+              <div>Start Date, End Date, Country, Location</div>
+              <div>
+                &quot;Jan 10, 2020&quot;, &quot;Jan 20, 2020&quot;,
+                &quot;Canada&quot;, &quot;Montreal, QC&quot;
+              </div>
+              <div>
+                &quot;January 10, 2020&quot;, &quot;January 20, 2020&quot;,
+                Canada, &quot;Montreal, QC&quot;
+              </div>
+              <div>10/01/2020, 20/01/2020, Canada, Montreal</div>
+            </TextStyle>
+          </Scrollable>
+        </div>
+        <DropZone
+          key={dropZoneKey}
+          allowMultiple={false}
+          onDrop={handleDropZoneDrop}
+          accept={validImageTypes.join(', ')}
+        >
+          {fileUpload}
+        </DropZone>
+      </Stack>
+    );
+  }
+
+  function renderLoadedFileSection(file: File) {
     const data = PapaParse.parse(file, {
+      error(err) {
+        throw new Error(err.message);
+      },
       complete(results) {
-        console.log('Finished:', results.data);
+        console.log(results.data);
+        setCanSubmit(true);
       },
     });
     const source =
@@ -86,22 +119,20 @@ export function ImportTripsModal({
         : 'https://cdn.shopify.com/s/files/1/0757/9955/files/New_Post.png?12678548500147524304';
 
     return (
-      <>
-        <Modal.Section>
-          <Stack alignment="center" wrap={false}>
-            <Thumbnail size="large" alt={file.name} source={source} />
-            <Stack.Item fill>
-              {file.name} <Caption>{file.size} bytes</Caption>
-            </Stack.Item>
-            <Tooltip content="Delete file">
-              <Link onClick={resetDropZone}>
-                <Icon source={DeleteMinor} color="inkLighter" />
-              </Link>
-            </Tooltip>
-          </Stack>
-        </Modal.Section>
-        <Modal.Section>{data}</Modal.Section>
-      </>
+      <Stack vertical>
+        <Stack alignment="center" wrap={false}>
+          <Thumbnail size="large" alt={file.name} source={source} />
+          <Stack.Item fill>
+            {file.name} <Caption>{file.size} bytes</Caption>
+          </Stack.Item>
+          <Tooltip content="Delete file">
+            <Link onClick={resetDropZone}>
+              <Icon source={DeleteMinor} color="inkLighter" />
+            </Link>
+          </Tooltip>
+        </Stack>
+        {data}
+      </Stack>
     );
   }
 
