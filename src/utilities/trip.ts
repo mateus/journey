@@ -65,11 +65,14 @@ export function csvToTrips({data}: PapaParse.ParseResult): Trip[] {
     location: columns.indexOf('location'),
     notes: columns.indexOf('notes'),
   };
+
+  if (!hasAllRequiredColumns(indexMap)) return [];
+
   const filtedData = data.filter(
     (row) =>
       isValidDate(row[indexMap.startDate]) &&
       isValidDate(row[indexMap.endDate]) &&
-      !hasEmptyValues(row),
+      !hasEmptyValues(row, indexMap),
   );
 
   return filtedData.map<Trip>((row) => {
@@ -81,16 +84,27 @@ export function csvToTrips({data}: PapaParse.ParseResult): Trip[] {
     const location = row[indexMap.location].trim();
     const notes = row[indexMap.notes].trim();
 
-    return {
+    const result = {
       startDate,
       endDate,
       countryCode,
       location,
-      notes: notes || undefined,
     };
+
+    if (notes) {
+      return {...result, notes};
+    }
+    return result;
   });
 }
 
-function hasEmptyValues(values: string[]) {
-  return values.some((value) => value.trim() === '');
+function hasEmptyValues(values: string[], indexMap: {[id: string]: number}) {
+  return values.some((value, index) => {
+    if (indexMap.notes === index) return false;
+    return value.trim() === '';
+  });
+}
+
+function hasAllRequiredColumns(map: {[id: string]: number}) {
+  return Object.keys(map).every((key) => map[key] >= 0);
 }

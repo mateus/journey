@@ -37,6 +37,7 @@ export function ImportTripsModal({
 }: ImportTripsModalProps) {
   const [tripsToImport, setTripsToImport] = useState<Trip[]>([]);
   const [canSubmit, setCanSubmit] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const [dropZoneKey, setDropZoneKey] = useState(faker.random.uuid());
   const [files, setFiles] = useState<File[]>([]);
   const handleDropZoneDrop = useCallback(
@@ -45,9 +46,10 @@ export function ImportTripsModal({
     [],
   );
 
-  const validImageTypes = ['text/csv'];
-  const fileUpload = files.length ? null : <DropZone.FileUpload />;
-  const uploadedFiles = files.length > 0 && renderLoadedFileSection(files[0]);
+  const content =
+    files.length > 0
+      ? renderLoadedFileSection(files[0])
+      : renderDropZoneSection();
 
   return (
     <Modal
@@ -55,7 +57,7 @@ export function ImportTripsModal({
       open={open}
       onClose={handleOnClose}
       primaryAction={{
-        content: 'Import trips',
+        content: `Import ${tripsToImport.length || ''} trips`,
         onAction: handleImportTripsSubmit,
         loading: Boolean(loading),
         disabled: !canSubmit || Boolean(loading),
@@ -68,16 +70,24 @@ export function ImportTripsModal({
       ]}
       sectioned
     >
-      {uploadedFiles || renderDropZoneSection()}
+      {content}
     </Modal>
   );
 
   function renderDropZoneSection() {
+    const validImageTypes = ['text/csv'];
+    const fileUpload = files.length ? null : <DropZone.FileUpload />;
+
     return (
       <Stack vertical>
         <Banner status="info">
-          Just exploring? <Link>Use sample data</Link>
+          Just exploring? <Link>Use sample data</Link>.
         </Banner>
+        {hasError && (
+          <Banner status="critical">
+            Selected file does not have the desired format.
+          </Banner>
+        )}
         <p>
           Select a <TextStyle variation="strong">CSV</TextStyle> file with the
           following format:
@@ -96,16 +106,7 @@ export function ImportTripsModal({
   }
 
   function renderLoadedFileSection(file: File) {
-    const data = PapaParse.parse(file, {
-      skipEmptyLines: true,
-      error(err) {
-        throw new Error(err.message);
-      },
-      complete(results) {
-        if (!canSubmit) setTripsToImport(csvToTrips(results));
-        setCanSubmit(true);
-      },
-    });
+    parseCSV(file);
 
     return (
       <Stack vertical>
@@ -120,9 +121,32 @@ export function ImportTripsModal({
             </Link>
           </Tooltip>
         </Stack>
-        {data}
       </Stack>
     );
+  }
+
+  function parseCSV(file: File) {
+    if (tripsToImport.length > 0) return;
+
+    PapaParse.parse(file, {
+      skipEmptyLines: true,
+      error(err) {
+        throw new Error(err.message);
+      },
+      complete(results) {
+        if (!canSubmit) {
+          const trips = csvToTrips(results);
+          if (trips.length > 0) {
+            setHasError(false);
+            setTripsToImport(trips);
+            setCanSubmit(true);
+          } else {
+            setHasError(true);
+            resetDropZone();
+          }
+        }
+      },
+    });
   }
 
   function csvExample() {
@@ -148,9 +172,9 @@ export function ImportTripsModal({
 
   function resetDropZone() {
     setCanSubmit(false);
-    setDropZoneKey(faker.random.uuid());
-    setFiles([]);
     setTripsToImport([]);
+    setFiles([]);
+    setDropZoneKey(faker.random.uuid());
   }
 
   function handleOnClose() {

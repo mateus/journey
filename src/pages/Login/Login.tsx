@@ -56,9 +56,7 @@ export function Login() {
           storeUserData(cred.user);
         }
       })
-      .catch((error) => {
-        throw new Error(error);
-      });
+      .catch(() => {});
   }
 
   function storeUserData(user: User) {
