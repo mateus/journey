@@ -14,15 +14,9 @@ import './Login.scss';
 export function Login() {
   const [user, initialising, error] = useAuthState(auth);
 
-  if (initialising) {
-    return <LoadingPage />;
-  }
-
+  if (initialising) return <LoadingPage />;
   if (error) throw new Error(error.message);
-
-  if (user) {
-    return <Redirect to={{pathname: '/'}} />;
-  }
+  if (user) return <Redirect to={{pathname: '/'}} />;
 
   return (
     <div className="Login">

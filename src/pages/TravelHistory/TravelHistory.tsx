@@ -39,7 +39,6 @@ export function TravelHistory() {
   });
 
   if (loading || !tripsSnapshot) return <LoadingPage />;
-
   if (error) throw new Error(error.message);
 
   const tripsData = tripsSnapshot.docs.map<QueryTripCollection>((doc) => {
@@ -145,6 +144,7 @@ export function TravelHistory() {
 
   async function handleImportTrips(trips: Trip[]) {
     setImporting(true);
+    // It would be better to batch all the trips together instead of add each at a time
     Promise.all(
       trips.map(async (trip) => {
         await handleAddNewTrip(trip, true);
