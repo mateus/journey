@@ -153,7 +153,7 @@ export function TravelHistory() {
       .then(() => {
         setImporting(false);
         setImportTripsModalOpen(false);
-        showToast({content: `${trips.length} imported`});
+        showToast({content: `${trips.length} trips imported`});
       })
       .catch(() => {
         throw new Error('Error importing trips');
