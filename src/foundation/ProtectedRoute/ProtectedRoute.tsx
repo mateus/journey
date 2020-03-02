@@ -9,13 +9,8 @@ import {Frame} from 'foundation';
 export function ProtectedRoute(props: RouteProps) {
   const [user, initialising, error] = useAuthState(auth);
 
-  if (initialising) {
-    return <LoadingPage />;
-  }
-
-  if (error) {
-    throw new Error(error.message);
-  }
+  if (initialising) return <LoadingPage />;
+  if (error) throw new Error(error.message);
 
   if (user) {
     return (
