@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useCollection} from 'react-firebase-hooks/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
+import faker from 'faker';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
 
@@ -24,6 +25,7 @@ import './TravelHistory.scss';
 export function TravelHistory() {
   const [newTripFormOpen, setNewTripFormOpen] = useState(false);
   const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
+  const [importing, setImporting] = useState(false);
   const [Toast, showToast] = useToast();
   const [user] = useAuthState(auth);
   const tripsCollectionRef = user
@@ -85,6 +87,7 @@ export function TravelHistory() {
       </EmptyState>
       <ImportTripsModal
         open={importTripsModalOpen}
+        loading={importing}
         onClose={() => setImportTripsModalOpen(false)}
         onConfirmed={handleImportTrips}
       />
@@ -117,7 +120,9 @@ export function TravelHistory() {
                       <MemoizedTripDetailsCard
                         {...trip}
                         completed={isPastDate(trip.endDate)}
-                        key={trip.startDate + trip.location}
+                        key={
+                          trip.startDate + trip.location + faker.random.uuid()
+                        }
                         onAddNew={handleAddNewTrip}
                         onUpdate={handleUpdateTrip}
                         onDelete={handleDeleteTrip}
@@ -138,12 +143,24 @@ export function TravelHistory() {
     );
   }
 
-  function handleImportTrips(trips: Trip[]) {
-    // eslint-disable-next-line no-console
-    console.log(trips);
+  async function handleImportTrips(trips: Trip[]) {
+    setImporting(true);
+    Promise.all(
+      trips.map(async (trip) => {
+        await handleAddNewTrip(trip, true);
+      }),
+    )
+      .then(() => {
+        setImporting(false);
+        setImportTripsModalOpen(false);
+        showToast({content: `${trips.length} imported`});
+      })
+      .catch(() => {
+        throw new Error('Error importing trips');
+      });
   }
 
-  async function handleAddNewTrip(trip: Trip) {
+  async function handleAddNewTrip(trip: Trip, importing = false) {
     // trip.id represents the Document ID, we don't have to include it as a value
     delete trip.id;
     if (tripsCollectionRef) {
@@ -153,8 +170,10 @@ export function TravelHistory() {
           createdAt: moment().toDate(),
         })
         .then(() => {
-          setNewTripFormOpen(false);
-          showToast({content: `Trip to ${trip.location} added`});
+          if (!importing) {
+            setNewTripFormOpen(false);
+            showToast({content: `Trip to ${trip.location} added`});
+          }
         });
     }
   }

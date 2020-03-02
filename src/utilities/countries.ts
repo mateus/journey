@@ -16,3 +16,16 @@ export function getCountryByCode(
     };
   }
 }
+
+export function getCountryByLabel(
+  label: Country['label'],
+): Country | undefined {
+  const country = countries.find(({name}) => name === label);
+
+  if (country) {
+    return {
+      countryCode: country.code,
+      label: country.name,
+    };
+  }
+}

@@ -5,7 +5,7 @@ import {ReactWrapper} from 'enzyme';
 import moment from 'moment';
 import {EmptyState, Toast, Page} from '@shopify/polaris';
 
-import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
+import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
 import {LoadingPage, MemoizedRandomQuote} from 'components';
 import {QueryTripCollection} from 'types';

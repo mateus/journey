@@ -9,7 +9,7 @@ import {
   NoteMajorTwotone,
 } from '@shopify/polaris-icons';
 
-import {mountWithAppProvider, updateWrapper} from 'utilities/tests';
+import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {auth} from 'utilities/firebase';
 
 import {Frame} from '../Frame';

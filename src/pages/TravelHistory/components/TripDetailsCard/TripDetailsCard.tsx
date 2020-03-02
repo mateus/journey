@@ -18,11 +18,12 @@ export function TripDetailsCard({
   onAddNew,
   onUpdate,
   onDelete,
+  completed,
   ...trip
 }: TripDetailsCardProps) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const {location, notes, startDate, endDate, countryCode, completed} = trip;
+  const {location, notes, startDate, endDate, countryCode} = trip;
 
   const cardMarkup = isEditing ? (
     <ManageTripCard
