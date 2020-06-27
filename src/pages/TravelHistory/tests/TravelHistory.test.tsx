@@ -124,7 +124,7 @@ describe('<TravelHistory />', () => {
         secondaryActions: expect.arrayContaining([
           expect.objectContaining({
             content: 'Export',
-            disabled: false,
+            disabled: true,
           }),
         ]),
       });
@@ -171,13 +171,14 @@ describe('<TravelHistory />', () => {
 
     it('is closed on first load', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(ManageTripModal)).toHaveProp({open: false});
+      expect(wrapper.find(ManageTripModal)).not.toExist();
     });
 
     it('renders when clicking "Add trip" action from Page', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
       expect(wrapper.find(ManageTripModal)).toExist();
+      expect(wrapper.find(ManageTripModal)).toHaveProp({open: true});
     });
 
     it('disables Add trip Page action when showing', async () => {

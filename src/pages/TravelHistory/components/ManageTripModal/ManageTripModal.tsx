@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, memo} from 'react';
 import moment from 'moment';
 import {
   Banner,
-  Card,
-  ComplexAction,
+  Button,
   Checkbox,
   DisplayText,
   DatePicker,
@@ -20,7 +19,7 @@ import {useForm, useField, notEmpty} from '@shopify/react-form';
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
-import {ConfirmActionModal, CountryTextField, Flag} from 'components';
+import {CountryTextField, Flag} from 'components';
 
 import './ManageTripModal.scss';
 
@@ -31,10 +30,10 @@ export interface ManageTripModalProps {
   onClose(): void;
   onAddNew(trip: Trip): Promise<unknown>;
   onUpdate(trip: Trip): Promise<unknown>;
-  onDelete(trip: Trip): Promise<unknown>;
+  onDelete(trip: Trip): void;
 }
 
-export function ManageTripModal({
+export const ManageTripModal = memo(function ManageTripModal({
   open,
   trip,
   onClose,
@@ -42,20 +41,12 @@ export function ManageTripModal({
   onUpdate,
   onDelete,
 }: ManageTripModalProps) {
+  // console.log('<ManageTripModal /> rendered');
+
   const today = moment();
-  const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
-  const [sameDayValue, setSameDay] = useState(false);
-  const [confirmActionModalVisible, setConfirmActionModalVisible] = useState(
-    false,
+  const [sameDayValue, setSameDay] = useState(
+    trip ? trip?.startDate === trip?.endDate : false,
   );
-
-  // This should be in useForm. Getting error when adding initial value.
-  // It won't manage the dirty state properly until it's included
-  const [selectedDates, setSelectedDates] = useState({
-    start: trip?.startDate || today.toDate(),
-    end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
-  });
-
   const {fields, submit, submitting, dirty, submitErrors} = useForm({
     fields: {
       location: useField({
@@ -71,12 +62,12 @@ export function ManageTripModal({
         month: moment(trip?.startDate).month() || today.month(),
         year: moment(trip?.startDate).year() || today.year(),
       }),
-      // selectedDates: useField({
-      //   start: trip?.startDate || today.toDate(),
-      //   end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
-      // }),
+      selectedDates: useField({
+        start: trip?.startDate || today.toDate(),
+        end: trip?.endDate || today.add(DEFAULT_TRIP_LENGTH, 'days').toDate(),
+      }),
     },
-    async onSubmit({location, notes, country}) {
+    async onSubmit({location, notes, country, selectedDates}) {
       try {
         const payload: Trip = {
           id: trip?.id || 'impossible-case',
@@ -100,39 +91,14 @@ export function ManageTripModal({
     },
   });
 
-  const confirmActionModal = trip && (
-    <ConfirmActionModal
-      open={confirmActionModalVisible}
-      title={`Delete trip to ${trip.location}`}
-      details={`Are you sure you want to remove the trip to ${trip.location}?`}
-      primaryActionLabel="Remove trip"
-      onClose={() => setConfirmActionModalVisible(false)}
-      onConfirmed={() => onDelete(trip)}
-      destructive
-    />
-  );
-
   const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
   const primaryFooterActionContent = trip ? 'Save changes' : 'Submit new trip';
-  const actions: ComplexAction[] = trip
-    ? [
-        {
-          content: 'Remove trip',
-          onAction: () => setConfirmActionModalVisible(true),
-        },
-        {
-          content: 'Add notes',
-          disabled: hasNotes,
-          onAction: () => setHasNotes(true),
-        },
-      ]
-    : [
-        {
-          content: 'Add notes',
-          disabled: hasNotes,
-          onAction: () => setHasNotes(true),
-        },
-      ];
+
+  const footerMarkup = trip ? (
+    <Button destructive onClick={() => onDelete(trip)}>
+      Remove trip
+    </Button>
+  ) : null;
 
   return (
     <Modal
@@ -146,7 +112,7 @@ export function ManageTripModal({
         disabled: !dirty,
       }}
       secondaryActions={[{content: 'Cancel', onAction: onClose}]}
-      // actions={actions}
+      footer={footerMarkup}
       sectioned
     >
       <Stack vertical>
@@ -164,23 +130,21 @@ export function ManageTripModal({
               country={fields.country.value}
               onChange={fields.country.onChange}
             />
-            {hasNotes && (
-              <TextField
-                {...fields.notes}
-                multiline={2}
-                label="Notes"
-                placeholder="Anything important to add?"
-              />
-            )}
+            <TextField
+              {...fields.notes}
+              multiline={2}
+              label="Notes"
+              placeholder="Anything important to add?"
+            />
             <FormLayout.Group>
               <DatePicker
                 month={fields.datePicker.value.month}
                 year={fields.datePicker.value.year}
-                onChange={setSelectedDates}
+                onChange={fields.selectedDates.onChange}
                 onMonthChange={(newMonth, newYear) =>
                   fields.datePicker.onChange({month: newMonth, year: newYear})
                 }
-                selected={selectedDates}
+                selected={fields.selectedDates.value}
                 allowRange={!sameDayValue}
               />
               {renderSummary()}
@@ -195,23 +159,22 @@ export function ManageTripModal({
           </FormLayout>
         </Form>
       </Stack>
-      {confirmActionModal}
     </Modal>
   );
 
   function renderTripDatesHumanized() {
     return sameDayValue ? (
       <TextStyle variation="strong">
-        {moment(selectedDates.start).format('ll')}
+        {moment(fields.selectedDates.value.start).format('ll')}
       </TextStyle>
     ) : (
       <>
         <TextStyle variation="strong">
-          {moment(selectedDates.start).format('ll')}
+          {moment(fields.selectedDates.value.start).format('ll')}
         </TextStyle>{' '}
         until{' '}
         <TextStyle variation="strong">
-          {moment(selectedDates.end).format('ll')}
+          {moment(fields.selectedDates.value.end).format('ll')}
         </TextStyle>
       </>
     );
@@ -261,6 +224,9 @@ export function ManageTripModal({
 
   function handleSameDayChange(newSameDay: boolean) {
     setSameDay(newSameDay);
-    setSelectedDates({start: selectedDates.start, end: selectedDates.start});
+    fields.selectedDates.onChange({
+      start: fields.selectedDates.value.start,
+      end: fields.selectedDates.value.start,
+    });
   }
-}
+});

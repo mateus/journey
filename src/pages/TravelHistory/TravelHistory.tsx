@@ -11,7 +11,12 @@ import {auth, firestore} from 'utilities/firebase';
 import {isPastDate} from 'utilities/dates';
 import {useToast} from 'hooks/useToast';
 import {Trip, QueryTripCollection} from 'types';
-import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
+import {
+  ConfirmActionModal,
+  DocumentTitle,
+  MemoizedRandomQuote,
+  LoadingPage,
+} from 'components';
 
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
@@ -27,6 +32,11 @@ export function TravelHistory() {
   const [tripToBeEdited, setTripToBeEdited] = useState<Trip | undefined>(
     undefined,
   );
+  const [
+    confirmDeleteActionModalOpen,
+    setConfirmDeleteActionModalOpen,
+  ] = useState(false);
+  const [manageTripLoading, setManageTripLoading] = useState(false);
   const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [importing, setImporting] = useState(false);
   const [Toast, showToast] = useToast();
@@ -62,13 +72,26 @@ export function TravelHistory() {
   );
   const upcoming = upcomingTrips(reconciledTrips);
 
+  const confirmDeleteActionModal = tripToBeEdited ? (
+    <ConfirmActionModal
+      open={confirmDeleteActionModalOpen}
+      loading={manageTripLoading}
+      title={`Delete trip to ${tripToBeEdited.location}`}
+      details={`Are you sure you want to remove the trip to ${tripToBeEdited.location}?`}
+      primaryActionLabel="Remove trip"
+      onClose={closeConfirmDeleteTripModal}
+      onConfirmed={() => handleDeleteTrip(tripToBeEdited)}
+      destructive
+    />
+  ) : null;
+
   return (
     <Page
       title="Travel History"
       primaryAction={{
         content: 'Add trip',
         disabled: manageTripModalOpen,
-        onAction: () => setManageTripModalOpen(!manageTripModalOpen),
+        onAction: () => setManageTripModalOpen(true),
       }}
       secondaryActions={[
         {
@@ -79,21 +102,24 @@ export function TravelHistory() {
         {
           content: 'Export',
           icon: ExportMinor,
-          disabled: reconciledTrips?.length === 0,
+          // disabled: reconciledTrips?.length === 0,
+          disabled: true,
         },
       ]}
     >
       <DocumentTitle title="Travel History" />
       <Layout>
         <Layout.Section>
-          <ManageTripModal
-            open={manageTripModalOpen}
-            trip={tripToBeEdited}
-            onClose={handleCloseManageTripModal}
-            onAddNew={handleAddNewTrip}
-            onUpdate={handleUpdateTrip}
-            onDelete={handleDeleteTrip}
-          />
+          {manageTripModalOpen && (
+            <ManageTripModal
+              open={manageTripModalOpen}
+              trip={tripToBeEdited}
+              onClose={handleCloseManageTripModal}
+              onAddNew={handleAddNewTrip}
+              onUpdate={handleUpdateTrip}
+              onDelete={openConfirmDeleteTripModal}
+            />
+          )}
           <Stack vertical>{renderTrips(reconciledTrips)}</Stack>
         </Layout.Section>
         <Layout.Section secondary>
@@ -110,6 +136,7 @@ export function TravelHistory() {
         onConfirmed={handleImportTrips}
       />
       <Toast />
+      {confirmDeleteActionModal}
     </Page>
   );
 
@@ -143,8 +170,8 @@ export function TravelHistory() {
   }
 
   function handleCloseManageTripModal() {
-    setManageTripModalOpen(false);
     setTripToBeEdited(undefined);
+    setManageTripModalOpen(false);
   }
 
   async function handleImportTrips(trips: Trip[]) {
@@ -200,15 +227,29 @@ export function TravelHistory() {
     }
   }
 
+  function closeConfirmDeleteTripModal() {
+    setManageTripModalOpen(true);
+    setConfirmDeleteActionModalOpen(false);
+  }
+
+  function openConfirmDeleteTripModal() {
+    setManageTripModalOpen(false);
+    setConfirmDeleteActionModalOpen(true);
+  }
+
   async function handleDeleteTrip(trip: Trip) {
     const docID = trip.id;
     if (tripsCollectionRef) {
+      setManageTripLoading(true);
       await tripsCollectionRef
         .doc(docID)
         .delete()
         .then(() => {
           showToast({content: `Trip to ${trip.location} removed`});
         });
+      setManageTripLoading(false);
+      setManageTripModalOpen(false);
+      setConfirmDeleteActionModalOpen(false);
     }
   }
 }
