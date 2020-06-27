@@ -12,8 +12,8 @@ import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
 import {
-  ManageTripCard,
-  MemoizedTripDetailsCard,
+  ManageTripModal,
+  TripDetailsCard,
   UpcomingTripsCard,
 } from '../components';
 
@@ -161,7 +161,7 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<ManageTripCard />', () => {
+  describe('<ManageTripModal />', () => {
     async function clickAddTrip(wrapper: ReactWrapper) {
       act(() => {
         wrapper.find(Page).prop('primaryAction')!.onAction!();
@@ -171,13 +171,13 @@ describe('<TravelHistory />', () => {
 
     it('is closed on first load', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(ManageTripCard)).not.toExist();
+      expect(wrapper.find(ManageTripModal)).toHaveProp({open: false});
     });
 
     it('renders when clicking "Add trip" action from Page', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
-      expect(wrapper.find(ManageTripCard)).toExist();
+      expect(wrapper.find(ManageTripModal)).toExist();
     });
 
     it('disables Add trip Page action when showing', async () => {
@@ -193,14 +193,14 @@ describe('<TravelHistory />', () => {
 
     it.todo('triggers firestore add action with a new trip');
 
-    it.skip('hides the compoent after new trip is added', async () => {
+    it.skip('closes after new trip is added', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
       act(async () => {
-        await wrapper.find(ManageTripCard).prop('onAddNew')(mockTrip());
+        await wrapper.find(ManageTripModal).prop('onAddNew')(mockTrip());
       });
       await updateWrapper(wrapper);
-      expect(wrapper.find(ManageTripCard)).not.toExist();
+      expect(wrapper.find(ManageTripModal)).toHaveProp({open: false});
     });
 
     it.skip('shows <Toast /> with success message after adding new trip', async () => {
@@ -208,7 +208,7 @@ describe('<TravelHistory />', () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       await clickAddTrip(wrapper);
       act(async () => {
-        await wrapper.find(ManageTripCard).prop('onAddNew')(mockTrip());
+        await wrapper.find(ManageTripModal).prop('onAddNew')(mockTrip());
       });
       await updateWrapper(wrapper);
       expect(wrapper.find(Toast)).toHaveProp({
@@ -217,12 +217,10 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<MemoizedTripDetailsCard />', () => {
+  describe('<TripDetailsCard />', () => {
     it('renders one for each trip', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(MemoizedTripDetailsCard)).toHaveLength(
-        mockTrips.length,
-      );
+      expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
     });
 
     it('renders descending ordered list of trips', async () => {
@@ -251,7 +249,7 @@ describe('<TravelHistory />', () => {
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(
-        wrapper.find(MemoizedTripDetailsCard).map((node) => node.props()),
+        wrapper.find(TripDetailsCard).map((node) => node.props().trip),
       ).toStrictEqual([
         expect.objectContaining(third),
         expect.objectContaining(second),

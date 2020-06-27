@@ -1,4 +1,4 @@
 export {ImportTripsModal} from './ImportTripsModal';
-export {ManageTripCard} from './ManageTripCard';
-export {TripDetailsCard, MemoizedTripDetailsCard} from './TripDetailsCard';
+export {ManageTripModal} from './ManageTripModal';
+export {TripDetailsCard} from './TripDetailsCard';
 export {UpcomingTripsCard} from './UpcomingTripsCard';

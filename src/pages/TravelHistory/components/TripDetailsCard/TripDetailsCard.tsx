@@ -1,39 +1,22 @@
-import React, {memo, useState} from 'react';
+import React, {memo} from 'react';
 import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
 import moment from 'moment';
 
 import {Flag} from 'components';
 import {Trip} from 'types';
 
-import {ManageTripCard} from '../ManageTripCard';
-
-export interface TripDetailsCardProps extends Trip {
+export interface TripDetailsCardProps {
+  trip: Trip;
   completed: boolean;
-  onAddNew(trip: Trip): Promise<unknown>;
-  onUpdate(trip: Trip): Promise<unknown>;
-  onDelete(trip: Trip): Promise<unknown>;
+  onEdit(): void;
 }
 
-export function TripDetailsCard({
-  onAddNew,
-  onUpdate,
-  onDelete,
+export const TripDetailsCard = memo(function TripDetailsCard({
+  onEdit,
   completed,
-  ...trip
+  trip: {location, notes, startDate, endDate, countryCode},
 }: TripDetailsCardProps) {
-  const [isEditing, setIsEditing] = useState(false);
-
-  const {location, notes, startDate, endDate, countryCode} = trip;
-
-  const cardMarkup = isEditing ? (
-    <ManageTripCard
-      trip={trip}
-      onClose={() => setIsEditing(false)}
-      onAddNew={onAddNew}
-      onUpdate={onUpdate}
-      onDelete={onDelete}
-    />
-  ) : (
+  return (
     <Card
       title={
         <Stack vertical spacing="extraTight">
@@ -46,7 +29,7 @@ export function TripDetailsCard({
           {renderDatesCaption()}
         </Stack>
       }
-      actions={[{content: 'Edit', onAction: () => setIsEditing(true)}]}
+      actions={[{content: 'Edit', onAction: onEdit}]}
       subdued={completed}
       sectioned
     >
@@ -64,8 +47,6 @@ export function TripDetailsCard({
       </Stack>
     </Card>
   );
-
-  return cardMarkup;
 
   function renderDatesCaption() {
     const start = moment(startDate).format('LL');
@@ -89,6 +70,4 @@ export function TripDetailsCard({
       <Badge status="attention">Upcoming</Badge>
     );
   }
-}
-
-export const MemoizedTripDetailsCard = memo(TripDetailsCard);
+});

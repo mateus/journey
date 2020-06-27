@@ -16,14 +16,17 @@ import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ImportTripsModal,
-  ManageTripCard,
-  MemoizedTripDetailsCard,
+  ManageTripModal,
+  TripDetailsCard,
   UpcomingTripsCard,
 } from './components';
 import './TravelHistory.scss';
 
 export function TravelHistory() {
-  const [newTripFormOpen, setNewTripFormOpen] = useState(false);
+  const [manageTripModalOpen, setManageTripModalOpen] = useState(false);
+  const [tripToBeEdited, setTripToBeEdited] = useState<Trip | undefined>(
+    undefined,
+  );
   const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [importing, setImporting] = useState(false);
   const [Toast, showToast] = useToast();
@@ -57,14 +60,15 @@ export function TravelHistory() {
       };
     },
   );
+  const upcoming = upcomingTrips(reconciledTrips);
 
   return (
     <Page
       title="Travel History"
       primaryAction={{
         content: 'Add trip',
-        disabled: newTripFormOpen,
-        onAction: () => setNewTripFormOpen(!newTripFormOpen),
+        disabled: manageTripModalOpen,
+        onAction: () => setManageTripModalOpen(!manageTripModalOpen),
       }}
       secondaryActions={[
         {
@@ -80,7 +84,22 @@ export function TravelHistory() {
       ]}
     >
       <DocumentTitle title="Travel History" />
-      {renderTrips(reconciledTrips)}
+      <Layout>
+        <Layout.Section>
+          <ManageTripModal
+            open={manageTripModalOpen}
+            trip={tripToBeEdited}
+            onClose={handleCloseManageTripModal}
+            onAddNew={handleAddNewTrip}
+            onUpdate={handleUpdateTrip}
+            onDelete={handleDeleteTrip}
+          />
+          <Stack vertical>{renderTrips(reconciledTrips)}</Stack>
+        </Layout.Section>
+        <Layout.Section secondary>
+          {reconciledTrips.length > 0 && <UpcomingTripsCard list={upcoming} />}
+        </Layout.Section>
+      </Layout>
       <EmptyState image={EmptyStateAirportDude}>
         <MemoizedRandomQuote />
       </EmptyState>
@@ -96,50 +115,36 @@ export function TravelHistory() {
 
   function renderTrips(trips: Trip[]) {
     const byYear = tripsByYear(trips);
-    const upcoming = upcomingTrips(trips);
 
-    return (
-      <Layout>
-        <Layout.Section>
-          <Stack vertical>
-            {newTripFormOpen && (
-              <ManageTripCard
-                onClose={() => setNewTripFormOpen(false)}
-                onAddNew={handleAddNewTrip}
-                onUpdate={handleUpdateTrip}
-                onDelete={handleDeleteTrip}
+    function handleEditTrip(trip: Trip) {
+      setManageTripModalOpen(true);
+      setTripToBeEdited(trip);
+    }
+
+    return Object.keys(byYear)
+      .reverse()
+      .map((year) => {
+        return (
+          <div key={year}>
+            {byYear[year].map((trip) => (
+              <TripDetailsCard
+                trip={trip}
+                completed={isPastDate(trip.endDate)}
+                key={trip.startDate + trip.location + faker.random.uuid()}
+                onEdit={() => handleEditTrip(trip)}
               />
-            )}
-            {Object.keys(byYear)
-              .reverse()
-              .map((year) => {
-                return (
-                  <div key={year}>
-                    {byYear[year].map((trip) => (
-                      <MemoizedTripDetailsCard
-                        {...trip}
-                        completed={isPastDate(trip.endDate)}
-                        key={
-                          trip.startDate + trip.location + faker.random.uuid()
-                        }
-                        onAddNew={handleAddNewTrip}
-                        onUpdate={handleUpdateTrip}
-                        onDelete={handleDeleteTrip}
-                      />
-                    ))}
-                    <div className="Separator">
-                      <DisplayText size="extraLarge">{year}</DisplayText>
-                    </div>
-                  </div>
-                );
-              })}
-          </Stack>
-        </Layout.Section>
-        <Layout.Section secondary>
-          {trips.length > 0 && <UpcomingTripsCard list={upcoming} />}
-        </Layout.Section>
-      </Layout>
-    );
+            ))}
+            <div className="Separator">
+              <DisplayText size="extraLarge">{year}</DisplayText>
+            </div>
+          </div>
+        );
+      });
+  }
+
+  function handleCloseManageTripModal() {
+    setManageTripModalOpen(false);
+    setTripToBeEdited(undefined);
   }
 
   async function handleImportTrips(trips: Trip[]) {
@@ -171,7 +176,7 @@ export function TravelHistory() {
         })
         .then(() => {
           if (!importing) {
-            setNewTripFormOpen(false);
+            setManageTripModalOpen(false);
             showToast({content: `Trip to ${trip.location} added`});
           }
         });

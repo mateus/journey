@@ -10,6 +10,7 @@ import {
   Form,
   FormLayout,
   List,
+  Modal,
   Stack,
   TextField,
   TextStyle,
@@ -21,9 +22,10 @@ import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
 import {ConfirmActionModal, CountryTextField, Flag} from 'components';
 
-import './ManageTripCard.scss';
+import './ManageTripModal.scss';
 
-export interface ManageTripCardProps {
+export interface ManageTripModalProps {
+  open: boolean;
   // List of trips. If undefined loads Submit new trio card style
   trip?: Trip;
   onClose(): void;
@@ -32,13 +34,14 @@ export interface ManageTripCardProps {
   onDelete(trip: Trip): Promise<unknown>;
 }
 
-export function ManageTripCard({
+export function ManageTripModal({
+  open,
   trip,
   onClose,
   onAddNew,
   onUpdate,
   onDelete,
-}: ManageTripCardProps) {
+}: ManageTripModalProps) {
   const today = moment();
   const [hasNotes, setHasNotes] = useState(Boolean(trip?.notes) || false);
   const [sameDayValue, setSameDay] = useState(false);
@@ -132,16 +135,18 @@ export function ManageTripCard({
       ];
 
   return (
-    <Card
+    <Modal
+      open={open}
       title={cardTitle}
-      primaryFooterAction={{
+      onClose={onClose}
+      primaryAction={{
         content: primaryFooterActionContent,
         onAction: submit,
         loading: submitting,
         disabled: !dirty,
       }}
-      secondaryFooterActions={[{content: 'Cancel', onAction: onClose}]}
-      actions={actions}
+      secondaryActions={[{content: 'Cancel', onAction: onClose}]}
+      // actions={actions}
       sectioned
     >
       <Stack vertical>
@@ -191,7 +196,7 @@ export function ManageTripCard({
         </Form>
       </Stack>
       {confirmActionModal}
-    </Card>
+    </Modal>
   );
 
   function renderTripDatesHumanized() {
