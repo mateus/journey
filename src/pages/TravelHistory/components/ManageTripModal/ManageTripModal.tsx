@@ -47,7 +47,18 @@ export const ManageTripModal = memo(function ManageTripModal({
   const [sameDayValue, setSameDay] = useState(
     trip ? trip?.startDate === trip?.endDate : false,
   );
-  const {fields, submit, submitting, dirty, submitErrors} = useForm({
+  const [datePicker, setDatePicker] = useState({
+    month: moment(trip?.startDate).month() || today.month(),
+    year: moment(trip?.startDate).year() || today.year(),
+  });
+
+  const {
+    fields: {location, notes, country, selectedDates},
+    submit,
+    submitting,
+    dirty,
+    submitErrors,
+  } = useForm({
     fields: {
       location: useField({
         value: trip?.location || '',
@@ -57,10 +68,6 @@ export const ManageTripModal = memo(function ManageTripModal({
       country: useField<Country | undefined>({
         value: trip ? getCountryByCode(trip.countryCode) : undefined,
         validates: [notEmpty('Country is required')],
-      }),
-      datePicker: useField({
-        month: moment(trip?.startDate).month() || today.month(),
-        year: moment(trip?.startDate).year() || today.year(),
       }),
       selectedDates: useField({
         start: trip?.startDate || today.toDate(),
@@ -120,31 +127,31 @@ export const ManageTripModal = memo(function ManageTripModal({
         <Form onSubmit={submit}>
           <FormLayout>
             <TextField
-              {...fields.location}
+              {...location}
               label="City"
               placeholder="Ottawa, ON"
               autoComplete={false}
             />
             <CountryTextField
-              error={fields.country.error}
-              country={fields.country.value}
-              onChange={fields.country.onChange}
+              error={country.error}
+              country={country.value}
+              onChange={country.onChange}
             />
             <TextField
-              {...fields.notes}
+              {...notes}
               multiline={2}
               label="Notes"
               placeholder="Anything important to add?"
             />
             <FormLayout.Group>
               <DatePicker
-                month={fields.datePicker.value.month}
-                year={fields.datePicker.value.year}
-                onChange={fields.selectedDates.onChange}
+                month={datePicker.month}
+                year={datePicker.year}
+                onChange={selectedDates.onChange}
                 onMonthChange={(newMonth, newYear) =>
-                  fields.datePicker.onChange({month: newMonth, year: newYear})
+                  setDatePicker({month: newMonth, year: newYear})
                 }
-                selected={fields.selectedDates.value}
+                selected={selectedDates.value}
                 allowRange={!sameDayValue}
               />
               {renderSummary()}
@@ -165,16 +172,16 @@ export const ManageTripModal = memo(function ManageTripModal({
   function renderTripDatesHumanized() {
     return sameDayValue ? (
       <TextStyle variation="strong">
-        {moment(fields.selectedDates.value.start).format('ll')}
+        {moment(selectedDates.value.start).format('ll')}
       </TextStyle>
     ) : (
       <>
         <TextStyle variation="strong">
-          {moment(fields.selectedDates.value.start).format('ll')}
+          {moment(selectedDates.value.start).format('ll')}
         </TextStyle>{' '}
         until{' '}
         <TextStyle variation="strong">
-          {moment(fields.selectedDates.value.end).format('ll')}
+          {moment(selectedDates.value.end).format('ll')}
         </TextStyle>
       </>
     );
@@ -188,20 +195,18 @@ export const ManageTripModal = memo(function ManageTripModal({
             <DisplayText size="small" element="h3">
               <TextStyle variation="subdued">
                 <TextStyle variation="strong">
-                  {fields.location.value || '...'}
+                  {location.value || '...'}
                 </TextStyle>
               </TextStyle>
             </DisplayText>
             <p>{renderTripDatesHumanized()}</p>
-            {fields.notes.value && (
+            {notes.value && (
               <p>
-                <TextStyle variation="subdued">{fields.notes.value}</TextStyle>
+                <TextStyle variation="subdued">{notes.value}</TextStyle>
               </p>
             )}
           </Stack>
-          {fields.country?.value && (
-            <Flag countryCode={fields.country?.value?.countryCode} />
-          )}
+          {country?.value && <Flag countryCode={country?.value?.countryCode} />}
         </Stack>
       </div>
     );
@@ -224,9 +229,9 @@ export const ManageTripModal = memo(function ManageTripModal({
 
   function handleSameDayChange(newSameDay: boolean) {
     setSameDay(newSameDay);
-    fields.selectedDates.onChange({
-      start: fields.selectedDates.value.start,
-      end: fields.selectedDates.value.start,
+    selectedDates.onChange({
+      start: selectedDates.value.start,
+      end: selectedDates.value.start,
     });
   }
 });
