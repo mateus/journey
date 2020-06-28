@@ -3,7 +3,7 @@ import {useCollection} from 'react-firebase-hooks/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import faker from 'faker';
-import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
+import {DeleteMinor, ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {
   Card,
   Page,
@@ -111,6 +111,11 @@ export function TravelHistory() {
           content: 'Export',
           icon: ExportMinor,
           // disabled: reconciledTrips?.length === 0,
+          disabled: true,
+        },
+        {
+          content: 'Remove all',
+          icon: DeleteMinor,
           disabled: true,
         },
       ]}
