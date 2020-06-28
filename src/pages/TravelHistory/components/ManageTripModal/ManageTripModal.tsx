@@ -4,7 +4,6 @@ import {
   Banner,
   Button,
   Checkbox,
-  DisplayText,
   DatePicker,
   Form,
   FormLayout,
@@ -12,16 +11,15 @@ import {
   Modal,
   Stack,
   TextField,
-  TextStyle,
 } from '@shopify/polaris';
 import {useForm, useField, notEmpty} from '@shopify/react-form';
 
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
 import {Country, Trip} from 'types';
-import {CountryTextField, Flag} from 'components';
+import {CountryTextField} from 'components';
 
-import './ManageTripModal.scss';
+import {TripReviewSection} from './components';
 
 export interface ManageTripModalProps {
   open: boolean;
@@ -156,7 +154,13 @@ export const ManageTripModal = memo(function ManageTripModal({
                 selected={selectedDates.value}
                 allowRange={!sameDayValue}
               />
-              {renderSummary()}
+              <TripReviewSection
+                countryCode={country.value?.countryCode}
+                location={location.value}
+                notes={notes.value}
+                sameDayValue={sameDayValue}
+                selectedDates={selectedDates.value}
+              />
             </FormLayout.Group>
             <FormLayout.Group condensed>
               <Checkbox
@@ -170,49 +174,6 @@ export const ManageTripModal = memo(function ManageTripModal({
       </Stack>
     </Modal>
   );
-
-  function renderTripDatesHumanized() {
-    return sameDayValue ? (
-      <TextStyle variation="strong">
-        {moment(selectedDates.value.start).format('ll')}
-      </TextStyle>
-    ) : (
-      <>
-        <TextStyle variation="strong">
-          {moment(selectedDates.value.start).format('ll')}
-        </TextStyle>{' '}
-        until{' '}
-        <TextStyle variation="strong">
-          {moment(selectedDates.value.end).format('ll')}
-        </TextStyle>
-      </>
-    );
-  }
-
-  function renderSummary() {
-    return (
-      <div className="Summary">
-        <Stack vertical alignment="center" spacing="loose">
-          <Stack vertical alignment="center" spacing="tight">
-            <DisplayText size="small" element="h3">
-              <TextStyle variation="subdued">
-                <TextStyle variation="strong">
-                  {location.value || '...'}
-                </TextStyle>
-              </TextStyle>
-            </DisplayText>
-            <p>{renderTripDatesHumanized()}</p>
-            {notes.value && (
-              <p>
-                <TextStyle variation="subdued">{notes.value}</TextStyle>
-              </p>
-            )}
-          </Stack>
-          {country?.value && <Flag countryCode={country?.value?.countryCode} />}
-        </Stack>
-      </div>
-    );
-  }
 
   function renderErrorBanner() {
     return submitErrors.length > 0 ? (

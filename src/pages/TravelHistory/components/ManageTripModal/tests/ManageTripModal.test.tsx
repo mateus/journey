@@ -9,7 +9,6 @@ import {
   List,
   Modal,
   DatePicker,
-  DatePickerProps,
   Range,
 } from '@shopify/polaris';
 import moment from 'moment';
@@ -21,6 +20,7 @@ import {noop, noopPromise} from 'utilities/other';
 import {CountryTextField} from 'components';
 import {Country} from 'types';
 
+import {TripReviewSection} from '../components';
 import {ManageTripModal, ManageTripModalProps} from '../ManageTripModal';
 
 describe('<ManageTripModal />', () => {
@@ -290,7 +290,33 @@ describe('<ManageTripModal />', () => {
     });
   });
 
-  describe('Trip summary section', () => {});
+  it('renders TripReviewSection', async () => {
+    const location = 'Cool place somewhere';
+    const countryCode = 'CA';
+    const notes = 'Notes about this trip';
+    const selectedDates: Range = {
+      start: new Date('04/04/2020'),
+      end: new Date('14/04/2020'),
+    };
+    const trip = mockTrip({
+      location,
+      countryCode,
+      notes,
+      startDate: selectedDates.start,
+      endDate: selectedDates.end,
+    });
+    const wrapper = await mountWithAppProvider(
+      <ManageTripModal {...mockProps} trip={trip} />,
+    );
+
+    expect(wrapper.find(TripReviewSection).props()).toMatchObject({
+      countryCode,
+      location,
+      notes,
+      sameDayValue: false,
+      selectedDates,
+    });
+  });
 
   describe('Without a trip object (Creating new trip)', () => {
     const mockPropsWihtoutTrip: ManageTripModalProps = {
