@@ -1,25 +1,20 @@
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
-import {act} from 'react-dom/test-utils';
-import {ReactWrapper} from 'enzyme';
 import moment from 'moment';
 import {Badge, Caption, Card, DisplayText} from '@shopify/polaris';
 
-import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
+import {mountWithAppProvider} from 'tests/utilities';
 import {mockTrip} from 'utilities/trip';
 import {Trip} from 'types';
 
 import {TripDetailsCard, TripDetailsCardProps} from '../TripDetailsCard';
-import {ManageTripCard} from '../../ManageTripCard';
 
 describe('<TripDetailsCard />', () => {
   function createMockProps(trip?: Partial<Trip>): TripDetailsCardProps {
     return {
-      ...mockTrip(trip),
+      trip: mockTrip(trip),
       completed: true,
-      onAddNew: jest.fn(Promise.resolve),
-      onUpdate: jest.fn(Promise.resolve),
-      onDelete: jest.fn(Promise.resolve),
+      onEdit: jest.fn(),
     };
   }
 
@@ -99,37 +94,5 @@ describe('<TripDetailsCard />', () => {
     expect(wrapper.find(Caption)).toHaveText(
       moment(trip.startDate).format('LL'),
     );
-  });
-
-  describe('<ManageTripCard />', () => {
-    async function clickEditTrip(wrapper: ReactWrapper) {
-      act(() => {
-        wrapper.find(Card).prop('actions')![0].onAction!();
-      });
-      await updateWrapper(wrapper);
-    }
-
-    it('renders when Edit action is triggered', async () => {
-      const trip = mockTrip();
-      const onAddNew = jest.fn(Promise.resolve);
-      const onUpdate = jest.fn(Promise.resolve);
-      const onDelete = jest.fn(Promise.resolve);
-      const wrapper = await mountWithAppProvider(
-        <TripDetailsCard
-          {...trip}
-          completed
-          onAddNew={onAddNew}
-          onUpdate={onUpdate}
-          onDelete={onDelete}
-        />,
-      );
-      await clickEditTrip(wrapper);
-      expect(wrapper.find(ManageTripCard)).toHaveProp({
-        trip,
-        onAddNew,
-        onUpdate,
-        onDelete,
-      });
-    });
   });
 });

@@ -1,1 +1,1 @@
-export {TripDetailsCard, MemoizedTripDetailsCard} from './TripDetailsCard';
+export {TripDetailsCard} from './TripDetailsCard';
