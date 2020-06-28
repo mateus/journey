@@ -45,7 +45,7 @@ export const ManageTripModal = memo(function ManageTripModal({
 
   const today = moment();
   const [sameDayValue, setSameDay] = useState(
-    trip ? trip?.startDate === trip?.endDate : false,
+    trip ? trip.startDate === trip.endDate : false,
   );
   const [datePicker, setDatePicker] = useState({
     month: moment(trip?.startDate).month() || today.month(),
@@ -98,7 +98,9 @@ export const ManageTripModal = memo(function ManageTripModal({
     },
   });
 
-  const cardTitle = trip ? 'What is different?' : 'When is your next trip?';
+  const cardTitle = trip
+    ? `Trip to ${trip.location}`
+    : 'When is your next trip?';
   const primaryFooterActionContent = trip ? 'Save changes' : 'Submit new trip';
 
   const footerMarkup = trip ? (
