@@ -4,7 +4,15 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import faker from 'faker';
 import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
-import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
+import {
+  Card,
+  Page,
+  EmptyState,
+  Layout,
+  DisplayText,
+  Stack,
+  ResourceList,
+} from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
@@ -153,14 +161,20 @@ export function TravelHistory() {
       .map((year) => {
         return (
           <div key={year}>
-            {byYear[year].map((trip) => (
-              <TripDetailsCard
-                trip={trip}
-                completed={isPastDate(trip.endDate)}
-                key={trip.startDate + trip.location + faker.random.uuid()}
-                onEdit={() => handleEditTrip(trip)}
+            <Card>
+              <ResourceList
+                resourceName={{singular: 'trip', plural: 'trips'}}
+                items={byYear[year]}
+                renderItem={(trip) => (
+                  <TripDetailsCard
+                    trip={trip}
+                    completed={isPastDate(trip.endDate)}
+                    key={trip.startDate + trip.location + faker.random.uuid()}
+                    onEdit={() => handleEditTrip(trip)}
+                  />
+                )}
               />
-            ))}
+            </Card>
             <div className="Separator">
               <DisplayText size="extraLarge">{year}</DisplayText>
             </div>

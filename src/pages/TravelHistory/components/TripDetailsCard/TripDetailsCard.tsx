@@ -1,9 +1,18 @@
 import React, {memo} from 'react';
-import {Badge, Card, Caption, DisplayText, Stack} from '@shopify/polaris';
+import faker from 'faker';
+import {
+  Badge,
+  Caption,
+  DisplayText,
+  Stack,
+  ResourceItem,
+} from '@shopify/polaris';
 import moment from 'moment';
 
 import {Flag} from 'components';
 import {Trip} from 'types';
+
+import './TripDetails.scss';
 
 export interface TripDetailsCardProps {
   trip: Trip;
@@ -14,38 +23,30 @@ export interface TripDetailsCardProps {
 export const TripDetailsCard = memo(function TripDetailsCard({
   onEdit,
   completed,
-  trip: {location, notes, startDate, endDate, countryCode},
+  trip: {location, notes, startDate, endDate, countryCode, id},
 }: TripDetailsCardProps) {
   return (
-    <Card
-      title={
-        <Stack vertical spacing="extraTight">
-          <Stack alignment="center" spacing="tight">
-            <DisplayText size="small" element="h3">
-              {location}
-            </DisplayText>
-            {renderBadge()}
-          </Stack>
-          {renderDatesCaption()}
-        </Stack>
+    <ResourceItem
+      id={id || faker.random.uuid()}
+      onClick={onEdit}
+      media={
+        <div className="FlagContainer">
+          <Flag countryCode={countryCode} svg />
+        </div>
       }
-      actions={[{content: 'Edit', onAction: onEdit}]}
-      subdued={completed}
-      sectioned
+      accessibilityLabel={`Trip to ${location}`}
     >
-      <Stack wrap={false} spacing="extraLoose" alignment="trailing">
-        <Stack.Item fill>{notes && <p>{notes}</p>}</Stack.Item>
-        <Flag
-          countryCode={countryCode}
-          svg
-          style={{
-            width: 'auto',
-            height: '26px',
-            borderRadius: '3px',
-          }}
-        />
+      <Stack vertical spacing="extraTight">
+        <Stack alignment="center" spacing="tight">
+          <DisplayText size="small" element="h3">
+            {location}
+          </DisplayText>
+          {renderBadge()}
+        </Stack>
+        {renderDatesCaption()}
+        {notes && <p>{notes}</p>}
       </Stack>
-    </Card>
+    </ResourceItem>
   );
 
   function renderDatesCaption() {
@@ -64,10 +65,6 @@ export const TripDetailsCard = memo(function TripDetailsCard({
   }
 
   function renderBadge() {
-    return completed ? (
-      <Badge>Completed</Badge>
-    ) : (
-      <Badge status="attention">Upcoming</Badge>
-    );
+    return completed ? null : <Badge status="attention">Upcoming</Badge>;
   }
 });
