@@ -14,17 +14,17 @@ import {Trip} from 'types';
 
 import './TripDetails.scss';
 
-export interface TripDetailsCardProps {
+export interface TripDetailsProps {
   trip: Trip;
   completed: boolean;
   onEdit(): void;
 }
 
-export const TripDetailsCard = memo(function TripDetailsCard({
+export const TripDetails = memo(function TripDetails({
   onEdit,
   completed,
   trip: {location, notes, startDate, endDate, countryCode, id},
-}: TripDetailsCardProps) {
+}: TripDetailsProps) {
   return (
     <ResourceItem
       id={id || faker.random.uuid()}
@@ -41,7 +41,7 @@ export const TripDetailsCard = memo(function TripDetailsCard({
           <DisplayText size="small" element="h3">
             {location}
           </DisplayText>
-          {renderBadge()}
+          {!completed && <Badge status="attention">Upcoming</Badge>}
         </Stack>
         {renderDatesCaption()}
         {notes && <p>{notes}</p>}
@@ -52,19 +52,8 @@ export const TripDetailsCard = memo(function TripDetailsCard({
   function renderDatesCaption() {
     const start = moment(startDate).format('LL');
     const end = moment(endDate).format('LL');
+    const caption = start === end ? start : `${start} - ${end}`;
 
-    if (start === end) {
-      return <Caption>{start}</Caption>;
-    } else {
-      return (
-        <Caption>
-          {start} - {end}
-        </Caption>
-      );
-    }
-  }
-
-  function renderBadge() {
-    return completed ? null : <Badge status="attention">Upcoming</Badge>;
+    return <Caption>{caption}</Caption>;
   }
 });

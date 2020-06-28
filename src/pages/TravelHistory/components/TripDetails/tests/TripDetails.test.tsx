@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import moment from 'moment';
-import {Badge, Caption, Card, DisplayText} from '@shopify/polaris';
+import {Badge, Caption, ResourceItem, DisplayText} from '@shopify/polaris';
 
 import {mountWithAppProvider} from 'tests/utilities';
 import {mockTrip} from 'utilities/trip';
 import {Trip} from 'types';
 
-import {TripDetailsCard, TripDetailsCardProps} from '../TripDetailsCard';
+import {TripDetails, TripDetailsProps} from '../TripDetails';
 
-describe('<TripDetailsCard />', () => {
-  function createMockProps(trip?: Partial<Trip>): TripDetailsCardProps {
+describe('<TripDetails />', () => {
+  function createMockProps(trip?: Partial<Trip>): TripDetailsProps {
     return {
       trip: mockTrip(trip),
       completed: true,
@@ -21,31 +21,14 @@ describe('<TripDetailsCard />', () => {
   it('renders with the location', async () => {
     const location = 'Tatooine';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({location})} />,
+      <TripDetails {...createMockProps({location})} />,
     );
-    const title = await mountWithAppProvider(
-      wrapper.find(Card).prop('title') as React.ReactElement,
-    );
-    expect(title.find(DisplayText)).toHaveText(location);
-  });
-
-  it('renders a subdued Card if trip is completed', async () => {
-    const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps()} completed />,
-    );
-    expect(wrapper.find(Card)).toHaveProp({subdued: true});
-  });
-
-  it('renders Completed Badge if trip is completed', async () => {
-    const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps()} completed />,
-    );
-    expect(wrapper.find(Badge)).toHaveText('Completed');
+    expect(wrapper.find(ResourceItem).find(DisplayText)).toHaveText(location);
   });
 
   it('renders Upcoming Badge if trip is not completed', async () => {
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps()} completed={false} />,
+      <TripDetails {...createMockProps()} completed={false} />,
     );
     expect(wrapper.find(Badge).text()).toContain('Upcoming');
   });
@@ -53,7 +36,7 @@ describe('<TripDetailsCard />', () => {
   it('renders a paragraph for the notes', async () => {
     const notes = 'Awesome notes';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({notes})} />,
+      <TripDetails {...createMockProps({notes})} />,
     );
     expect(
       wrapper.find('p').findWhere((node) => node.text() === notes),
@@ -63,7 +46,7 @@ describe('<TripDetailsCard />', () => {
   it('renders <ReactCountryFlag />', async () => {
     const countryCode = 'CA';
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps({countryCode})} />,
+      <TripDetails {...createMockProps({countryCode})} />,
     );
     expect(wrapper.find(ReactCountryFlag)).toHaveProp({
       countryCode,
@@ -74,7 +57,7 @@ describe('<TripDetailsCard />', () => {
   it('renders <Caption /> with start and end dates', async () => {
     const trip = mockTrip();
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps()} />,
+      <TripDetails {...createMockProps()} />,
     );
     expect(wrapper.find(Caption)).toHaveText(
       `${moment(trip.startDate).format('LL')} - ${moment(trip.endDate).format(
@@ -89,10 +72,19 @@ describe('<TripDetailsCard />', () => {
       endDate: new Date('01/01/2020'),
     });
     const wrapper = await mountWithAppProvider(
-      <TripDetailsCard {...createMockProps(trip)} />,
+      <TripDetails {...createMockProps(trip)} />,
     );
     expect(wrapper.find(Caption)).toHaveText(
       moment(trip.startDate).format('LL'),
     );
+  });
+
+  it('calls the onEdit prop when clicking the ResourceItem', async () => {
+    const spyOnEdit = jest.fn();
+    const wrapper = await mountWithAppProvider(
+      <TripDetails {...createMockProps()} onEdit={spyOnEdit} />,
+    );
+    wrapper.find(ResourceItem).prop('onClick')!();
+    expect(spyOnEdit).toHaveBeenCalled();
   });
 });

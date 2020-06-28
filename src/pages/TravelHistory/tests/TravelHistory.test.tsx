@@ -11,11 +11,7 @@ import {LoadingPage, MemoizedRandomQuote} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
-import {
-  ManageTripModal,
-  TripDetailsCard,
-  UpcomingTripsCard,
-} from '../components';
+import {ManageTripModal, TripDetails, UpcomingTripsCard} from '../components';
 
 import {mockTrips, mockDataTrips} from './fixtures/mockTrips';
 
@@ -218,10 +214,10 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<TripDetailsCard />', () => {
+  describe('<TripDetails />', () => {
     it('renders one for each trip', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
+      expect(wrapper.find(TripDetails)).toHaveLength(mockTrips.length);
     });
 
     it('renders descending ordered list of trips', async () => {
@@ -250,7 +246,7 @@ describe('<TravelHistory />', () => {
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(
-        wrapper.find(TripDetailsCard).map((node) => node.props().trip),
+        wrapper.find(TripDetails).map((node) => node.props().trip),
       ).toStrictEqual([
         expect.objectContaining(third),
         expect.objectContaining(second),

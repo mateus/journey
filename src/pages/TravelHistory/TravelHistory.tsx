@@ -30,7 +30,7 @@ import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ImportTripsModal,
   ManageTripModal,
-  TripDetailsCard,
+  TripDetails,
   UpcomingTripsCard,
 } from './components';
 import './TravelHistory.scss';
@@ -171,7 +171,7 @@ export function TravelHistory() {
                 resourceName={{singular: 'trip', plural: 'trips'}}
                 items={byYear[year]}
                 renderItem={(trip) => (
-                  <TripDetailsCard
+                  <TripDetails
                     trip={trip}
                     completed={isPastDate(trip.endDate)}
                     key={trip.startDate + trip.location + faker.random.uuid()}
