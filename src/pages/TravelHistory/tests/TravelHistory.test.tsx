@@ -3,7 +3,7 @@ import {act} from 'react-dom/test-utils';
 import {useCollection} from 'react-firebase-hooks/firestore';
 import {ReactWrapper} from 'enzyme';
 import moment from 'moment';
-import {EmptyState, Toast, Page} from '@shopify/polaris';
+import {EmptyState, Toast, Page, ComplexAction} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
@@ -11,11 +11,7 @@ import {LoadingPage, MemoizedRandomQuote} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
-import {
-  ManageTripModal,
-  TripDetailsCard,
-  UpcomingTripsCard,
-} from '../components';
+import {ManageTripModal, TripDetails, UpcomingTripsCard} from '../components';
 
 import {mockTrips, mockDataTrips} from './fixtures/mockTrips';
 
@@ -164,7 +160,10 @@ describe('<TravelHistory />', () => {
   describe('<ManageTripModal />', () => {
     async function clickAddTrip(wrapper: ReactWrapper) {
       act(() => {
-        wrapper.find(Page).prop('primaryAction')!.onAction!();
+        const primaryActionProp = wrapper
+          .find(Page)
+          .prop('primaryAction') as ComplexAction;
+        primaryActionProp.onAction!();
       });
       await updateWrapper(wrapper);
     }
@@ -218,10 +217,10 @@ describe('<TravelHistory />', () => {
     });
   });
 
-  describe('<TripDetailsCard />', () => {
+  describe('<TripDetails />', () => {
     it('renders one for each trip', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(TripDetailsCard)).toHaveLength(mockTrips.length);
+      expect(wrapper.find(TripDetails)).toHaveLength(mockTrips.length);
     });
 
     it('renders descending ordered list of trips', async () => {
@@ -250,7 +249,7 @@ describe('<TravelHistory />', () => {
       ]);
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(
-        wrapper.find(TripDetailsCard).map((node) => node.props().trip),
+        wrapper.find(TripDetails).map((node) => node.prop('trip')),
       ).toStrictEqual([
         expect.objectContaining(third),
         expect.objectContaining(second),

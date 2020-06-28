@@ -3,8 +3,16 @@ import {useCollection} from 'react-firebase-hooks/firestore';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import faker from 'faker';
-import {ImportMinor, ExportMinor} from '@shopify/polaris-icons';
-import {Page, EmptyState, Layout, DisplayText, Stack} from '@shopify/polaris';
+import {DeleteMinor, ImportMinor, ExportMinor} from '@shopify/polaris-icons';
+import {
+  Card,
+  Page,
+  EmptyState,
+  Layout,
+  DisplayText,
+  Stack,
+  ResourceList,
+} from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
 import {auth, firestore} from 'utilities/firebase';
@@ -22,7 +30,7 @@ import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ImportTripsModal,
   ManageTripModal,
-  TripDetailsCard,
+  TripDetails,
   UpcomingTripsCard,
 } from './components';
 import './TravelHistory.scss';
@@ -105,6 +113,11 @@ export function TravelHistory() {
           // disabled: reconciledTrips?.length === 0,
           disabled: true,
         },
+        {
+          content: 'Remove all',
+          icon: DeleteMinor,
+          disabled: true,
+        },
       ]}
     >
       <DocumentTitle title="Travel History" />
@@ -153,14 +166,20 @@ export function TravelHistory() {
       .map((year) => {
         return (
           <div key={year}>
-            {byYear[year].map((trip) => (
-              <TripDetailsCard
-                trip={trip}
-                completed={isPastDate(trip.endDate)}
-                key={trip.startDate + trip.location + faker.random.uuid()}
-                onEdit={() => handleEditTrip(trip)}
+            <Card>
+              <ResourceList
+                resourceName={{singular: 'trip', plural: 'trips'}}
+                items={byYear[year]}
+                renderItem={(trip) => (
+                  <TripDetails
+                    trip={trip}
+                    completed={isPastDate(trip.endDate)}
+                    key={trip.startDate + trip.location + faker.random.uuid()}
+                    onEdit={() => handleEditTrip(trip)}
+                  />
+                )}
               />
-            ))}
+            </Card>
             <div className="Separator">
               <DisplayText size="extraLarge">{year}</DisplayText>
             </div>
