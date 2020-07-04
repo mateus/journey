@@ -1,15 +1,8 @@
 import React from 'react';
-import {
-  Checkbox,
-  ContextualSaveBar,
-  EmptyState,
-  Stack,
-  Page,
-} from '@shopify/polaris';
+import {Checkbox, ContextualSaveBar, Stack, Page} from '@shopify/polaris';
 import {useForm, useField} from '@shopify/react-form';
 
-import {EmptyStateConnectedWorld} from 'assets';
-import {DocumentTitle, MemoizedRandomQuote, LoadingPage} from 'components';
+import {DocumentTitle, LoadingPage} from 'components';
 
 import {WONDERS_OF_THE_WORLD} from './wonders';
 
@@ -72,9 +65,6 @@ export function WondersOfTheWorld() {
           );
         })}
       </Stack>
-      <EmptyState image={EmptyStateConnectedWorld}>
-        <MemoizedRandomQuote />
-      </EmptyState>
     </Page>
   );
 }
