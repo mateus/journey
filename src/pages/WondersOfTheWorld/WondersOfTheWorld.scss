@@ -1,0 +1,14 @@
+.WonderCheckboxWrapper {
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  border: 0;
+  text-align: left;
+}
+
+.WonderRowButton__Content {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+}

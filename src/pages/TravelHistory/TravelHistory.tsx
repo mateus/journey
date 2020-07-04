@@ -119,6 +119,7 @@ export function TravelHistory() {
           disabled: true,
         },
       ]}
+      separator={reconciledTrips.length > 0}
     >
       <DocumentTitle title="Travel History" />
       <Layout>
