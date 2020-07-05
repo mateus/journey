@@ -1679,22 +1679,22 @@
     lodash "^4.17.4"
     tslib "^1.9.3"
 
-"@shopify/predicates@^1.2.5":
+"@shopify/predicates@^1.2.6":
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/@shopify/predicates/-/predicates-1.2.6.tgz#f781800a021faec413370248be37ee0f2822482a"
   integrity sha512-dZxr8Q5BtErhmP021dsROyXAn/R4aqiGs/l4RWmMYJxJOhZ3hi2drAYi7iKn+YxxUJ8esHCOnFiv5Xo8uZUBVg==
 
-"@shopify/react-form@^0.3.33":
-  version "0.3.34"
-  resolved "https://registry.yarnpkg.com/@shopify/react-form/-/react-form-0.3.34.tgz#f23a65dbe792190d39812172f8b1dfe5a7146991"
-  integrity sha512-L/V5n8HUg5j532J4Ek5tD1lTEsQFDY2rC6KL55ioyTGEV8b3PPpyG7QcxT6w8bJQ0LLNB3Aj2ZT8XlpBJahrhA==
+"@shopify/react-form@^0.7.1":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@shopify/react-form/-/react-form-0.7.1.tgz#6d6439a525b7d9aded2c7fadb9e7289686966311"
+  integrity sha512-/qDb81Jx3R5xKBHvqUTfckt2lBsB9YQUytmHRyE+PcSdK6wic6hfyQEdgQRRMnTcY5QfSu0EgXybCOqczepTyw==
   dependencies:
-    "@shopify/predicates" "^1.2.5"
-    "@shopify/react-hooks" "^1.4.2"
+    "@shopify/predicates" "^1.2.6"
+    "@shopify/react-hooks" "^1.10.1"
     fast-deep-equal "^2.0.1"
     get-value "^3.0.1"
 
-"@shopify/react-hooks@^1.4.2":
+"@shopify/react-hooks@^1.10.1":
   version "1.10.1"
   resolved "https://registry.yarnpkg.com/@shopify/react-hooks/-/react-hooks-1.10.1.tgz#b17d16beaddf9af7adad7c9c1a1e4d5ad408f732"
   integrity sha512-xvYyTYGQHNff7MJDCwrNSQ9PxuU6Icp2sleaB73S+uDL+BvVVwEyhqYxVOMMJtX3mLgUAEAYDAm3Jxr3rmlINw==
