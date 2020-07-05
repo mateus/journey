@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Checkbox,
-  Card,
-  ContextualSaveBar,
-  Layout,
-  Image,
-  DisplayText,
-  TextStyle,
-  Stack,
-  Page,
-} from '@shopify/polaris';
+import {ContextualSaveBar, Layout, Page} from '@shopify/polaris';
 import {
   useForm,
   useField,
@@ -19,8 +9,8 @@ import {
 
 import {DocumentTitle} from 'components';
 
+import {WondersCard} from './components';
 import {WONDERS_OF_THE_WORLD} from './wonders';
-import './WondersOfTheWorld.scss';
 
 export function WondersOfTheWorld() {
   const {
@@ -82,102 +72,20 @@ export function WondersOfTheWorld() {
           title="New 7 Wonders of the World"
           description="New7Wonders of the World (2000–2007) was a campaign started in 2000 to choose Wonders of the World from a selection of 200 existing monuments."
         >
-          <Card sectioned>
-            <Stack vertical spacing="tight">
-              {Object.entries(new7WondersOfTheWorld).map(([key, field]) => {
-                const {
-                  name,
-                  city,
-                  country,
-                  image,
-                } = WONDERS_OF_THE_WORLD.new7WondersOfTheWorld[key];
-
-                return (
-                  <div
-                    className="WonderCheckboxWrapper"
-                    key={name}
-                    onClick={() => field.onChange(!field.value)}
-                    onKeyDown={() => {}}
-                  >
-                    <div className="WonderRowButton__Content">
-                      <Checkbox
-                        key={name}
-                        label={name}
-                        labelHidden
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                      <Image
-                        source={image}
-                        alt={name}
-                        width={150}
-                        style={{filter: `grayscale(${field.value ? 0 : 100}%)`}}
-                      />
-                      <Stack vertical spacing="none">
-                        <DisplayText size="small" element="h3">
-                          {name}
-                        </DisplayText>
-                        <p>
-                          <TextStyle variation="subdued">{`${city}, ${country}`}</TextStyle>
-                        </p>
-                      </Stack>
-                    </div>
-                  </div>
-                );
-              })}
-            </Stack>
-          </Card>
+          <WondersCard
+            wonders={WONDERS_OF_THE_WORLD.new7WondersOfTheWorld}
+            wondersFields={new7WondersOfTheWorld}
+          />
         </Layout.AnnotatedSection>
 
         <Layout.AnnotatedSection
           title="New 7 Wonders of Nature"
           description="A contemporary effort to create a list of seven natural wonders chosen through a global poll, was organized by the same group as the New7Wonders of the World campaign."
         >
-          <Card sectioned>
-            <Stack vertical spacing="tight">
-              {Object.entries(new7WondersOfNature).map(([key, field]) => {
-                const {
-                  name,
-                  city,
-                  country,
-                  image,
-                } = WONDERS_OF_THE_WORLD.new7WondersOfNature[key];
-
-                return (
-                  <div
-                    className="WonderCheckboxWrapper"
-                    key={name}
-                    onClick={() => field.onChange(!field.value)}
-                    onKeyDown={() => {}}
-                  >
-                    <div className="WonderRowButton__Content">
-                      <Checkbox
-                        key={name}
-                        label={name}
-                        labelHidden
-                        checked={field.value}
-                        onChange={field.onChange}
-                      />
-                      <Image
-                        source={image}
-                        alt={name}
-                        width={150}
-                        style={{filter: `grayscale(${field.value ? 0 : 100}%)`}}
-                      />
-                      <Stack vertical spacing="none">
-                        <DisplayText size="small" element="h3">
-                          {name}
-                        </DisplayText>
-                        <p>
-                          <TextStyle variation="subdued">{`${city}, ${country}`}</TextStyle>
-                        </p>
-                      </Stack>
-                    </div>
-                  </div>
-                );
-              })}
-            </Stack>
-          </Card>
+          <WondersCard
+            wonders={WONDERS_OF_THE_WORLD.new7WondersOfNature}
+            wondersFields={new7WondersOfNature}
+          />
         </Layout.AnnotatedSection>
       </Layout>
     </Page>
