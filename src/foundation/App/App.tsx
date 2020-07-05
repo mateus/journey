@@ -13,7 +13,7 @@ export function App() {
   const theme = {
     colors: {
       topBar: {
-        background: '#202E78',
+        background: '#444052',
       },
     },
     logo: {
