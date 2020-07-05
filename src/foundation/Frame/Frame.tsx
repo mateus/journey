@@ -1,5 +1,6 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import {useHistory} from 'react-router-dom';
+import {useAuthState} from 'react-firebase-hooks/auth';
 import {Navigation, TopBar, Frame as PolarisFrame} from '@shopify/polaris';
 import {
   TransportMajorTwotone,
@@ -7,30 +8,65 @@ import {
   GlobeMajorTwotone,
   ChecklistMajorTwotone,
   NoteMajorTwotone,
+  GlobeMinor,
 } from '@shopify/polaris-icons';
 
 import {auth} from 'utilities/firebase';
 
-import {TopNav, Footer} from './components';
+import {Footer} from './components';
 
 export interface FrameProps {
   children?: React.ReactChild;
 }
 
 export function Frame({children}: FrameProps) {
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [user] = useAuthState(auth);
   const history = useHistory();
   const [mobileNavigationActive, setMobileNavigationActive] = useState(false);
+
+  const toggleIsUserMenuOpen = useCallback(
+    () => setIsUserMenuOpen((isUserMenuOpen) => !isUserMenuOpen),
+    [],
+  );
+
+  const userMenuMarkup = user ? (
+    <TopBar.UserMenu
+      actions={[
+        {
+          items: [
+            {
+              content: 'Google Timeline',
+              icon: GlobeMinor,
+              url: 'https://www.google.com/maps/timeline',
+              external: true,
+            },
+            {
+              onAction: logout,
+              content: 'Log out',
+              icon: LogOutMinor,
+            },
+          ],
+        },
+      ]}
+      initials={user.displayName?.charAt(0)}
+      avatar={user.photoURL || undefined}
+      name={user.displayName || '...'}
+      open={isUserMenuOpen}
+      onToggle={toggleIsUserMenuOpen}
+    />
+  ) : null;
 
   const topBarMarkup = (
     <TopBar
       showNavigationToggle
+      userMenu={userMenuMarkup}
       onNavigationToggle={toggleMobileNavigationActive}
     />
   );
 
   const navigationMarkup = (
     <Navigation location={history.location.pathname}>
-      <TopNav />
       <Navigation.Section
         title="Journey"
         items={[
@@ -63,16 +99,6 @@ export function Frame({children}: FrameProps) {
         ]}
         separator
         fill
-      />
-      <Navigation.Section
-        items={[
-          {
-            onClick: logout,
-            label: 'Log out',
-            icon: LogOutMinor,
-          },
-        ]}
-        separator
       />
     </Navigation>
   );
