@@ -4,6 +4,12 @@
   background: none;
   border: 0;
   text-align: left;
+
+  &:hover {
+    img {
+      filter: grayscale(0%) !important;
+    }
+  }
 }
 
 .WonderRowButton__Content {

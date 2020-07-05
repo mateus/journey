@@ -6,4 +6,13 @@ export {
   Petra,
   MachuPicchu,
   TajMahal,
-} from './new7wonders';
+} from './new7wondersOfTheWorld';
+export {
+  AmazonRiver,
+  HalongBay,
+  IguazuFalls,
+  JejuIsland,
+  KomodoIsland,
+  PuertoPrincesa,
+  TableMountain,
+} from './new7wondersOfNature';
