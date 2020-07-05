@@ -71,12 +71,12 @@ describe('<Frame />', () => {
             icon: TransportMajorTwotone,
           }),
           expect.objectContaining({
-            label: 'Future Plans',
-            icon: NoteMajorTwotone,
-          }),
-          expect.objectContaining({
             label: 'Wonders of the World',
             icon: GlobeMajorTwotone,
+          }),
+          expect.objectContaining({
+            label: 'Future Plans',
+            icon: NoteMajorTwotone,
           }),
           expect.objectContaining({
             label: 'Bucket List',

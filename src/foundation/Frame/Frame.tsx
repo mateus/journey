@@ -41,22 +41,24 @@ export function Frame({children}: FrameProps) {
             icon: TransportMajorTwotone,
           },
           {
-            label: 'Future Plans',
-            onClick: () => pushTo('/plans'),
-            selected: history.location.pathname === '/plans',
-            icon: NoteMajorTwotone,
-          },
-          {
             label: 'Wonders of the World',
             onClick: () => pushTo('/wonders'),
             selected: history.location.pathname === '/wonders',
             icon: GlobeMajorTwotone,
           },
           {
+            label: 'Future Plans',
+            onClick: () => pushTo('/plans'),
+            selected: history.location.pathname === '/plans',
+            icon: NoteMajorTwotone,
+            disabled: true,
+          },
+          {
             label: 'Bucket List',
             onClick: () => pushTo('/bucket-list'),
             selected: history.location.pathname === '/bucket-list',
             icon: ChecklistMajorTwotone,
+            disabled: true,
           },
         ]}
         separator
