@@ -12,7 +12,7 @@ import {Field} from '@shopify/react-form';
 import {Wonders} from '../../wonders';
 import './WondersCard.scss';
 
-interface WondersCardProps {
+export interface WondersCardProps {
   wondersFields: Record<string, Field<boolean>>;
   wonders: Wonders;
 }
@@ -26,14 +26,13 @@ export function WondersCard({wonders, wondersFields}: WondersCardProps) {
 
           return (
             <div
+              key={key}
               className="WonderCheckboxWrapper"
-              key={name}
               onClick={() => field.onChange(!field.value)}
               onKeyDown={() => {}}
             >
               <div className="WonderRowButton__Content">
                 <Checkbox
-                  key={name}
                   label={name}
                   labelHidden
                   checked={field.value}
