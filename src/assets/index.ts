@@ -7,3 +7,4 @@ export {default as EmptyStateLogin} from './emptyStateLogin.svg';
 export {default as EmptyStateNotFound} from './emptyStateNotFound.svg';
 export {default as EmptyStateTravelBooking} from './emptyStateTravelBooking.svg';
 export {default as EmptyStateNotes} from './emptyStateNotes.svg';
+export {default as JorneyLogo} from './journeyLogo.png';

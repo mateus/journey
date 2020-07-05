@@ -5,6 +5,7 @@ import {BrowserRouter as Router} from 'react-router-dom';
 
 import {isDevelopment} from 'config/variables';
 import {Routes} from 'foundation';
+import {JorneyLogo} from 'assets';
 
 import {DevelopmentHead} from './components';
 
@@ -16,9 +17,8 @@ export function App() {
       },
     },
     logo: {
-      width: 124,
-      topBarSource:
-        'https://cdn.shopify.com/s/files/1/0446/6937/files/jaded-pixel-logo-color.svg?6215648040070010999',
+      width: 30,
+      topBarSource: JorneyLogo,
       url: window.location.origin,
       accessibilityLabel: 'Journey',
     },
