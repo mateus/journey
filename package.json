@@ -34,6 +34,7 @@
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/faker": "^4.1.9",
+    "@types/firebase": "^3.2.1",
     "@types/jest": "^25.1.2",
     "@types/jsdom": "^16.1.0",
     "@types/moment-timezone": "^0.5.12",
