@@ -6,50 +6,71 @@ import {
   submitFail,
   submitSuccess,
 } from '@shopify/react-form';
+import moment from 'moment';
 
-import {DocumentTitle} from 'components';
+import {useToast} from 'hooks/useToast';
+import {DocumentTitle, LoadingPage} from 'components';
 
 import {WondersCard} from './components';
 import {WONDERS_OF_THE_WORLD} from './wonders';
+import {useWonders} from './hooks';
 
 export function WondersOfTheWorld() {
   const {
-    fields: {new7WondersOfTheWorld, new7WondersOfNature},
-    submit,
-    submitting,
-    dirty,
-    reset,
-    // submitErrors,
-  } = useForm({
+    wonders: {new7WondersOfTheWorld, new7WondersOfNature},
+    wondersCollectionRef,
+    loading,
+    error,
+  } = useWonders();
+  const [Toast, showToast] = useToast();
+
+  const {fields, submit, submitting, dirty, reset} = useForm({
     fields: {
       new7WondersOfTheWorld: {
-        greatWallOfChina: useField(false),
-        petra: useField(false),
-        christTheRedeemer: useField(false),
-        machuPicchu: useField(false),
-        chichenItza: useField(false),
-        colosseum: useField(false),
-        tajMahal: useField(false),
+        greatWallOfChina: useField(new7WondersOfTheWorld.greatWallOfChina),
+        petra: useField(new7WondersOfTheWorld.petra),
+        christTheRedeemer: useField(new7WondersOfTheWorld.christTheRedeemer),
+        machuPicchu: useField(new7WondersOfTheWorld.machuPicchu),
+        chichenItza: useField(new7WondersOfTheWorld.chichenItza),
+        colosseum: useField(new7WondersOfTheWorld.colosseum),
+        tajMahal: useField(new7WondersOfTheWorld.tajMahal),
       },
       new7WondersOfNature: {
-        tableMountain: useField(false),
-        iguazuFalls: useField(false),
-        komodoIsland: useField(false),
-        halongBay: useField(false),
-        puertoPrincesaUndergroundRiver: useField(false),
-        amazon: useField(false),
-        jejuIsland: useField(false),
+        tableMountain: useField(new7WondersOfNature.tableMountain),
+        iguazuFalls: useField(new7WondersOfNature.iguazuFalls),
+        komodoIsland: useField(new7WondersOfNature.komodoIsland),
+        halongBay: useField(new7WondersOfNature.halongBay),
+        puertoPrincesaUndergroundRiver: useField(
+          new7WondersOfNature.puertoPrincesaUndergroundRiver,
+        ),
+        amazon: useField(new7WondersOfNature.amazon),
+        jejuIsland: useField(new7WondersOfNature.jejuIsland),
       },
     },
     async onSubmit({new7WondersOfTheWorld, new7WondersOfNature}) {
-      // console.log(new7WondersOfTheWorld, new7WondersOfNature);
       try {
-        return submitSuccess();
-      } catch (error) {
+        if (wondersCollectionRef) {
+          await wondersCollectionRef.doc('new7WondersOfTheWorld').update({
+            ...new7WondersOfTheWorld,
+            updatedAt: moment().toDate(),
+          });
+          await wondersCollectionRef.doc('new7WondersOfNature').update({
+            ...new7WondersOfNature,
+            updatedAt: moment().toDate(),
+          });
+          showToast({content: 'Wonders updated'});
+
+          return submitSuccess();
+        }
+        return submitFail();
+      } catch (err) {
         return submitFail();
       }
     },
   });
+
+  if (error) throw new Error(error.message);
+  if (loading) return <LoadingPage />;
 
   return (
     <Page title="Wonders of the World" separator>
@@ -74,7 +95,7 @@ export function WondersOfTheWorld() {
         >
           <WondersCard
             wonders={WONDERS_OF_THE_WORLD.new7WondersOfTheWorld}
-            wondersFields={new7WondersOfTheWorld}
+            wondersFields={fields.new7WondersOfTheWorld}
           />
         </Layout.AnnotatedSection>
 
@@ -84,10 +105,11 @@ export function WondersOfTheWorld() {
         >
           <WondersCard
             wonders={WONDERS_OF_THE_WORLD.new7WondersOfNature}
-            wondersFields={new7WondersOfNature}
+            wondersFields={fields.new7WondersOfNature}
           />
         </Layout.AnnotatedSection>
       </Layout>
+      <Toast />
     </Page>
   );
 }
