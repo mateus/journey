@@ -52,8 +52,8 @@ export function WondersOfTheWorld() {
   });
 
   return (
-    <Page title="Wonder of the World" separator>
-      <DocumentTitle title="Wonder of the World" />
+    <Page title="Wonders of the World" separator>
+      <DocumentTitle title="Wonders of the World" />
       {dirty && (
         <ContextualSaveBar
           message="Unsaved changes"

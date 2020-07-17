@@ -1,6 +1,6 @@
 import React from 'react';
 import enTranslations from '@shopify/polaris/locales/en.json';
-import {AppProvider} from '@shopify/polaris';
+import {AppProvider as PolarisAppProvider} from '@shopify/polaris';
 import {BrowserRouter as Router} from 'react-router-dom';
 
 import {isDevelopment} from 'config/variables';
@@ -27,9 +27,9 @@ export function App() {
   return (
     <Router>
       {isDevelopment && <DevelopmentHead />}
-      <AppProvider theme={theme} i18n={enTranslations}>
+      <PolarisAppProvider theme={theme} i18n={enTranslations}>
         <Routes />
-      </AppProvider>
+      </PolarisAppProvider>
     </Router>
   );
 }
