@@ -16,13 +16,9 @@ import {WONDERS_OF_THE_WORLD} from './wonders';
 import {useWonders} from './hooks';
 
 export function WondersOfTheWorld() {
-  const {
-    wonders: {new7WondersOfTheWorld, new7WondersOfNature},
-    wondersCollectionRef,
-    loading,
-    error,
-  } = useWonders();
+  const {wonders, wondersCollectionRef, loading, error} = useWonders();
   const [Toast, showToast] = useToast();
+  const {new7WondersOfTheWorld, new7WondersOfNature} = wonders;
 
   const {fields, submit, submitting, dirty, reset} = useForm({
     fields: {

@@ -5,18 +5,9 @@ import moment from 'moment';
 
 import {auth, firestore} from 'utilities/firebase';
 
-type WondersFormValues = Record<string, Record<string, boolean>>;
+export type WondersFormValues = Record<string, Record<string, boolean>>;
 
-export interface WondersData {
-  wonders: WondersFormValues;
-  loading: boolean;
-  error?: Error;
-  wondersCollectionRef: firebase.firestore.CollectionReference<
-    firebase.firestore.DocumentData
-  > | null;
-}
-
-const wondersInitialValues: WondersFormValues = {
+export const wondersInitialValues: WondersFormValues = {
   new7WondersOfTheWorld: {
     greatWallOfChina: false,
     petra: false,
@@ -36,6 +27,15 @@ const wondersInitialValues: WondersFormValues = {
     jejuIsland: false,
   },
 };
+
+export interface WondersData {
+  wonders: WondersFormValues;
+  loading: boolean;
+  error?: Error;
+  wondersCollectionRef: firebase.firestore.CollectionReference<
+    firebase.firestore.DocumentData
+  > | null;
+}
 
 export function useWonders(): WondersData {
   const [user] = useAuthState(auth);
