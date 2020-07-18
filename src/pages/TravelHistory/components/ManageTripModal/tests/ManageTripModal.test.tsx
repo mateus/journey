@@ -353,8 +353,7 @@ describe('<ManageTripModal />', () => {
       expect(modalFooter.find(Button)).not.toExist();
     });
 
-    // https://github.com/mateus/journey/issues/98
-    it.skip('triggers onAddNew with new trip details', async () => {
+    it('triggers onAddNew with new trip details', async () => {
       const onAddNewSpy = jest.fn();
       const wrapper = await mountWithAppProvider(
         <ManageTripModal {...mockPropsWihtoutTrip} onAddNew={onAddNewSpy} />,
@@ -373,13 +372,15 @@ describe('<ManageTripModal />', () => {
       await updateDatePickerSelection(wrapper, expectedDateRage);
       await submitForm(wrapper);
 
-      expect(onAddNewSpy).toBeCalledWith({
-        startDate: expectedDateRage.start,
-        endDate: expectedDateRage.end,
-        location: expectedCity,
-        notes: expectedNotes,
-        countryCode: expectedCountryCode.countryCode,
-      });
+      expect(onAddNewSpy).toBeCalledWith(
+        expect.objectContaining({
+          startDate: expectedDateRage.start,
+          endDate: expectedDateRage.end,
+          location: expectedCity,
+          notes: expectedNotes,
+          countryCode: expectedCountryCode.countryCode,
+        }),
+      );
     });
   });
 

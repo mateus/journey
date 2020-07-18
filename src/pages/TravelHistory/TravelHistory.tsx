@@ -97,16 +97,14 @@ export function TravelHistory() {
       <DocumentTitle title="Travel History" />
       <Layout>
         <Layout.Section>
-          {manageTripModalOpen && (
-            <ManageTripModal
-              open={manageTripModalOpen}
-              trip={tripToBeEdited}
-              onClose={handleCloseManageTripModal}
-              onAddNew={handleAddNewTrip}
-              onUpdate={handleUpdateTrip}
-              onDelete={openConfirmDeleteTripModal}
-            />
-          )}
+          <ManageTripModal
+            open={manageTripModalOpen}
+            trip={tripToBeEdited}
+            onClose={handleCloseManageTripModal}
+            onAddNew={handleAddNewTrip}
+            onUpdate={handleUpdateTrip}
+            onDelete={openConfirmDeleteTripModal}
+          />
           <Stack vertical>{renderTrips(trips)}</Stack>
         </Layout.Section>
         <Layout.Section secondary>
@@ -131,8 +129,8 @@ export function TravelHistory() {
     const byYear = tripsByYear(trips);
 
     function handleEditTrip(trip: Trip) {
-      setManageTripModalOpen(true);
       setTripToBeEdited(trip);
+      setManageTripModalOpen(true);
     }
 
     return Object.keys(byYear)
