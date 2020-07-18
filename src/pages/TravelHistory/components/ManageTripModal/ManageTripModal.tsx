@@ -45,9 +45,7 @@ export const ManageTripModal = memo(function ManageTripModal({
   onUpdate,
   onDelete,
 }: ManageTripModalProps) {
-  // console.log('<ManageTripModal /> rendered');
-
-  const today = moment();
+  const today = moment().startOf('day');
   const [sameDayValue, setSameDay] = useState(
     trip ? trip.startDate === trip.endDate : false,
   );
@@ -89,8 +87,8 @@ export const ManageTripModal = memo(function ManageTripModal({
           notes,
         };
         if (trip) {
-          // onUpdate might rerender the page. Can cause no-ops with onClose
-          await onUpdate(payload).then(onClose);
+          await onUpdate(payload);
+          onClose();
         } else {
           await onAddNew(payload);
         }

@@ -170,7 +170,7 @@ describe('<TravelHistory />', () => {
 
     it('is closed on first load', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
-      expect(wrapper.find(ManageTripModal)).not.toExist();
+      expect(wrapper.find(ManageTripModal)).toHaveProp({open: false});
     });
 
     it('renders when clicking "Add trip" action from Page', async () => {
