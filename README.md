@@ -10,10 +10,9 @@ App to keep track of Travel History, Bucket Lists, and more.
 ![localhost_3000_(Laptop with HiDPI screen) (3)](https://user-images.githubusercontent.com/2091116/87844978-b83be400-c890-11ea-8dd0-e851e6a9f6fd.png)
 
 
-
 ### Development
 
-1. Add local variables with the Firebase configuration.
+Local variables for Firebase setup:
 
 ```
 # .env
@@ -27,14 +26,3 @@ REACT_APP_APP_ID='app-id'
 REACT_APP_MEASUREMENT_ID='G-measurement-id'
 ```
 
-2. Install dependencies
-
-`$ yarn install`
-
-3. Run project
-
-`$ yarn start`
-
-4. Test it
-
-`$ yarn test {file}`
