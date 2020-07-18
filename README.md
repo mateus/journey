@@ -2,13 +2,11 @@
 ![Build and Deploy](https://github.com/mateus/journey/workflows/Build%20and%20Deploy/badge.svg)
 ![Lint](https://github.com/mateus/journey/workflows/Lint/badge.svg)
 
-
-App to keep track of Travel History, Bucket Lists, and more.
+App to keep track of travel history, bucket lists, travel plans and more.
 
 ![localhost_3000_(Laptop with HiDPI screen) (4)](https://user-images.githubusercontent.com/2091116/87844996-ce49a480-c890-11ea-8974-0a9e3bb63715.png)
 
 ![localhost_3000_(Laptop with HiDPI screen) (3)](https://user-images.githubusercontent.com/2091116/87844978-b83be400-c890-11ea-8dd0-e851e6a9f6fd.png)
-
 
 ### Development
 
@@ -25,4 +23,3 @@ REACT_APP_MESSAGING_SENDER_ID='sender-id'
 REACT_APP_APP_ID='app-id'
 REACT_APP_MEASUREMENT_ID='G-measurement-id'
 ```
-
