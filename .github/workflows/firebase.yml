@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Firebase Deploy
 on:
   push:
     branches:
@@ -13,6 +13,10 @@ jobs:
         uses: actions/checkout@master
       - name: Install Dependencies
         run: npm install
+      - name: Run Tests
+        env:
+          CI: true
+        run: npm test
       - name: Build
         run: npm run build
         env:
@@ -40,9 +44,11 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: build
+          path: build
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
