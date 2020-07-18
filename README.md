@@ -2,7 +2,7 @@
 ![Firebase Deploy](https://github.com/mateus/journey/workflows/Firebase%20Deploy/badge.svg)
 ![Lint](https://github.com/mateus/journey/workflows/Lint/badge.svg)
 
-App to keep track of travel history, bucket lists, travel plans and more.
+Web App to keep track of travel history, bucket lists, travel plans, and more.
 
 ![localhost_3000_(Laptop with HiDPI screen) (4)](https://user-images.githubusercontent.com/2091116/87844996-ce49a480-c890-11ea-8974-0a9e3bb63715.png)
 
