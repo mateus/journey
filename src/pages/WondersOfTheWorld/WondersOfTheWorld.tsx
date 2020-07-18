@@ -54,7 +54,7 @@ export function WondersOfTheWorld() {
             ...new7WondersOfNature,
             updatedAt: moment().toDate(),
           });
-          showToast({content: 'Wonders updated'});
+          showToast({content: 'Wonders of the World updated'});
 
           return submitSuccess();
         }
