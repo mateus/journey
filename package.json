@@ -2,12 +2,14 @@
   "name": "journey",
   "version": "0.1.0",
   "private": true,
-  "author": "Mateus Ferreira",
+  "author": "@mateus",
   "license": "UNLICENSED",
   "main": "src/index.tsx",
   "engines": {
     "node": ">=12.0"
   },
+  "description": "App to keep track of travel history, bucket lists, travel plans and more",
+  "homepage": "https://journeyapp.me/",
   "dependencies": {
     "@shopify/polaris": "^4.13.1",
     "@shopify/polaris-icons": "^3.9.0",
