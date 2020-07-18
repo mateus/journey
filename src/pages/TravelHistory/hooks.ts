@@ -25,29 +25,24 @@ export function useTrips(): TripsData {
         .collection('trips')
     : null;
   const [tripsSnapshot, loading, error] = useCollection(tripsCollectionRef);
-  const [trips, setTrips] = useState<Trip[]>([]);
 
-  useEffect(() => {
-    if (!tripsSnapshot || loading) return;
-
-    const tripsData = tripsSnapshot.docs.map<QueryTripCollection>((doc) => {
+  const tripsData =
+    tripsSnapshot?.docs.map<QueryTripCollection>((doc) => {
       return {
         id: doc.id,
         // data() does not have inferred types from firestore
         ...(doc.data() as QueryTripCollection),
       };
-    });
-    const reconciledTrips = tripsData.map<Trip>(
-      ({endDate, startDate, ...rest}) => {
-        return {
-          ...rest,
-          endDate: moment.unix(endDate.seconds).toDate(),
-          startDate: moment.unix(startDate.seconds).toDate(),
-        };
-      },
-    );
-    setTrips(reconciledTrips);
-  }, [tripsSnapshot, loading]);
+    }) || [];
+  const reconciledTrips = tripsData.map<Trip>(
+    ({endDate, startDate, ...rest}) => {
+      return {
+        ...rest,
+        endDate: moment.unix(endDate.seconds).toDate(),
+        startDate: moment.unix(startDate.seconds).toDate(),
+      };
+    },
+  );
 
-  return {trips, tripsCollectionRef, loading, error};
+  return {trips: reconciledTrips, tripsCollectionRef, loading, error};
 }
