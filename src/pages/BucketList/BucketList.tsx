@@ -8,7 +8,7 @@ export function BucketList() {
   return (
     <Page title="Bucket List">
       <DocumentTitle title="Bucket List" />
-      <EmptyState heading="Soon ...hand tight" image={EmptyStateBucketList} />
+      <EmptyState image={EmptyStateBucketList} />
     </Page>
   );
 }

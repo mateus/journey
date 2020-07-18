@@ -12,7 +12,13 @@ import {
   Stack,
   TextField,
 } from '@shopify/polaris';
-import {useForm, useField, notEmpty} from '@shopify/react-form';
+import {
+  useForm,
+  useField,
+  notEmpty,
+  submitSuccess,
+  submitFail,
+} from '@shopify/react-form';
 
 import {DEFAULT_TRIP_LENGTH} from 'utilities/trip';
 import {getCountryByCode} from 'utilities/countries';
@@ -89,9 +95,9 @@ export const ManageTripModal = memo(function ManageTripModal({
           await onAddNew(payload);
         }
 
-        return {status: 'success'};
+        return submitSuccess();
       } catch (error) {
-        return {status: 'fail', errors: [{message: error.message}]};
+        return submitFail();
       }
     },
   });

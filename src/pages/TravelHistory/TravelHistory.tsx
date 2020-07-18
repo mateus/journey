@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useCollection} from 'react-firebase-hooks/firestore';
-import {useAuthState} from 'react-firebase-hooks/auth';
 import moment from 'moment';
 import faker from 'faker';
 import {DeleteMinor, ImportMinor, ExportMinor} from '@shopify/polaris-icons';
@@ -15,10 +13,9 @@ import {
 } from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
-import {auth, firestore} from 'utilities/firebase';
 import {isPastDate} from 'utilities/dates';
 import {useToast} from 'hooks/useToast';
-import {Trip, QueryTripCollection} from 'types';
+import {Trip} from 'types';
 import {
   ConfirmActionModal,
   DocumentTitle,
@@ -26,6 +23,7 @@ import {
   LoadingPage,
 } from 'components';
 
+import {useTrips} from './hooks';
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
   ImportTripsModal,
@@ -48,37 +46,12 @@ export function TravelHistory() {
   const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [importing, setImporting] = useState(false);
   const [Toast, showToast] = useToast();
-  const [user] = useAuthState(auth);
-  const tripsCollectionRef = user
-    ? firestore
-        .collection('users')
-        .doc(user?.uid)
-        .collection('trips')
-    : null;
-  const [tripsSnapshot, loading, error] = useCollection(tripsCollectionRef, {
-    snapshotListenOptions: {includeMetadataChanges: true},
-  });
+  const {trips, tripsCollectionRef, loading, error} = useTrips();
 
-  if (loading || !tripsSnapshot) return <LoadingPage />;
   if (error) throw new Error(error.message);
+  if (loading) return <LoadingPage />;
 
-  const tripsData = tripsSnapshot.docs.map<QueryTripCollection>((doc) => {
-    return {
-      id: doc.id,
-      // data() does not have inferred types from firestore
-      ...(doc.data() as QueryTripCollection),
-    };
-  });
-  const reconciledTrips = tripsData.map<Trip>(
-    ({endDate, startDate, ...rest}) => {
-      return {
-        ...rest,
-        endDate: moment.unix(endDate.seconds).toDate(),
-        startDate: moment.unix(startDate.seconds).toDate(),
-      };
-    },
-  );
-  const upcoming = upcomingTrips(reconciledTrips);
+  const upcoming = upcomingTrips(trips);
 
   const confirmDeleteActionModal = tripToBeEdited ? (
     <ConfirmActionModal
@@ -119,6 +92,7 @@ export function TravelHistory() {
           disabled: true,
         },
       ]}
+      separator={trips.length > 0}
     >
       <DocumentTitle title="Travel History" />
       <Layout>
@@ -133,10 +107,10 @@ export function TravelHistory() {
               onDelete={openConfirmDeleteTripModal}
             />
           )}
-          <Stack vertical>{renderTrips(reconciledTrips)}</Stack>
+          <Stack vertical>{renderTrips(trips)}</Stack>
         </Layout.Section>
         <Layout.Section secondary>
-          {reconciledTrips.length > 0 && <UpcomingTripsCard list={upcoming} />}
+          {trips.length > 0 && <UpcomingTripsCard list={upcoming} />}
         </Layout.Section>
       </Layout>
       <EmptyState image={EmptyStateAirportDude}>

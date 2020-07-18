@@ -11,7 +11,8 @@
   "dependencies": {
     "@shopify/polaris": "^4.13.1",
     "@shopify/polaris-icons": "^3.9.0",
-    "@shopify/react-form": "^0.3.33",
+    "@shopify/react-form": "^0.7.1",
+    "classnames": "^2.2.6",
     "firebase": "^7.9.1",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.7",
@@ -33,6 +34,7 @@
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/faker": "^4.1.9",
+    "@types/firebase": "^3.2.1",
     "@types/jest": "^25.1.2",
     "@types/jsdom": "^16.1.0",
     "@types/moment-timezone": "^0.5.12",
