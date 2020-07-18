@@ -1,5 +1,5 @@
 ![Node.js CI](https://github.com/mateus/journey/workflows/Node.js%20CI/badge.svg)
-![Build and Deploy](https://github.com/mateus/journey/workflows/Build%20and%20Deploy/badge.svg)
+![Firebase Deploy](https://github.com/mateus/journey/workflows/Firebase%20Deploy/badge.svg)
 ![Lint](https://github.com/mateus/journey/workflows/Lint/badge.svg)
 
 App to keep track of travel history, bucket lists, travel plans and more.
