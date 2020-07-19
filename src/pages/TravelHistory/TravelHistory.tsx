@@ -20,7 +20,7 @@ import {
   ConfirmActionModal,
   DocumentTitle,
   MemoizedRandomQuote,
-  LoadingPage,
+  SkeletonTwoColumn,
 } from 'components';
 
 import {useTrips} from './hooks';
@@ -49,7 +49,7 @@ export function TravelHistory() {
   const {trips, tripsCollectionRef, loading, error} = useTrips();
 
   if (error) throw new Error(error.message);
-  if (loading) return <LoadingPage />;
+  if (loading) return <SkeletonTwoColumn />;
 
   const upcoming = upcomingTrips(trips);
 

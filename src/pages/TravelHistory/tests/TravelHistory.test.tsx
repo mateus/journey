@@ -7,7 +7,7 @@ import {EmptyState, Toast, Page, ComplexAction} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
-import {LoadingPage, MemoizedRandomQuote} from 'components';
+import {SkeletonTwoColumn, MemoizedRandomQuote} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
@@ -39,10 +39,10 @@ describe('<TravelHistory />', () => {
     useCollectionSpy.mockRestore();
   });
 
-  it('render <LoadingPage /> when collection is still loading', async () => {
+  it('render <SkeletonTwoColumn /> when collection is still loading', async () => {
     useCollectionSpy.mockReturnValue([null, true, null]);
     const wrapper = await mountWithAppProvider(<TravelHistory />);
-    expect(wrapper.find(LoadingPage)).toExist();
+    expect(wrapper.find(SkeletonTwoColumn)).toExist();
   });
 
   it('renders <Page />', async () => {

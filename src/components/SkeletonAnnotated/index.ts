@@ -1,0 +1,1 @@
+export {SkeletonAnnotated} from './SkeletonAnnotated';
