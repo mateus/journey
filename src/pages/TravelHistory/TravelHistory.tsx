@@ -20,7 +20,7 @@ import {
   ConfirmActionModal,
   DocumentTitle,
   MemoizedRandomQuote,
-  LoadingPage,
+  SkeletonTwoColumn,
 } from 'components';
 
 import {useTrips} from './hooks';
@@ -49,7 +49,7 @@ export function TravelHistory() {
   const {trips, tripsCollectionRef, loading, error} = useTrips();
 
   if (error) throw new Error(error.message);
-  if (loading) return <LoadingPage />;
+  if (loading) return <SkeletonTwoColumn />;
 
   const upcoming = upcomingTrips(trips);
 
@@ -83,7 +83,7 @@ export function TravelHistory() {
         {
           content: 'Export',
           icon: ExportMinor,
-          // disabled: reconciledTrips?.length === 0,
+          // disabled: trips?.length === 0,
           disabled: true,
         },
         {
@@ -95,25 +95,27 @@ export function TravelHistory() {
       separator={trips.length > 0}
     >
       <DocumentTitle title="Travel History" />
-      <Layout>
-        <Layout.Section>
-          <ManageTripModal
-            open={manageTripModalOpen}
-            trip={tripToBeEdited}
-            onClose={handleCloseManageTripModal}
-            onAddNew={handleAddNewTrip}
-            onUpdate={handleUpdateTrip}
-            onDelete={openConfirmDeleteTripModal}
-          />
-          <Stack vertical>{renderTrips(trips)}</Stack>
-        </Layout.Section>
-        <Layout.Section secondary>
-          {trips.length > 0 && <UpcomingTripsCard list={upcoming} />}
-        </Layout.Section>
-      </Layout>
+      {trips.length > 0 && (
+        <Layout>
+          <Layout.Section>
+            <Stack vertical>{renderTrips(trips)}</Stack>
+          </Layout.Section>
+          <Layout.Section secondary>
+            <UpcomingTripsCard list={upcoming} />
+          </Layout.Section>
+        </Layout>
+      )}
       <EmptyState image={EmptyStateAirportDude}>
         <MemoizedRandomQuote />
       </EmptyState>
+      <ManageTripModal
+        open={manageTripModalOpen}
+        trip={tripToBeEdited}
+        onClose={handleCloseManageTripModal}
+        onAddNew={handleAddNewTrip}
+        onUpdate={handleUpdateTrip}
+        onDelete={openConfirmDeleteTripModal}
+      />
       <ImportTripsModal
         open={importTripsModalOpen}
         loading={importing}

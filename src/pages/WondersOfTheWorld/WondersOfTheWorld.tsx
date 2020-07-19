@@ -9,7 +9,7 @@ import {
 import moment from 'moment';
 
 import {useToast} from 'hooks/useToast';
-import {DocumentTitle, LoadingPage} from 'components';
+import {DocumentTitle, SkeletonAnnotated} from 'components';
 
 import {WondersCard} from './components';
 import {WONDERS_OF_THE_WORLD} from './wonders';
@@ -66,7 +66,7 @@ export function WondersOfTheWorld() {
   });
 
   if (error) throw new Error(error.message);
-  if (loading) return <LoadingPage />;
+  if (loading) return <SkeletonAnnotated />;
 
   return (
     <Page title="Wonders of the World" separator>

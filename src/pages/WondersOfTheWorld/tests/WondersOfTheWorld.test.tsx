@@ -3,7 +3,7 @@ import {act} from 'react-dom/test-utils';
 import {Page, ContextualSaveBar} from '@shopify/polaris';
 import {useCollection} from 'react-firebase-hooks/firestore';
 
-import {LoadingPage} from 'components';
+import {SkeletonAnnotated} from 'components';
 import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 
 import {WondersOfTheWorld} from '../WondersOfTheWorld';
@@ -56,10 +56,10 @@ describe('<WondersOfTheWorld />', () => {
     useCollectionSpy.mockRestore();
   });
 
-  it('render <LoadingPage /> when collection is still loading', async () => {
+  it('render <SkeletonAnnotated /> when collection is still loading', async () => {
     useCollectionSpy.mockReturnValue([null, true, null]);
     const wrapper = await mountWithAppProvider(<WondersOfTheWorld />);
-    expect(wrapper.find(LoadingPage)).toExist();
+    expect(wrapper.find(SkeletonAnnotated)).toExist();
   });
 
   it('renders <Page />', async () => {
