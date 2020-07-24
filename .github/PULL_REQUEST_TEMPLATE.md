@@ -1,6 +1,8 @@
-### What is this PR doing?
+### Change description
 
-### Required
+<!-- Describe your PR with details -->
 
-- [ ] Your code builds clean without any errors or warnings
+### Before merging
+
 - [ ] You have added unit tests
+- [ ] Your code builds clean without any errors or warnings
