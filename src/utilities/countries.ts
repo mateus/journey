@@ -20,7 +20,9 @@ export function getCountryByCode(
 export function getCountryByLabel(
   label: Country['label'],
 ): Country | undefined {
-  const country = countries.find(({name}) => name === label);
+  const country = countries.find(
+    ({name}) => name.toLocaleLowerCase() === label.toLocaleLowerCase().trim(),
+  );
 
   if (country) {
     return {
