@@ -7,11 +7,20 @@ import {EmptyState, Toast, Page, ComplexAction} from '@shopify/polaris';
 
 import {mountWithAppProvider, updateWrapper} from 'tests/utilities';
 import {mockTrip, mockTripCollection} from 'utilities/trip';
-import {SkeletonTwoColumn, MemoizedRandomQuote} from 'components';
+import {
+  SkeletonTwoColumn,
+  MemoizedRandomQuote,
+  ConfirmActionModal,
+} from 'components';
 import {QueryTripCollection} from 'types';
 
 import {TravelHistory} from '../TravelHistory';
-import {ManageTripModal, TripDetails, UpcomingTripsCard} from '../components';
+import {
+  ManageTripModal,
+  TripDetails,
+  ImportTripsModal,
+  UpcomingTripsCard,
+} from '../components';
 
 import {mockTrips, mockDataTrips} from './fixtures/mockTrips';
 
@@ -145,7 +154,7 @@ describe('<TravelHistory />', () => {
   });
 
   describe('Import trips', () => {
-    it('renders as <Page /> a action', async () => {
+    it('renders as <Page /> an action', async () => {
       const wrapper = await mountWithAppProvider(<TravelHistory />);
       expect(wrapper.find(Page)).toHaveProp({
         secondaryActions: expect.arrayContaining([
@@ -155,6 +164,75 @@ describe('<TravelHistory />', () => {
         ]),
       });
     });
+
+    it('opens a <ImportTripsModal /> when action is triggered', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      const action = wrapper
+        .find(Page)
+        .prop('secondaryActions')!
+        .find(({content}) => content === 'Import')!;
+      act(() => {
+        action.onAction!();
+      });
+      await updateWrapper(wrapper);
+      expect(wrapper.find(ImportTripsModal)).toHaveProp({
+        open: true,
+      });
+    });
+
+    it.todo(
+      'imports trips in batch when <ImportTripsModal /> onSuccess is triggered',
+    );
+  });
+
+  describe('Remove all trips', () => {
+    it('renders as <Page /> an action', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      expect(wrapper.find(Page)).toHaveProp({
+        secondaryActions: expect.arrayContaining([
+          expect.objectContaining({
+            content: 'Remove all',
+            disabled: false,
+          }),
+        ]),
+      });
+    });
+
+    it('has action disabled if there are no trips', async () => {
+      useCollectionSpy.mockReturnValue([
+        createCollectionsSnapshot([]),
+        false,
+        null,
+      ]);
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      expect(wrapper.find(Page)).toHaveProp({
+        secondaryActions: expect.arrayContaining([
+          expect.objectContaining({
+            content: 'Remove all',
+            disabled: true,
+          }),
+        ]),
+      });
+    });
+
+    it('opens a <ConfirmActionModal /> when action is triggered', async () => {
+      const wrapper = await mountWithAppProvider(<TravelHistory />);
+      const action = wrapper
+        .find(Page)
+        .prop('secondaryActions')!
+        .find(({content}) => content === 'Remove all')!;
+      act(() => {
+        action.onAction!();
+      });
+      await updateWrapper(wrapper);
+      expect(wrapper.find(ConfirmActionModal)).toHaveProp({
+        open: true,
+      });
+    });
+
+    it.todo(
+      'removes all trips in batch when <ConfirmActionModal /> onSuccess is triggered',
+    );
   });
 
   describe('<ManageTripModal />', () => {

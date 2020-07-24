@@ -14,6 +14,7 @@ import {
 
 import {EmptyStateAirportDude} from 'assets';
 import {isPastDate} from 'utilities/dates';
+import {firestore} from 'utilities/firebase';
 import {useToast} from 'hooks/useToast';
 import {Trip} from 'types';
 import {
@@ -42,6 +43,8 @@ export function TravelHistory() {
     confirmDeleteActionModalOpen,
     setConfirmDeleteActionModalOpen,
   ] = useState(false);
+  const [deleteAllModalOpen, setDeleteAllModalOpen] = useState(false);
+  const [deletingAllLoading, setDeletingAllLoading] = useState(false);
   const [manageTripLoading, setManageTripLoading] = useState(false);
   const [importTripsModalOpen, setImportTripsModalOpen] = useState(false);
   const [importing, setImporting] = useState(false);
@@ -83,13 +86,14 @@ export function TravelHistory() {
         {
           content: 'Export',
           icon: ExportMinor,
-          // disabled: trips?.length === 0,
+          // disabled: trips.length === 0,
           disabled: true,
         },
         {
           content: 'Remove all',
+          disabled: trips.length === 0,
           icon: DeleteMinor,
-          disabled: true,
+          onAction: () => setDeleteAllModalOpen(true),
         },
       ]}
       separator={trips.length > 0}
@@ -120,9 +124,19 @@ export function TravelHistory() {
         open={importTripsModalOpen}
         loading={importing}
         onClose={() => setImportTripsModalOpen(false)}
-        onConfirmed={handleImportTrips}
+        onConfirmed={handleBatchAddTrips}
       />
       <Toast />
+      <ConfirmActionModal
+        open={deleteAllModalOpen}
+        loading={deletingAllLoading}
+        title="Remove all trips"
+        details="Are you sure you want to remove all your trips?"
+        primaryActionLabel="Remove all trips"
+        onClose={() => setDeleteAllModalOpen(false)}
+        onConfirmed={handleBatchDeleteTrips}
+        destructive
+      />
       {confirmDeleteActionModal}
     </Page>
   );
@@ -130,10 +144,10 @@ export function TravelHistory() {
   function renderTrips(trips: Trip[]) {
     const byYear = tripsByYear(trips);
 
-    function handleEditTrip(trip: Trip) {
+    const handleEditTrip = (trip: Trip) => {
       setTripToBeEdited(trip);
       setManageTripModalOpen(true);
-    }
+    };
 
     return Object.keys(byYear)
       .reverse()
@@ -167,59 +181,6 @@ export function TravelHistory() {
     setManageTripModalOpen(false);
   }
 
-  async function handleImportTrips(trips: Trip[]) {
-    setImporting(true);
-    // It would be better to batch all the trips together instead of add each at a time
-    Promise.all(
-      trips.map(async (trip) => {
-        await handleAddNewTrip(trip, true);
-      }),
-    )
-      .then(() => {
-        setImporting(false);
-        setImportTripsModalOpen(false);
-        showToast({content: `${trips.length} trips imported`});
-      })
-      .catch(() => {
-        throw new Error('Error importing trips');
-      });
-  }
-
-  async function handleAddNewTrip(trip: Trip, importing = false) {
-    // trip.id represents the Document ID, we don't have to include it as a value
-    delete trip.id;
-    if (tripsCollectionRef) {
-      await tripsCollectionRef
-        .add({
-          ...trip,
-          createdAt: moment().toDate(),
-        })
-        .then(() => {
-          if (!importing) {
-            setManageTripModalOpen(false);
-            showToast({content: `Trip to ${trip.location} added`});
-          }
-        });
-    }
-  }
-
-  async function handleUpdateTrip(trip: Trip) {
-    const docID = trip.id;
-    // trip.id represents the Document ID, we don't have to include it as a value
-    delete trip.id;
-    if (tripsCollectionRef) {
-      await tripsCollectionRef
-        .doc(docID)
-        .update({
-          ...trip,
-          updatedAt: moment().toDate(),
-        })
-        .then(() => {
-          showToast({content: `Trip to ${trip.location} updated`});
-        });
-    }
-  }
-
   function closeConfirmDeleteTripModal() {
     setManageTripModalOpen(true);
     setConfirmDeleteActionModalOpen(false);
@@ -230,19 +191,88 @@ export function TravelHistory() {
     setConfirmDeleteActionModalOpen(true);
   }
 
+  async function handleAddNewTrip(trip: Trip, importing = false) {
+    // trip.id represents the Document ID, we don't have to include it as a value
+    delete trip.id;
+
+    if (tripsCollectionRef) {
+      await tripsCollectionRef.add({
+        ...trip,
+        createdAt: moment().toDate(),
+      });
+
+      if (!importing) {
+        setManageTripModalOpen(false);
+        showToast({content: `Trip to ${trip.location} added`});
+      }
+    }
+  }
+
+  async function handleUpdateTrip(trip: Trip) {
+    const docID = trip.id;
+    // trip.id represents the Document ID, we don't have to include it as a value
+    delete trip.id;
+
+    if (tripsCollectionRef) {
+      await tripsCollectionRef.doc(docID).update({
+        ...trip,
+        updatedAt: moment().toDate(),
+      });
+      showToast({content: `Trip to ${trip.location} updated`});
+    }
+  }
+
   async function handleDeleteTrip(trip: Trip) {
     const docID = trip.id;
+
     if (tripsCollectionRef) {
       setManageTripLoading(true);
-      await tripsCollectionRef
-        .doc(docID)
-        .delete()
-        .then(() => {
-          showToast({content: `Trip to ${trip.location} removed`});
-        });
+      await tripsCollectionRef.doc(docID).delete();
       setManageTripLoading(false);
       setManageTripModalOpen(false);
       setConfirmDeleteActionModalOpen(false);
+      showToast({content: `Trip to ${trip.location} removed`});
     }
+  }
+
+  async function handleBatchAddTrips(tripsToImport: Trip[]) {
+    setImporting(true);
+
+    if (tripsCollectionRef) {
+      const batch = firestore.batch();
+
+      tripsToImport.forEach((trip) => {
+        const docRef = tripsCollectionRef.doc();
+        batch.set(docRef, {
+          ...trip,
+          createdAt: moment().toDate(),
+        });
+      });
+
+      await batch.commit();
+      showToast({content: `${tripsToImport.length} trips imported`});
+    }
+
+    setImporting(false);
+    setImportTripsModalOpen(false);
+  }
+
+  async function handleBatchDeleteTrips() {
+    setDeletingAllLoading(true);
+
+    if (tripsCollectionRef) {
+      const batch = firestore.batch();
+
+      trips.forEach(({id}) => {
+        const docRef = tripsCollectionRef.doc(id);
+        batch.delete(docRef);
+      });
+
+      await batch.commit();
+      showToast({content: 'All trips removed'});
+    }
+
+    setDeletingAllLoading(false);
+    setDeleteAllModalOpen(false);
   }
 }
