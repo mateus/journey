@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {Autocomplete, Icon} from '@shopify/polaris';
 import {SearchMinor} from '@shopify/polaris-icons';
 
@@ -65,6 +65,10 @@ export function CountryTextField({
     },
     [onChange, options],
   );
+
+  useEffect(() => {
+    if (country) setInputValue(country.label);
+  }, [country]);
 
   const textField = (
     <Autocomplete.TextField
