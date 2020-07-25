@@ -1,4 +1,4 @@
-import React, {useState, memo} from 'react';
+import React, {useState, useEffect, memo} from 'react';
 import moment from 'moment';
 import {
   Banner,
@@ -47,12 +47,22 @@ export const ManageTripModal = memo(function ManageTripModal({
 }: ManageTripModalProps) {
   const today = moment().startOf('day');
   const [sameDayValue, setSameDay] = useState(
-    trip ? trip.startDate === trip.endDate : false,
+    trip ? Number(trip.startDate) === Number(trip.endDate) : false,
   );
   const [datePicker, setDatePicker] = useState({
     month: moment(trip?.startDate).month() || today.month(),
     year: moment(trip?.startDate).year() || today.year(),
   });
+
+  useEffect(() => {
+    if (trip) {
+      setDatePicker({
+        month: moment(trip.startDate).month(),
+        year: moment(trip.startDate).year(),
+      });
+      setSameDay(Number(trip.startDate) === Number(trip.endDate));
+    }
+  }, [trip]);
 
   const {
     fields: {location, notes, country, selectedDates},
