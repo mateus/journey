@@ -1,13 +1,9 @@
 import moment from 'moment';
 
 import {Trip} from 'types';
-import {isFutureDate, isTodayDate} from 'utilities/dates';
+import {isPastDate, isFutureDate, isTodayDate} from 'utilities/dates';
 
-export interface TripsByYear {
-  [key: string]: Trip[];
-}
-
-export function tripsByYear(trips: Trip[]): TripsByYear {
+export function tripsByYear(trips: Trip[]): Record<string, Trip[]> {
   return trips.reduce((map, trip) => {
     const year = moment(trip.endDate).year();
     if (map[year]) {
@@ -16,13 +12,13 @@ export function tripsByYear(trips: Trip[]): TripsByYear {
       map[year] = [trip];
     }
     return map;
-  }, {} as {[key: string]: Trip[]});
+  }, {} as Record<string, Trip[]>);
 }
 
 export function upcomingTrips(trips: Trip[]) {
   return trips
-    .filter(({endDate}) => isFutureDate(endDate) || isTodayDate(endDate))
-    .sort(sortByEndDateAsc);
+    .filter(({startDate}) => isFutureDate(startDate))
+    .sort(sortByStartDateAsc);
 }
 
 export function insertOrdered(
@@ -50,4 +46,27 @@ export function sortByEndDateAsc(tripA: Trip, tripB: Trip) {
 
 export function sortByEndDateDesc(tripA: Trip, tripB: Trip) {
   return Number(tripA.endDate) > Number(tripB.endDate) ? -1 : 0;
+}
+
+export function earliestTrip(trips: Trip[]): Trip {
+  return trips.sort(
+    (tripA, tripB) =>
+      Number(new Date(tripA.startDate)) - Number(new Date(tripB.startDate)),
+  )[0];
+}
+
+export function listOfCountriesVisited(trips: Trip[]): Trip['countryCode'][] {
+  const pastTrips = filterUpcomingTrips(trips);
+  return Array.from(new Set(pastTrips.map(({countryCode}) => countryCode)));
+}
+
+export function listOfPlacesVisited(trips: Trip[]): Trip['location'][] {
+  const pastTrips = filterUpcomingTrips(trips);
+  return Array.from(new Set(pastTrips.map(({location}) => location)));
+}
+
+export function filterUpcomingTrips(trips: Trip[]): Trip[] {
+  return trips.filter(
+    ({startDate}) => isPastDate(startDate) || isTodayDate(startDate),
+  );
 }
