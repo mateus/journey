@@ -37,12 +37,12 @@ export function AnalyticsCard({trips}: AnalyticsCardProps) {
             <TextStyle variation="strong">{completedTrips}</TextStyle> trips
           </p>
           <p>
-            <TextStyle variation="strong">{totalPlacesVisited}</TextStyle>{' '}
-            places visited
-          </p>
-          <p>
             <TextStyle variation="strong">{totalDaysTraveled}</TextStyle> days
             traveled
+          </p>
+          <p>
+            <TextStyle variation="strong">{totalPlacesVisited}</TextStyle>{' '}
+            places visited
           </p>
           <>
             <p>
