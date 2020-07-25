@@ -47,6 +47,28 @@ describe('<UpcomingTripsCard />', () => {
     });
   });
 
+  it('renders caption with only start date if same day trip', async () => {
+    const startDate = new Date('May 4, 2020');
+    const location = 'Some awesome location';
+    const wrapper = await mountWithAppProvider(
+      <UpcomingTripsCard
+        list={[
+          mockTrip({
+            location,
+            startDate,
+            endDate: startDate,
+          }),
+        ]}
+      />,
+    );
+    const upcomingList = wrapper.find(List.Item);
+
+    expect(upcomingList.find(Heading)).toHaveText(`Trip to ${location}`);
+    expect(upcomingList.find(Caption)).toHaveText(
+      moment(startDate).format('ll'),
+    );
+  });
+
   it('renders empty state message', async () => {
     const wrapper = await mountWithAppProvider(<UpcomingTripsCard list={[]} />);
     expect(wrapper.find('p')).toHaveText('You have no upcoming trips.');
