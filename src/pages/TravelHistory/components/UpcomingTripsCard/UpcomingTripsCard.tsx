@@ -17,15 +17,7 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
             <Stack vertical spacing="extraTight">
               <Heading>Trip to {location}</Heading>
               <TextStyle variation="subdued">
-                <Caption>
-                  <TextStyle variation="strong">
-                    {moment(startDate).format('ll')}
-                  </TextStyle>{' '}
-                  until{' '}
-                  <TextStyle variation="strong">
-                    {moment(endDate).format('ll')}
-                  </TextStyle>
-                </Caption>
+                <Caption>{caption(startDate, endDate)}</Caption>
               </TextStyle>
             </Stack>
           </List.Item>
@@ -42,4 +34,19 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
       {content}
     </Card>
   );
+
+  function caption(startDate: Date, endDate: Date) {
+    const start = moment(startDate).format('ll');
+    const end = moment(endDate).format('ll');
+    const startMarkup = <TextStyle variation="strong">{start}</TextStyle>;
+    const endMarkup = <TextStyle variation="strong">{end}</TextStyle>;
+
+    return start === end ? (
+      startMarkup
+    ) : (
+      <>
+        {startMarkup} until {endMarkup}
+      </>
+    );
+  }
 }
