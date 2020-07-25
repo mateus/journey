@@ -13,6 +13,7 @@ import {
   listOfCountriesVisited,
   listOfPlacesVisited,
   filterUpcomingTrips,
+  daysTraveled,
 } from '../utilities';
 
 describe('insertOrdered()', () => {
@@ -326,5 +327,32 @@ describe('filterUpcomingTrips()', () => {
     const trips = [pastTrip, todayTrip, futureTrip];
     const expected = [pastTrip, todayTrip];
     expect(filterUpcomingTrips(trips)).toStrictEqual(expected);
+  });
+});
+
+describe('daysTraveled()', () => {
+  it('returns sum of all the traveled days for completed trips', () => {
+    const totalTripDays = 5;
+    const past = moment(new Date('01/01/2020')).startOf('day');
+    const today = moment().startOf('day');
+    const futureDate = moment(today)
+      .add(10, 'days')
+      .toDate();
+    const firstTrip = mockTrip({
+      startDate: past.toDate(),
+      endDate: past.add(totalTripDays, 'days').toDate(),
+    });
+    const secondTrip = mockTrip({
+      startDate: past.toDate(),
+      endDate: past.add(totalTripDays, 'days').toDate(),
+    });
+    const futureTrip = mockTrip({
+      startDate: futureDate,
+      endDate: futureDate,
+    });
+    const trips = [firstTrip, secondTrip, futureTrip];
+    // One day added per trip since we should consider the startDate as well
+    const expected = totalTripDays * 2 + 2;
+    expect(daysTraveled(trips)).toStrictEqual(expected);
   });
 });

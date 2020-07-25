@@ -74,6 +74,33 @@ describe('<AnalyticsCard />', () => {
     ).toExist();
   });
 
+  it('renders total amount of days traveled', async () => {
+    const totalTripDays = 5;
+    const past = moment(new Date('01/01/2020')).startOf('day');
+    const today = moment().startOf('day');
+    const futureDate = moment(today)
+      .add(10, 'days')
+      .toDate();
+    const pastTrip = mockTrip({
+      startDate: past.toDate(),
+      endDate: past.add(totalTripDays, 'days').toDate(),
+    });
+    const futureTrip = mockTrip({
+      startDate: futureDate,
+      endDate: futureDate,
+    });
+    const trips = [pastTrip, futureTrip];
+    const wrapper = await mountWithAppProvider(<AnalyticsCard trips={trips} />);
+    expect(
+      wrapper
+        .find('p')
+        .filterWhere(
+          (node) =>
+            node.text() === `${String(totalTripDays + 1)} days traveled`,
+        ),
+    ).toExist();
+  });
+
   it('renders country visited total with flags', async () => {
     const todayDate = moment()
       .startOf('day')
