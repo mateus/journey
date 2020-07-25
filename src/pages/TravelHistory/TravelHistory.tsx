@@ -13,7 +13,7 @@ import {
 } from '@shopify/polaris';
 
 import {EmptyStateAirportDude} from 'assets';
-import {isPastDate} from 'utilities/dates';
+import {isFutureDate} from 'utilities/dates';
 import {firestore} from 'utilities/firebase';
 import {useToast} from 'hooks/useToast';
 import {Trip} from 'types';
@@ -27,6 +27,7 @@ import {
 import {useTrips} from './hooks';
 import {tripsByYear, upcomingTrips} from './utilities';
 import {
+  AnalyticsCard,
   ImportTripsModal,
   ManageTripModal,
   TripDetails,
@@ -55,19 +56,6 @@ export function TravelHistory() {
   if (loading) return <SkeletonTwoColumn />;
 
   const upcoming = upcomingTrips(trips);
-
-  const confirmDeleteActionModal = tripToBeEdited ? (
-    <ConfirmActionModal
-      open={confirmDeleteActionModalOpen}
-      loading={manageTripLoading}
-      title={`Delete trip to ${tripToBeEdited.location}`}
-      details={`Are you sure you want to remove the trip to ${tripToBeEdited.location}?`}
-      primaryActionLabel="Remove trip"
-      onClose={closeConfirmDeleteTripModal}
-      onConfirmed={() => handleDeleteTrip(tripToBeEdited)}
-      destructive
-    />
-  ) : null;
 
   return (
     <Page
@@ -106,6 +94,7 @@ export function TravelHistory() {
           </Layout.Section>
           <Layout.Section secondary>
             <UpcomingTripsCard list={upcoming} />
+            <AnalyticsCard trips={trips} />
           </Layout.Section>
         </Layout>
       )}
@@ -137,7 +126,18 @@ export function TravelHistory() {
         onConfirmed={handleBatchDeleteTrips}
         destructive
       />
-      {confirmDeleteActionModal}
+      {tripToBeEdited && (
+        <ConfirmActionModal
+          open={confirmDeleteActionModalOpen}
+          loading={manageTripLoading}
+          title={`Delete trip to ${tripToBeEdited.location}`}
+          details={`Are you sure you want to remove the trip to ${tripToBeEdited.location}?`}
+          primaryActionLabel="Remove trip"
+          onClose={closeConfirmDeleteTripModal}
+          onConfirmed={() => handleDeleteTrip(tripToBeEdited)}
+          destructive
+        />
+      )}
     </Page>
   );
 
@@ -161,7 +161,7 @@ export function TravelHistory() {
                 renderItem={(trip) => (
                   <TripDetails
                     trip={trip}
-                    completed={isPastDate(trip.endDate)}
+                    completed={!isFutureDate(trip.startDate)}
                     key={trip.startDate + trip.location + faker.random.uuid()}
                     onEdit={() => handleEditTrip(trip)}
                   />

@@ -39,8 +39,8 @@ describe('<TripDetails />', () => {
       <TripDetails {...createMockProps({notes})} />,
     );
     expect(
-      wrapper.find('p').findWhere((node) => node.text() === notes),
-    ).toBeTruthy();
+      wrapper.find('p').filterWhere((node) => node.text() === notes),
+    ).toExist();
   });
 
   it('renders <ReactCountryFlag />', async () => {

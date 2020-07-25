@@ -38,7 +38,7 @@ export function UpcomingTripsCard({list}: UpcomingTripsCardProps) {
     );
 
   return (
-    <Card title="Upcoming" sectioned subdued>
+    <Card title="Upcoming" sectioned>
       {content}
     </Card>
   );
