@@ -11,7 +11,7 @@
   "description": "App to keep track of travel history, bucket lists, travel plans and more",
   "homepage": "https://journeyapp.me/",
   "dependencies": {
-    "@shopify/polaris": "^4.13.1",
+    "@shopify/polaris": "^5.1.0",
     "@shopify/polaris-icons": "^3.9.0",
     "@shopify/react-form": "^0.7.1",
     "classnames": "^2.2.6",
