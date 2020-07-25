@@ -1,7 +1,12 @@
 import moment from 'moment';
 
 import {Trip} from 'types';
-import {isPastDate, isFutureDate, isTodayDate} from 'utilities/dates';
+import {
+  isPastDate,
+  isFutureDate,
+  isTodayDate,
+  numberOfDaysBetween,
+} from 'utilities/dates';
 
 export function tripsByYear(trips: Trip[]): Record<string, Trip[]> {
   return trips.reduce((map, trip) => {
@@ -63,6 +68,13 @@ export function listOfCountriesVisited(trips: Trip[]): Trip['countryCode'][] {
 export function listOfPlacesVisited(trips: Trip[]): Trip['location'][] {
   const pastTrips = filterUpcomingTrips(trips);
   return Array.from(new Set(pastTrips.map(({location}) => location)));
+}
+
+export function daysTraveled(trips: Trip[]): number {
+  const pastTrips = filterUpcomingTrips(trips);
+  return pastTrips
+    .map(({startDate, endDate}) => numberOfDaysBetween(startDate, endDate))
+    .reduce((daysA, daysB) => daysA + daysB, 0);
 }
 
 export function filterUpcomingTrips(trips: Trip[]): Trip[] {

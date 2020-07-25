@@ -10,6 +10,7 @@ import {
   filterUpcomingTrips,
   listOfCountriesVisited,
   listOfPlacesVisited,
+  daysTraveled,
 } from '../../utilities';
 
 interface AnalyticsCardProps {
@@ -21,6 +22,7 @@ export function AnalyticsCard({trips}: AnalyticsCardProps) {
   const countriesVisited = listOfCountriesVisited(trips);
   const totalCountriesVisited = countriesVisited.length;
   const totalPlacesVisited = listOfPlacesVisited(trips).length;
+  const totalDaysTraveled = daysTraveled(trips);
   const trackingSince = moment(earliestTrip(trips).startDate).format('ll');
 
   const flags = countriesVisited.map((countryCode) => (
@@ -37,6 +39,10 @@ export function AnalyticsCard({trips}: AnalyticsCardProps) {
           <p>
             <TextStyle variation="strong">{totalPlacesVisited}</TextStyle>{' '}
             places visited
+          </p>
+          <p>
+            <TextStyle variation="strong">{totalDaysTraveled}</TextStyle> days
+            traveled
           </p>
           <>
             <p>

@@ -18,3 +18,9 @@ export function isTodayDate(date: Date) {
 export function isValidDate(date: string) {
   return Boolean(Date.parse(date));
 }
+
+export function numberOfDaysBetween(dateA: Date, dateB: Date) {
+  const momentDateA = moment(dateA);
+  const momentDateB = moment(dateB);
+  return momentDateB.diff(momentDateA, 'days') + 1;
+}
