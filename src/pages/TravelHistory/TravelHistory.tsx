@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import moment from 'moment';
-import faker from 'faker';
 import {DeleteMinor, ImportMinor, ExportMinor} from '@shopify/polaris-icons';
 import {
   Card,
@@ -162,7 +161,7 @@ export function TravelHistory() {
                   <TripDetails
                     trip={trip}
                     completed={!isFutureDate(trip.startDate)}
-                    key={trip.startDate + trip.location + faker.random.uuid()}
+                    key={trip.id}
                     onEdit={() => handleEditTrip(trip)}
                   />
                 )}
