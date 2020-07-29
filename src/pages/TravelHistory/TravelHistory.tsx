@@ -14,6 +14,7 @@ import {
 import {EmptyStateAirportDude} from 'assets';
 import {isFutureDate} from 'utilities/dates';
 import {firestore} from 'utilities/firebase';
+import {useMedia} from 'hooks/useMedia';
 import {useToast} from 'hooks/useToast';
 import {Trip} from 'types';
 import {
@@ -50,6 +51,7 @@ export function TravelHistory() {
   const [importing, setImporting] = useState(false);
   const [Toast, showToast] = useToast();
   const {trips, tripsCollectionRef, loading, error} = useTrips();
+  const isLargeScreen = useMedia('(min-width: 1044px)');
 
   if (error) throw new Error(error.message);
   if (loading) return <SkeletonTwoColumn />;
@@ -86,17 +88,7 @@ export function TravelHistory() {
       separator={trips.length > 0}
     >
       <DocumentTitle title="Travel History" />
-      {trips.length > 0 && (
-        <Layout>
-          <Layout.Section>
-            <Stack vertical>{renderTrips(trips)}</Stack>
-          </Layout.Section>
-          <Layout.Section secondary>
-            <UpcomingTripsCard list={upcoming} />
-            <AnalyticsCard trips={trips} />
-          </Layout.Section>
-        </Layout>
-      )}
+      {trips.length > 0 && renderContent()}
       <EmptyState image={EmptyStateAirportDude}>
         <MemoizedRandomQuote />
       </EmptyState>
@@ -139,6 +131,33 @@ export function TravelHistory() {
       )}
     </Page>
   );
+
+  function renderContent() {
+    const primarySection = (
+      <Layout.Section>
+        <Stack vertical>{renderTrips(trips)}</Stack>
+      </Layout.Section>
+    );
+
+    const secondarySection = (
+      <Layout.Section secondary>
+        <UpcomingTripsCard list={upcoming} />
+        <AnalyticsCard trips={trips} />
+      </Layout.Section>
+    );
+
+    return isLargeScreen ? (
+      <Layout>
+        {primarySection}
+        {secondarySection}
+      </Layout>
+    ) : (
+      <Layout>
+        {secondarySection}
+        {primarySection}
+      </Layout>
+    );
+  }
 
   function renderTrips(trips: Trip[]) {
     const byYear = tripsByYear(trips);
