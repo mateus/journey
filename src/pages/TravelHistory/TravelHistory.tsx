@@ -14,8 +14,7 @@ import {
 import {EmptyStateAirportDude} from 'assets';
 import {isFutureDate} from 'utilities/dates';
 import {firestore} from 'utilities/firebase';
-import {useMedia} from 'hooks/useMedia';
-import {useToast} from 'hooks/useToast';
+import {useToast, useMedia} from 'hooks';
 import {Trip} from 'types';
 import {
   ConfirmActionModal,

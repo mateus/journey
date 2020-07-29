@@ -8,7 +8,7 @@ import {
 } from '@shopify/react-form';
 import moment from 'moment';
 
-import {useToast} from 'hooks/useToast';
+import {useToast} from 'hooks';
 import {DocumentTitle, SkeletonAnnotated} from 'components';
 
 import {WondersCard} from './components';
